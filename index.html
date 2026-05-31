@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LOWIST Smart Campus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #060d1a;
+      --surface: #0d1b2e;
+      --surface2: #112039;
+      --border: rgba(99,179,237,0.10);
+      --border2: rgba(99,179,237,0.18);
+      --accent: #38bdf8;
+      --accent2: #0ea5e9;
+      --accent-dim: rgba(56,189,248,0.12);
+      --green: #22d3a0;
+      --green-dim: rgba(34,211,160,0.12);
+      --red: #f87171;
+      --red-dim: rgba(248,113,113,0.12);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251,191,36,0.12);
+      --text: #e2eff8;
+      --muted: #7fa8c4;
+      --faint: #3a5870;
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ─── Sidebar ─────────────────────────── */
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-mark {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .nav {
+      padding: 16px 12px;
+      flex: 1;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--faint);
+      padding: 8px 12px 4px;
+      margin-top: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+      transition: all 0.15s;
+      margin: 2px 0;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item i { font-size: 18px; }
+
+    .nav-item:hover {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .nav-item.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-weight: 500;
+      border-left: 2px solid var(--accent);
+    }
+
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--faint);
+    }
+
+    /* ─── Main ────────────────────────────── */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ─── Top bar ─────────────────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-title {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 16px;
+    }
+
+    .search-bar i { color: var(--muted); font-size: 16px; }
+
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      width: 200px;
+    }
+
+    .search-bar input::placeholder { color: var(--faint); }
+
+    .badge-live {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-dim);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,211,160,0.2);
+    }
+
+    .dot-live {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ─── Content area ────────────────────── */
+    .content {
+      padding: 28px 32px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── Stat cards ──────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .stat-card.blue::before { background: var(--accent); }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.amber::before { background: var(--amber); }
+    .stat-card.red::before { background: var(--red); }
+
+    .stat-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .stat-icon.blue { background: var(--accent-dim); color: var(--accent); }
+    .stat-icon.green { background: var(--green-dim); color: var(--green); }
+    .stat-icon.amber { background: var(--amber-dim); color: var(--amber); }
+    .stat-icon.red { background: var(--red-dim); color: var(--red); }
+
+    .stat-value {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ─── Section header ──────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #051a29;
+    }
+    .btn-primary:hover { background: #7dd3f7; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+    }
+    .btn-ghost:hover { background: var(--accent-dim); color: var(--accent); }
+
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+    .btn-success { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.2); }
+
+    /* ─── Table ───────────────────────────── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--accent-dim); }
+
+    td {
+      padding: 12px 16px;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    /* ─── Badges ──────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-allowed { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.25); }
+    .badge-denied { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+    .badge-student { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(56,189,248,0.25); }
+    .badge-staff { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+    .badge-present { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.25); }
+    .badge-absent { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+    .badge-late { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+
+    /* ─── Avatar ──────────────────────────── */
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .name-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ─── Attendance ──────────────────────── */
+    .attendance-controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .attendance-controls select,
+    .attendance-controls input[type="date"] {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 9px 14px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .attendance-controls select:focus,
+    .attendance-controls input[type="date"]:focus {
+      border-color: var(--accent);
+    }
+
+    .att-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .att-stat {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .att-stat-num {
+      font-family: var(--font-head);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .att-stat-num.green { color: var(--green); }
+    .att-stat-num.red { color: var(--red); }
+    .att-stat-num.amber { color: var(--amber); }
+
+    .att-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 3px;
+    }
+
+    .mark-btns { display: flex; gap: 6px; }
+
+    /* ─── Modal ───────────────────────────── */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-bg.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      padding: 28px 32px;
+      width: 440px;
+      max-width: 95vw;
+    }
+
+    .modal-title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .form-input:focus { border-color: var(--accent); }
+
+    .form-select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    /* ─── Empty state ─────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 48px;
+      color: var(--faint);
+    }
+    .empty i { font-size: 36px; margin-bottom: 12px; display: block; }
+    .empty p { font-size: 14px; }
+
+    /* ─── Loading spinner ─────────────────── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 40px auto;
+    }
+
+    /* ─── Toast ───────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 12px 20px;
+      font-size: 14px;
+      color: var(--text);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.25s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success i { color: var(--green); }
+    .toast.error i { color: var(--red); }
+
+    /* ─── Two-col layout ──────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { width: 64px; }
+      .sidebar .logo-sub, .sidebar .nav-item span, .sidebar-footer, .logo-mark { display: none; }
+      .main { margin-left: 64px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Sidebar ─────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">LOWIST</div>
+    <div class="logo-sub">Smart Campus</div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <button class="nav-item active" onclick="showPage('dashboard', this)">
+      <i class="ti ti-layout-dashboard"></i><span>Dashboard</span>
+    </button>
+
+    <div class="nav-label">Management</div>
+    <button class="nav-item" onclick="showPage('students', this)">
+      <i class="ti ti-users"></i><span>Students</span>
+    </button>
+    <button class="nav-item" onclick="showPage('attendance', this)">
+      <i class="ti ti-calendar-check"></i><span>Attendance</span>
+    </button>
+    <button class="nav-item" onclick="showPage('logs', this)">
+      <i class="ti ti-activity"></i><span>Live Logs</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">v2.0 · LOWIST</div>
+</aside>
+
+<!-- ─── Main ──────────────────────────────── -->
+<main class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-title" id="pageTitle">Dashboard</div>
+    <div class="topbar-right">
+      <div class="search-bar">
+        <i class="ti ti-search"></i>
+        <input type="text" id="globalSearch" placeholder="Search anything..." oninput="handleGlobalSearch(this.value)">
+      </div>
+      <div class="badge-live"><div class="dot-live"></div>Live</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ DASHBOARD PAGE ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-icon blue"><i class="ti ti-users"></i></div>
+          <div class="stat-value" id="stat-students">—</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green"><i class="ti ti-calendar-check"></i></div>
+          <div class="stat-value" id="stat-present">—</div>
+          <div class="stat-label">Present Today</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon amber"><i class="ti ti-activity"></i></div>
+          <div class="stat-value" id="stat-logs">—</div>
+          <div class="stat-label">Live Log Events</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon red"><i class="ti ti-shield-x"></i></div>
+          <div class="stat-value" id="stat-denied">—</div>
+          <div class="stat-label">Denied Today</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="section-header">
+            <div class="section-title">Recent Students</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('students', document.querySelector('[onclick*=students]'))">View all</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Name</th><th>Role</th><th>Dept</th></tr>
+              </thead>
+              <tbody id="dash-students"><tr><td colspan="3"><div class="spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-header">
+            <div class="section-title">Recent Activity</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('logs', document.querySelector('[onclick*=logs]'))">View all</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Name</th><th>Location</th><th>Status</th></tr>
+              </thead>
+              <tbody id="dash-logs"><tr><td colspan="3"><div class="spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STUDENTS PAGE ═══ -->
+    <div class="page" id="page-students">
+      <div class="section-header">
+        <div class="section-title">All Students</div>
+        <button class="btn btn-primary" onclick="openModal('addStudent')">
+          <i class="ti ti-plus"></i> Add Student
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Student ID</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>UID</th>
+            </tr>
+          </thead>
+          <tbody id="students-tbody"><tr><td colspan="5"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ ATTENDANCE PAGE ═══ -->
+    <div class="page" id="page-attendance">
+      <div class="section-header">
+        <div class="section-title">Attendance</div>
+        <button class="btn btn-primary" onclick="openModal('markAttendance')">
+          <i class="ti ti-calendar-plus"></i> Mark Attendance
+        </button>
+      </div>
+
+      <div class="attendance-controls">
+        <input type="date" id="att-date" onchange="renderAttendance()">
+        <select id="att-dept" onchange="renderAttendance()">
+          <option value="">All Departments</option>
+        </select>
+        <select id="att-status" onchange="renderAttendance()">
+          <option value="">All Status</option>
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Late">Late</option>
+        </select>
+        <button class="btn btn-ghost" onclick="exportAttendanceCSV()">
+          <i class="ti ti-download"></i> Export CSV
+        </button>
+      </div>
+
+      <div class="att-stats">
+        <div class="att-stat">
+          <div class="att-stat-num green" id="att-count-present">0</div>
+          <div class="att-stat-label">Present</div>
+        </div>
+        <div class="att-stat">
+          <div class="att-stat-num red" id="att-count-absent">0</div>
+          <div class="att-stat-label">Absent</div>
+        </div>
+        <div class="att-stat">
+          <div class="att-stat-num amber" id="att-count-late">0</div>
+          <div class="att-stat-label">Late</div>
+        </div>
+        <div class="att-stat">
+          <div class="att-stat-num" id="att-count-pct" style="color:var(--accent)">0%</div>
+          <div class="att-stat-label">Attendance Rate</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Student ID</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="attendance-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ LOGS PAGE ═══ -->
+    <div class="page" id="page-logs">
+      <div class="section-header">
+        <div class="section-title">Live Activity Log</div>
+        <div style="display:flex;gap:8px">
+          <select id="log-filter" class="form-select" style="width:auto;padding:8px 14px" onchange="renderLogs()">
+            <option value="">All Status</option>
+            <option value="Allowed">Allowed</option>
+            <option value="Denied">Denied</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Location</th><th>Status</th><th>Time</th></tr>
+          </thead>
+          <tbody id="logs-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ─── Modal: Add Student ─── -->
+<div class="modal-bg" id="modal-addStudent">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-user-plus" style="color:var(--accent)"></i> Add Student</div>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" id="add-name" placeholder="e.g. Ahmad Rizal">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Student ID</label>
+      <input class="form-input" id="add-sid" placeholder="e.g. S2024001">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Role</label>
+      <select class="form-select" id="add-role">
+        <option value="Student">Student</option>
+        <option value="Staff">Staff</option>
+        <option value="Lecturer">Lecturer</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Department</label>
+      <input class="form-input" id="add-dept" placeholder="e.g. Computer Science">
+    </div>
+    <div class="form-group">
+      <label class="form-label">UID (Card/Tag)</label>
+      <input class="form-input" id="add-uid" placeholder="e.g. A1B2C3D4">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addStudent')">Cancel</button>
+      <button class="btn btn-primary" onclick="addStudent()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Modal: Mark Attendance ─── -->
+<div class="modal-bg" id="modal-markAttendance">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-calendar-plus" style="color:var(--accent)"></i> Mark Attendance</div>
+    <div class="form-group">
+      <label class="form-label">Student</label>
+      <select class="form-select" id="mark-student"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" id="mark-date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="mark-status">
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+        <option value="Late">Late</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Note (optional)</label>
+      <input class="form-input" id="mark-note" placeholder="e.g. Medical leave">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('markAttendance')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAttendance()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Toast ─── -->
+<div class="toast" id="toast"><i class="ti ti-check-circle"></i><span id="toast-msg"></span></div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAP1FMBJckEkYFpaynypw9QT0Yf2ei9Q9o",
+    authDomain: "rcz-university-system.firebaseapp.com",
+    projectId: "rcz-university-system",
+    storageBucket: "rcz-university-system.firebasestorage.app",
+    messagingSenderId: "18705411316",
+    appId: "1:18705411316:web:545385d4c689b9297e82a1"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  let studentsData = [];
+  let logsData = [];
+  let attendanceData = [];
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  document.getElementById('att-date').value = todayStr;
+  document.getElementById('mark-date').value = todayStr;
+
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    const titles = { dashboard: 'Dashboard', students: 'Students', attendance: 'Attendance', logs: 'Live Logs' };
+    document.getElementById('pageTitle').textContent = titles[id] || id;
+  }
+
+  function initials(name) {
+    if (!name) return '?';
+    return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    const i = t.querySelector('i');
+    t.className = 'toast ' + type;
+    i.className = type === 'success' ? 'ti ti-check-circle' : 'ti ti-alert-circle';
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function openModal(id) {
+    if (id === 'markAttendance') {
+      const sel = document.getElementById('mark-student');
+      sel.innerHTML = studentsData.map(s => `<option value="${s.uid || s.name}">${s.name} (${s.Student_ID || 'N/A'})</option>`).join('');
+    }
+    document.getElementById('modal-' + id).classList.add('open');
+  }
+
+  function closeModal(id) {
+    document.getElementById('modal-' + id).classList.remove('open');
+  }
+
+  document.querySelectorAll('.modal-bg').forEach(bg => {
+    bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+  });
+
+  db.collection("users").onSnapshot(snap => {
+    studentsData = [];
+    snap.forEach(doc => studentsData.push({ id: doc.id, ...doc.data() }));
+    renderStudents(studentsData);
+    renderDashStudents();
+    updateDeptFilter();
+    document.getElementById('stat-students').textContent = studentsData.length;
+  }, err => console.error(err));
+
+  function renderStudents(data) {
+    const tbody = document.getElementById('students-tbody');
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><i class="ti ti-users-off"></i><p>No students found</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(s => `
+      <tr>
+        <td><div class="name-cell">
+          <div class="avatar">${initials(s.name)}</div>
+          <span>${s.name || '—'}</span>
+        </div></td>
+        <td>${s.Student_ID || '—'}</td>
+        <td><span class="badge ${s.role === 'Student' ? 'badge-student' : 'badge-staff'}">${s.role || '—'}</span></td>
+        <td>${s.department || '—'}</td>
+        <td style="font-family:monospace;font-size:12px;color:var(--muted)">${s.uid || '—'}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderDashStudents() {
+    const tbody = document.getElementById('dash-students');
+    tbody.innerHTML = studentsData.slice(0, 6).map(s => `
+      <tr>
+        <td><div class="name-cell">
+          <div class="avatar">${initials(s.name)}</div>
+          <span>${s.name || '—'}</span>
+        </div></td>
+        <td><span class="badge ${s.role === 'Student' ? 'badge-student' : 'badge-staff'}">${s.role || '—'}</span></td>
+        <td style="color:var(--muted)">${s.department || '—'}</td>
+      </tr>
+    `).join('');
+  }
+
+  function updateDeptFilter() {
+    const depts = [...new Set(studentsData.map(s => s.department).filter(Boolean))].sort();
+    const sel = document.getElementById('att-dept');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">All Departments</option>' + depts.map(d => `<option value="${d}"${d === current ? ' selected' : ''}>${d}</option>`).join('');
+  }
+
+  async function addStudent() {
+    const name = document.getElementById('add-name').value.trim();
+    const sid = document.getElementById('add-sid').value.trim();
+    const role = document.getElementById('add-role').value;
+    const dept = document.getElementById('add-dept').value.trim();
+    const uid = document.getElementById('add-uid').value.trim();
+    if (!name) { showToast('Name is required', 'error'); return; }
+    try {
+      await db.collection("users").add({ name, Student_ID: sid, role, department: dept, uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      closeModal('addStudent');
+      ['add-name','add-sid','add-dept','add-uid'].forEach(id => document.getElementById(id).value = '');
+      showToast('Student added successfully');
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
+  }
+
+  db.collection("logs").orderBy("time", "desc").limit(50).onSnapshot(snap => {
+    logsData = [];
+    snap.forEach(doc => logsData.push({ id: doc.id, ...doc.data() }));
+    renderLogs();
+    renderDashLogs();
+    updateDashStats();
+  }, err => console.error(err));
+
+  function renderLogs() {
+    const filter = document.getElementById('log-filter').value;
+    const data = filter ? logsData.filter(l => l.status === filter) : logsData;
+    const tbody = document.getElementById('logs-tbody');
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty"><i class="ti ti-activity-off"></i><p>No logs found</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(l => `
+      <tr>
+        <td><div class="name-cell">
+          <div class="avatar">${initials(l.name)}</div>
+          <span>${l.name || '—'}</span>
+        </div></td>
+        <td>${l.location || '—'}</td>
+        <td><span class="badge ${l.status === 'Allowed' ? 'badge-allowed' : 'badge-denied'}">${l.status || '—'}</span></td>
+        <td style="color:var(--muted);font-size:12px">${l.time ? new Date(l.time.toDate()).toLocaleString() : '—'}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderDashLogs() {
+    const tbody = document.getElementById('dash-logs');
+    tbody.innerHTML = logsData.slice(0, 6).map(l => `
+      <tr>
+        <td>${l.name || '—'}</td>
+        <td style="color:var(--muted)">${l.location || '—'}</td>
+        <td><span class="badge ${l.status === 'Allowed' ? 'badge-allowed' : 'badge-denied'}">${l.status || '—'}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function updateDashStats() {
+    document.getElementById('stat-logs').textContent = logsData.length;
+    const denied = logsData.filter(l => l.status === 'Denied').length;
+    document.getElementById('stat-denied').textContent = denied;
+  }
+
+  db.collection("attendance").onSnapshot(snap => {
+    attendanceData = [];
+    snap.forEach(doc => attendanceData.push({ id: doc.id, ...doc.data() }));
+    renderAttendance();
+    updatePresentStat();
+  }, err => console.error(err));
+
+  function renderAttendance() {
+    const dateVal = document.getElementById('att-date').value;
+    const deptVal = document.getElementById('att-dept').value;
+    const statusVal = document.getElementById('att-status').value;
+
+    let data = attendanceData;
+    if (dateVal) data = data.filter(a => a.date === dateVal);
+    if (deptVal) data = data.filter(a => a.department === deptVal);
+    if (statusVal) data = data.filter(a => a.status === statusVal);
+
+    const present = data.filter(a => a.status === 'Present').length;
+    const absent = data.filter(a => a.status === 'Absent').length;
+    const late = data.filter(a => a.status === 'Late').length;
+    const total = data.length;
+    const pct = total > 0 ? Math.round((present / total) * 100) : 0;
+
+    document.getElementById('att-count-present').textContent = present;
+    document.getElementById('att-count-absent').textContent = absent;
+    document.getElementById('att-count-late').textContent = late;
+    document.getElementById('att-count-pct').textContent = pct + '%';
+
+    const tbody = document.getElementById('attendance-tbody');
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><i class="ti ti-calendar-off"></i><p>No attendance records for this selection</p></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(a => {
+      const badgeClass = a.status === 'Present' ? 'badge-present' : a.status === 'Absent' ? 'badge-absent' : 'badge-late';
+      return `
+        <tr>
+          <td><div class="name-cell">
+            <div class="avatar">${initials(a.studentName)}</div>
+            <span>${a.studentName || '—'}</span>
+          </div></td>
+          <td style="color:var(--muted)">${a.studentId || '—'}</td>
+          <td>${a.department || '—'}</td>
+          <td><span class="badge ${badgeClass}">${a.status || '—'}</span></td>
+          <td style="color:var(--muted);font-size:12px">${a.time || '—'}</td>
+          <td>
+            <div class="mark-btns">
+              <button class="btn btn-success btn-sm" onclick="updateAttStatus('${a.id}', 'Present')"><i class="ti ti-check"></i></button>
+              <button class="btn btn-sm" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.2)" onclick="updateAttStatus('${a.id}', 'Late')"><i class="ti ti-clock"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="updateAttStatus('${a.id}', 'Absent')"><i class="ti ti-x"></i></button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function updatePresentStat() {
+    const today = new Date().toISOString().slice(0, 10);
+    const present = attendanceData.filter(a => a.date === today && a.status === 'Present').length;
+    document.getElementById('stat-present').textContent = present;
+  }
+
+  async function saveAttendance() {
+    const studentVal = document.getElementById('mark-student').value;
+    const student = studentsData.find(s => s.uid === studentVal || s.name === studentVal);
+    const dateVal = document.getElementById('mark-date').value;
+    const statusVal = document.getElementById('mark-status').value;
+    const noteVal = document.getElementById('mark-note').value.trim();
+    if (!studentVal || !dateVal) { showToast('Please select student and date', 'error'); return; }
+    try {
+      await db.collection("attendance").add({
+        studentName: student ? student.name : studentVal,
+        studentId: student ? (student.Student_ID || '') : '',
+        department: student ? (student.department || '') : '',
+        uid: studentVal,
+        date: dateVal,
+        status: statusVal,
+        note: noteVal,
+        time: new Date().toLocaleTimeString(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      closeModal('markAttendance');
+      document.getElementById('mark-note').value = '';
+      showToast('Attendance saved');
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
+  }
+
+  async function updateAttStatus(docId, status) {
+    try {
+      await db.collection("attendance").doc(docId).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      showToast('Status updated to ' + status);
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
+  }
+
+  function exportAttendanceCSV() {
+    const dateVal = document.getElementById('att-date').value;
+    const data = dateVal ? attendanceData.filter(a => a.date === dateVal) : attendanceData;
+    if (!data.length) { showToast('No data to export', 'error'); return; }
+    const header = ['Name', 'Student ID', 'Department', 'Status', 'Date', 'Time', 'Note'];
+    const rows = data.map(a => [a.studentName, a.studentId, a.department, a.status, a.date, a.time, a.note || ''].map(v => `"${v}"`).join(','));
+    const csv = [header.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `attendance-${dateVal || 'all'}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast('CSV exported');
+  }
+
+  function handleGlobalSearch(val) {
+    const q = val.toLowerCase();
+    if (!q) { renderStudents(studentsData); return; }
+    const filtered = studentsData.filter(s =>
+      (s.name && s.name.toLowerCase().includes(q)) ||
+      (s.Student_ID && s.Student_ID.toLowerCase().includes(q)) ||
+      (s.department && s.department.toLowerCase().includes(q)) ||
+      (s.uid && s.uid.toLowerCase().includes(q))
+    );
+    renderStudents(filtered);
+  }
+</script>
+</body>
+</html>
