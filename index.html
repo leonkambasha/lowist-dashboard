@@ -24,8 +24,6 @@
       --radius: 12px; --radius-sm: 8px;
     }
     body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; overflow-x: hidden; }
-
-    /* ── LOGIN ── */
     #login-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
     .login-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 40px; width: 420px; max-width: 95vw; }
     .login-logo { text-align: center; margin-bottom: 24px; }
@@ -33,28 +31,21 @@
     .login-logo .logo-sub { font-size: 12px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
     .login-title { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 6px; text-align: center; }
     .login-subtitle { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 24px; }
-
-    /* Auth mode toggle */
     .auth-mode-toggle { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 20px; }
     .auth-mode-btn { flex: 1; padding: 9px; border: none; background: none; border-radius: 6px; font-family: var(--font-body); font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
     .auth-mode-btn.active { background: var(--surface); color: var(--accent); border: 1px solid var(--border2); }
-
     .login-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 20px; }
     .login-tab { flex: 1; padding: 8px; border: none; background: none; border-radius: 6px; font-family: var(--font-body); font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
     .login-tab.active { background: var(--surface); color: var(--accent); border: 1px solid var(--border2); }
     .login-panel { display: none; }
     .login-panel.active { display: block; }
-
-    /* Password field with eye icon */
     .password-wrap { position: relative; margin-bottom: 12px; }
     .password-wrap .login-input { margin-bottom: 0; padding-right: 44px; }
     .eye-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; display: flex; align-items: center; padding: 4px; }
     .eye-btn:hover { color: var(--accent); }
-
     .login-input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); padding: 12px 14px; font-family: var(--font-body); font-size: 14px; outline: none; margin-bottom: 12px; transition: border-color 0.15s; display: block; }
     .login-input:focus { border-color: var(--accent); }
     .login-input::placeholder { color: var(--faint); }
-
     .login-btn { width: 100%; padding: 13px; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
     .btn-email { background: var(--accent); color: #051a29; }
     .btn-email:hover { background: #7dd3f7; }
@@ -66,15 +57,11 @@
     .btn-apple:hover { background: #222; }
     .btn-phone-send { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.3); }
     .btn-phone-send:hover { background: rgba(34,211,160,0.2); }
-
     .login-error { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 12px; display: none; }
     .login-error.show { display: block; }
     .login-success { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.2); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 12px; display: none; }
     .login-success.show { display: block; }
-
     #phone-step2 { display: none; }
-
-    /* ── SIDEBAR ── */
     .sidebar { width: 240px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100; }
     .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
     .logo-mark { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
@@ -88,8 +75,6 @@
     .sidebar-footer { padding: 16px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--faint); display: flex; align-items: center; justify-content: space-between; }
     .signout-btn { background: none; border: none; color: var(--red); cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: var(--radius-sm); }
     .signout-btn:hover { background: var(--red-dim); }
-
-    /* ── MAIN ── */
     .main { margin-left: 240px; flex: 1; min-height: 100vh; }
     .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 50; }
     .topbar-title { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--text); }
@@ -104,7 +89,6 @@
     .content { padding: 28px 32px; }
     .page { display: none; }
     .page.active { display: block; }
-
     .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; }
     .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
@@ -113,7 +97,6 @@
     .stat-icon.blue{background:var(--accent-dim);color:var(--accent)} .stat-icon.green{background:var(--green-dim);color:var(--green)} .stat-icon.amber{background:var(--amber-dim);color:var(--amber)} .stat-icon.red{background:var(--red-dim);color:var(--red)}
     .stat-value { font-family:var(--font-head); font-size:28px; font-weight:700; color:var(--text); line-height:1; margin-bottom:4px; }
     .stat-label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; }
-
     .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
     .section-title { font-family:var(--font-head); font-size:16px; font-weight:600; color:var(--text); }
     .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-sm); font-family:var(--font-body); font-size:13px; font-weight:500; cursor:pointer; border:none; transition:all 0.15s; }
@@ -127,7 +110,6 @@
     thead th{padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--surface2)}
     tbody tr{border-bottom:1px solid var(--border);transition:background 0.12s} tbody tr:last-child{border-bottom:none} tbody tr:hover{background:var(--accent-dim)}
     td{padding:12px 16px;color:var(--text);vertical-align:middle}
-
     .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
     .badge-allowed{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.25)}
     .badge-denied{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
@@ -138,7 +120,6 @@
     .badge-late{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25)}
     .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-dim);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
     .name-cell{display:flex;align-items:center;gap:10px}
-
     .attendance-controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
     .attendance-controls select,.attendance-controls input[type="date"]{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
     .att-stats{display:flex;gap:12px;margin-bottom:20px}
@@ -147,7 +128,6 @@
     .att-stat-num.green{color:var(--green)} .att-stat-num.red{color:var(--red)} .att-stat-num.amber{color:var(--amber)}
     .att-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-top:3px}
     .mark-btns{display:flex;gap:6px}
-
     .dept-overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
     .dept-overview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
     .dept-overview-card:hover{border-color:var(--border2);transform:translateY(-1px)}
@@ -159,7 +139,6 @@
     .dept-search-input{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none}
     .dept-search-input:focus{border-color:var(--accent)}
     .dept-filter-select{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-
     .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center}
     .modal-bg.open{display:flex}
     .modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;width:440px;max-width:95vw}
@@ -170,7 +149,6 @@
     .form-input:focus{border-color:var(--accent)}
     .form-select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none}
     .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
-
     .empty{text-align:center;padding:48px;color:var(--faint)}
     .empty i{font-size:36px;margin-bottom:12px;display:block}
     .empty p{font-size:14px}
@@ -189,7 +167,6 @@
 </head>
 <body>
 
-<!-- ── LOGIN SCREEN ── -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
@@ -198,53 +175,38 @@
     </div>
     <div class="login-title" id="auth-title">Welcome back</div>
     <div class="login-subtitle" id="auth-subtitle">Sign in to access the dashboard</div>
-
     <div class="login-error" id="login-error"></div>
     <div class="login-success" id="login-success"></div>
-
-    <!-- Sign In / Sign Up toggle -->
     <div class="auth-mode-toggle">
       <button class="auth-mode-btn active" id="mode-signin" onclick="switchMode('signin')">Sign In</button>
       <button class="auth-mode-btn" id="mode-signup" onclick="switchMode('signup')">Sign Up</button>
     </div>
-
-    <!-- Method tabs (only show on Sign In) -->
     <div class="login-tabs" id="method-tabs">
       <button class="login-tab active" onclick="switchTab('email',this)">Email</button>
       <button class="login-tab" onclick="switchTab('phone',this)">Phone</button>
       <button class="login-tab" onclick="switchTab('social',this)">Social</button>
     </div>
-
-    <!-- EMAIL PANEL -->
     <div class="login-panel active" id="panel-email">
       <input class="login-input" id="email-input" type="email" placeholder="Email address" />
       <div class="password-wrap">
         <input class="login-input" id="password-input" type="password" placeholder="Password" />
-        <button class="eye-btn" id="eye-btn" type="button">
-          <i class="ti ti-eye" id="eye-icon"></i>
-        </button>
+        <button class="eye-btn" id="eye-btn" type="button"><i class="ti ti-eye" id="eye-icon"></i></button>
       </div>
       <button class="login-btn btn-email" id="email-signin-btn">
-        <i class="ti ti-login"></i> <span id="email-btn-text">Sign In</span>
+        <i class="ti ti-login"></i> Sign In
       </button>
     </div>
-
-    <!-- SIGN UP PANEL (shown only in signup mode) -->
     <div class="login-panel" id="panel-signup">
       <input class="login-input" id="signup-email" type="email" placeholder="Email address" />
       <div class="password-wrap">
         <input class="login-input" id="signup-password" type="password" placeholder="Password (min 6 characters)" />
-        <button class="eye-btn" id="eye-btn2" type="button">
-          <i class="ti ti-eye" id="eye-icon2"></i>
-        </button>
+        <button class="eye-btn" id="eye-btn2" type="button"><i class="ti ti-eye" id="eye-icon2"></i></button>
       </div>
       <input class="login-input" id="signup-confirm" type="password" placeholder="Confirm password" />
       <button class="login-btn btn-signup" id="signup-btn">
         <i class="ti ti-user-plus"></i> Create Account
       </button>
     </div>
-
-    <!-- PHONE PANEL -->
     <div class="login-panel" id="panel-phone">
       <div id="phone-step1">
         <input class="login-input" id="phone-input" type="tel" placeholder="+1 234 567 8900" />
@@ -260,8 +222,6 @@
         <button class="login-btn btn-phone-send" onclick="resetPhone()" style="margin-top:6px"><i class="ti ti-arrow-left"></i> Back</button>
       </div>
     </div>
-
-    <!-- SOCIAL PANEL -->
     <div class="login-panel" id="panel-social">
       <button class="login-btn btn-google" id="google-signin-btn">
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.8 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.9 19 12 24 12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.8 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.7-3.3-11.3-8H6.3C9.7 35.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.2C42 35.2 44 30 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
@@ -275,7 +235,6 @@
   </div>
 </div>
 
-<!-- ── SIDEBAR ── -->
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-mark">LOWIST</div>
@@ -296,7 +255,6 @@
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
 <main class="main">
   <div class="topbar">
     <div class="topbar-title" id="pageTitle">Dashboard</div>
@@ -306,8 +264,6 @@
     </div>
   </div>
   <div class="content">
-
-    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="stats-grid">
         <div class="stat-card blue"><div class="stat-icon blue"><i class="ti ti-users"></i></div><div class="stat-value" id="stat-students">—</div><div class="stat-label">Total Students</div></div>
@@ -326,14 +282,10 @@
         </div>
       </div>
     </div>
-
-    <!-- STUDENTS -->
     <div class="page" id="page-students">
       <div class="section-header"><div class="section-title">All Students</div><button class="btn btn-primary" onclick="openModal('addStudent')"><i class="ti ti-plus"></i> Add Student</button></div>
       <div class="table-wrap"><table><thead><tr><th>Name</th><th>Student ID</th><th>Role</th><th>Department</th><th>UID</th></tr></thead><tbody id="students-tbody"><tr><td colspan="5"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
-
-    <!-- DEPARTMENTS -->
     <div class="page" id="page-departments">
       <div class="dept-overview-grid" id="dept-cards-row"></div>
       <div class="section-header">
@@ -352,8 +304,6 @@
       </div>
       <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Student ID</th><th>Department</th><th>Status</th><th>UID</th><th>Change Dept</th></tr></thead><tbody id="dept-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
-
-    <!-- ATTENDANCE -->
     <div class="page" id="page-attendance">
       <div class="section-header"><div class="section-title">Attendance</div><button class="btn btn-primary" onclick="openModal('markAttendance')"><i class="ti ti-calendar-plus"></i> Mark Attendance</button></div>
       <div class="attendance-controls">
@@ -370,8 +320,6 @@
       </div>
       <div class="table-wrap"><table><thead><tr><th>Name</th><th>Student ID</th><th>Department</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead><tbody id="attendance-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
-
-    <!-- LOGS -->
     <div class="page" id="page-logs">
       <div class="section-header">
         <div class="section-title">Live Activity Log</div>
@@ -379,11 +327,9 @@
       </div>
       <div class="table-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Status</th><th>Time</th></tr></thead><tbody id="logs-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
-
   </div>
 </main>
 
-<!-- Modal: Add Student -->
 <div class="modal-bg" id="modal-addStudent">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-user-plus" style="color:var(--accent)"></i> Add Student</div>
@@ -395,8 +341,6 @@
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('addStudent')">Cancel</button><button class="btn btn-primary" onclick="addStudent()"><i class="ti ti-check"></i> Save</button></div>
   </div>
 </div>
-
-<!-- Modal: Mark Attendance -->
 <div class="modal-bg" id="modal-markAttendance">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-calendar-plus" style="color:var(--accent)"></i> Mark Attendance</div>
@@ -407,8 +351,6 @@
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('markAttendance')">Cancel</button><button class="btn btn-primary" onclick="saveAttendance()"><i class="ti ti-check"></i> Save</button></div>
   </div>
 </div>
-
-<!-- Modal: Change Department -->
 <div class="modal-bg" id="modal-changeDept">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-building" style="color:var(--accent)"></i> Change Department</div>
@@ -417,7 +359,6 @@
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('changeDept')">Cancel</button><button class="btn btn-primary" onclick="saveDeptChange()"><i class="ti ti-check"></i> Save</button></div>
   </div>
 </div>
-
 <div class="toast" id="toast"><i class="ti ti-check-circle"></i><span id="toast-msg"></span></div>
 
 <script>
@@ -434,7 +375,6 @@
 
   let studentsData=[], logsData=[], attendanceData=[];
   let confirmationResult=null, recaptchaVerifier=null;
-  let currentMode = 'signin';
   const todayStr = new Date().toISOString().slice(0,10);
 
   const DEPARTMENTS = [
@@ -456,44 +396,32 @@
     }
   });
 
-  // ── Wire buttons ────────────────────────────
-  window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('email-signin-btn').addEventListener('click', handleEmailBtn);
+  // ── FIX: Wire buttons immediately, no DOMContentLoaded ──
+  function setupButtons() {
+    document.getElementById('email-signin-btn').addEventListener('click', signInEmail);
     document.getElementById('signup-btn').addEventListener('click', doSignUp);
     document.getElementById('google-signin-btn').addEventListener('click', signInGoogle);
     document.getElementById('apple-signin-btn').addEventListener('click', signInApple);
     document.getElementById('send-otp-btn').addEventListener('click', sendOTP);
     document.getElementById('verify-otp-btn').addEventListener('click', verifyOTP);
-
-    // Eye toggle for sign in password
     document.getElementById('eye-btn').addEventListener('click', () => toggleEye('password-input','eye-icon'));
     document.getElementById('eye-btn2').addEventListener('click', () => toggleEye('signup-password','eye-icon2'));
-
-    // Enter key
-    document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') handleEmailBtn(); });
-    document.getElementById('email-input').addEventListener('keydown',    e => { if(e.key==='Enter') handleEmailBtn(); });
+    document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') signInEmail(); });
+    document.getElementById('email-input').addEventListener('keydown', e => { if(e.key==='Enter') signInEmail(); });
     document.getElementById('signup-confirm').addEventListener('keydown', e => { if(e.key==='Enter') doSignUp(); });
-  });
+  }
+  setupButtons();
 
-  // ── Show/hide password ──────────────────────
   function toggleEye(inputId, iconId) {
     const input = document.getElementById(inputId);
     const icon  = document.getElementById(iconId);
-    if (input.type === 'password') {
-      input.type = 'text';
-      icon.className = 'ti ti-eye-off';
-    } else {
-      input.type = 'password';
-      icon.className = 'ti ti-eye';
-    }
+    if (input.type === 'password') { input.type = 'text'; icon.className = 'ti ti-eye-off'; }
+    else { input.type = 'password'; icon.className = 'ti ti-eye'; }
   }
 
-  // ── Mode: Sign In / Sign Up ─────────────────
   function switchMode(mode) {
-    currentMode = mode;
     document.querySelectorAll('.auth-mode-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('mode-' + mode).classList.add('active');
-
     if (mode === 'signup') {
       document.getElementById('auth-title').textContent = 'Create account';
       document.getElementById('auth-subtitle').textContent = 'Fill in your details to get started';
@@ -512,7 +440,6 @@
     hideError(); hideSuccess();
   }
 
-  // ── Tab switching ───────────────────────────
   function switchTab(tab, btn) {
     document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
@@ -523,23 +450,18 @@
   }
 
   function showError(msg) { const el=document.getElementById('login-error'); el.textContent=msg; el.classList.add('show'); }
-  function hideError()    { document.getElementById('login-error').classList.remove('show'); }
-  function showSuccess(msg){ const el=document.getElementById('login-success'); el.textContent=msg; el.classList.add('show'); }
-  function hideSuccess()  { document.getElementById('login-success').classList.remove('show'); }
-
-  // ── Email sign in ───────────────────────────
-  function handleEmailBtn() { signInEmail(); }
+  function hideError() { document.getElementById('login-error').classList.remove('show'); }
+  function showSuccess(msg) { const el=document.getElementById('login-success'); el.textContent=msg; el.classList.add('show'); }
+  function hideSuccess() { document.getElementById('login-success').classList.remove('show'); }
 
   async function signInEmail() {
-    const email    = document.getElementById('email-input').value.trim();
+    const email = document.getElementById('email-input').value.trim();
     const password = document.getElementById('password-input').value;
     if (!email || !password) { showError('Please enter your email and password'); return; }
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-    } catch(e) { showError(e.message); }
+    try { await auth.signInWithEmailAndPassword(email, password); }
+    catch(e) { showError(e.message); }
   }
 
-  // ── Sign Up ─────────────────────────────────
   async function doSignUp() {
     const email    = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value;
@@ -553,19 +475,16 @@
     } catch(e) { showError(e.message); }
   }
 
-  // ── Google ──────────────────────────────────
   async function signInGoogle() {
     try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     catch(e) { showError(e.message); }
   }
 
-  // ── Apple ───────────────────────────────────
   async function signInApple() {
     try { await auth.signInWithPopup(new firebase.auth.OAuthProvider('apple.com')); }
     catch(e) { showError(e.message); }
   }
 
-  // ── Phone ───────────────────────────────────
   function setupRecaptcha() {
     recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size:'normal', callback:()=>{} });
     recaptchaVerifier.render();
@@ -598,11 +517,9 @@
 
   async function doSignOut() { await auth.signOut(); }
 
-  // ── Init data ───────────────────────────────
   function initData() {
     document.getElementById('att-date').value  = todayStr;
     document.getElementById('mark-date').value = todayStr;
-
     db.collection("users").onSnapshot(snap => {
       studentsData = [];
       snap.forEach(d => studentsData.push({id:d.id,...d.data()}));
@@ -610,13 +527,11 @@
       document.getElementById('stat-students').textContent = studentsData.length;
       if (document.getElementById('page-departments').classList.contains('active')) renderDeptPage();
     });
-
     db.collection("logs").orderBy("time","desc").limit(50).onSnapshot(snap => {
       logsData = [];
       snap.forEach(d => logsData.push({id:d.id,...d.data()}));
       renderLogs(); renderDashLogs(); updateDashStats();
     });
-
     db.collection("attendance").onSnapshot(snap => {
       attendanceData = [];
       snap.forEach(d => attendanceData.push({id:d.id,...d.data()}));
@@ -624,7 +539,6 @@
     });
   }
 
-  // ── Navigation ──────────────────────────────
   function showPage(id, btn) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -655,7 +569,6 @@
   function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
   document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e => { if(e.target===bg) bg.classList.remove('open'); }));
 
-  // ── Students ────────────────────────────────
   function renderStudents(data) {
     const tbody = document.getElementById('students-tbody');
     if (!data.length) { tbody.innerHTML=`<tr><td colspan="5"><div class="empty"><i class="ti ti-users-off"></i><p>No students found</p></div></td></tr>`; return; }
@@ -696,7 +609,6 @@
     } catch(e) { showToast('Error: '+e.message,'error'); }
   }
 
-  // ── Departments ─────────────────────────────
   function renderDeptPage() { renderDeptCards(); renderDeptTable(); }
 
   function renderDeptCards() {
@@ -759,7 +671,6 @@
     }catch(e){showToast('Error: '+e.message,'error');}
   }
 
-  // ── Logs ────────────────────────────────────
   function renderLogs(){
     const filter=document.getElementById('log-filter').value;
     const data=filter?logsData.filter(l=>l.status===filter):logsData;
@@ -785,7 +696,6 @@
     document.getElementById('stat-denied').textContent=logsData.filter(l=>l.status==='Denied').length;
   }
 
-  // ── Attendance ──────────────────────────────
   function renderAttendance(){
     const dateVal=document.getElementById('att-date').value;
     const deptVal=document.getElementById('att-dept').value;
@@ -835,8 +745,8 @@
     try{
       await db.collection("attendance").add({
         studentName:student?student.name:studentVal,
-        studentId:student?(student.Student_ID||')':'',
-        department:student?(student.department||''):'',
+        studentId:student?student.Student_ID||'':'',
+        department:student?student.department||'':'',
         uid:studentVal,date:dateVal,status:statusVal,note:noteVal,
         time:new Date().toLocaleTimeString(),
         createdAt:firebase.firestore.FieldValue.serverTimestamp()
