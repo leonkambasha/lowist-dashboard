@@ -18,11 +18,12 @@
   <style>
     /* ============================================
        CSS VARIABLES — Brand Color System
-       These variables are specifically for the LOGIN/AUTH screen
-       The existing dashboard variables remain untouched to preserve its dark theme.
+       These variables are specifically for the LOGIN/AUTH screen.
+       The existing dashboard variables are renamed with a '-dash' suffix to avoid conflicts
+       and are used only for the dashboard-related styles.
     ============================================ */
     :root {
-      /* Brand colors from logo */
+      /* Brand colors from logo - EXACTLY as specified */
       --teal:        #2F8F8B;
       --teal-light:  #4FAFA8;
       --teal-dim:    rgba(47,143,139,0.12); /* Light transparent version for backgrounds */
@@ -31,13 +32,13 @@
       --gray:        #2A2A2A;
       --muted:       #6B7280; /* Muted text for light background */
       --faint:       #9CA3AF; /* Faint text/placeholders for light background */
-      --bg-page:     #F5F5F5; /* Page background color for login */
+      --bg-page:     #F5F5F5; /* Page background color for login as specified */
       --white:       #FFFFFF;
       --shadow:      0 4px 24px rgba(0,0,0,0.08); /* Soft shadow for form card */
       --shadow-lg:   0 8px 40px rgba(0,0,0,0.12); /* Larger shadow for form card */
 
-      /* Typography for Login/Auth Screen */
-      --font-brand:  'Playfair Display', serif;
+      /* Typography for Login/Auth Screen as specified */
+      --font-brand:  'Playfair Display', serif; /* Optional for branding */
       --font-ui:     'Poppins', sans-serif; /* General UI elements */
       --font-head:   'Poppins', sans-serif; /* Titles and headings on login */
       --font-body:   'Poppins', sans-serif; /* Body text on login */
@@ -45,7 +46,7 @@
       --radius-sm:   8px;
       --radius-lg:   16px; /* Larger radius for the login box */
 
-      /* Existing Dashboard dark theme variables (unchanged to avoid conflict) */
+      /* Existing Dashboard dark theme variables (renamed to avoid conflict with new brand vars) */
       --bg-dash:          #060d1a;
       --surface-dash:     #0d1b2e;
       --surface2-dash:    #112039;
@@ -118,7 +119,7 @@
       margin-right: auto;
     }
 
-    /* Fallback SVG logo styles */
+    /* Fallback SVG logo if image not found (original from your first code) */
     .login-logo .logo-svg-wrap {
       width: 80px;
       height: 80px;
@@ -129,7 +130,7 @@
     }
 
     .login-logo .brand-name {
-      font-family: var(--font-brand); /* Playfair Display for brand name */
+      font-family: var(--font-brand); /* Playfair Display for brand name as specified */
       font-size: 13px;
       font-weight: 600;
       color: var(--dark);     /* Dark color for brand name */
@@ -245,7 +246,7 @@
     }
 
     .login-input:focus {
-      border-color: var(--teal); /* Teal border on focus */
+      border-color: var(--teal); /* Teal border on focus as specified */
       box-shadow: 0 0 0 3px var(--teal-dim); /* Soft teal shadow on focus */
     }
 
@@ -282,24 +283,24 @@
 
     /* Primary teal button for Email Sign-in */
     .btn-email {
-      background: var(--teal); /* Teal background */
-      color: var(--white);     /* White text */
+      background: var(--teal); /* Teal background as specified */
+      color: var(--white);     /* White text as specified */
       box-shadow: 0 2px 8px rgba(47,143,139,0.25); /* Subtle shadow */
     }
     .btn-email:hover {
-      background: var(--teal-light); /* Lighter teal on hover */
+      background: var(--teal-light); /* Lighter teal on hover as specified */
       box-shadow: 0 4px 12px rgba(47,143,139,0.35); /* Larger shadow on hover */
       transform: translateY(-1px); /* Slight lift on hover */
     }
 
     /* Primary teal button for Sign-up */
     .btn-signup {
-      background: var(--teal); /* Teal background */
-      color: var(--white);     /* White text */
+      background: var(--teal); /* Teal background as specified */
+      color: var(--white);     /* White text as specified */
       box-shadow: 0 2px 8px rgba(47,143,139,0.25);
     }
     .btn-signup:hover {
-      background: var(--teal-light); /* Lighter teal on hover */
+      background: var(--teal-light); /* Lighter teal on hover as specified */
       box-shadow: 0 4px 12px rgba(47,143,139,0.35);
       transform: translateY(-1px);
     }
@@ -308,4 +309,91 @@
     .btn-google {
       background: var(--white); /* White background */
       color: var(--gray);      /* Gray text */
-      border: 1.5px solid #E5E7EB; /* Light borderNo response
+      border: 1.5px solid #E5E7EB; /* Light border */
+    }
+    .btn-google:hover {
+      background: var(--bg-page); /* Light background on hover */
+      border-color: #D1D5DB;
+    }
+
+    /* Apple Sign-in button */
+    .btn-apple {
+      background: var(--dark); /* Dark background */
+      color: var(--white);     /* White text */
+    }
+    .btn-apple:hover {
+      background: #333;
+    }
+
+    /* Phone OTP send button */
+    .btn-phone-send {
+      background: var(--teal-dim); /* Teal dim background for secondary action */
+      color: var(--teal);        /* Teal text */
+      border: 1px solid var(--teal-border); /* Teal border */
+    }
+    .btn-phone-send:hover {
+      background: rgba(47,143,139,0.2); /* Slightly darker dim on hover */
+    }
+
+    /* Error / success messages */
+    .login-error {
+      background: #FEF2F2; /* Light red background */
+      color: #DC2626;      /* Dark red text */
+      border: 1px solid #FECACA; /* Red border */
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .login-error.show { display: block; }
+
+    .login-success {
+      background: #F0FDF4; /* Light green background */
+      color: #16A34A;      /* Dark green text */
+      border: 1px solid #BBF7D0; /* Green border */
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .login-success.show { display: block; }
+
+    #phone-step2 { display: none; }
+    #recaptcha-container { margin-bottom: 12px; }
+
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 14px;
+      color: var(--faint); /* Faint color for divider text */
+      font-size: 12px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E5E7EB; /* Light gray line */
+    }
+
+    /* ============================================
+       DASHBOARD — Dark Theme (unchanged from original, adapted to new vars)
+       These styles are for the dashboard and are not affected by the login changes.
+    ============================================ */
+    .sidebar {
+      width: 240px; min-height: 100vh; background: var(--surface-dash);
+      border-right: 1px solid var(--border-dash); display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; z-index: 100;
+    }
+    .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid var(--border-dash); }
+    .logo-mark { font-family: var(--font-head-dash); font-size: 18px; font-weight: 700; color: var(--accent-dash); letter-spacing: -0.5px; line-height: 1.2; }
+    .logo-sub { font-size: 10px; color: var(--muted-dash); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; opacity: 0.7; }
+    .nav { padding: 16px 12px; flex: 1; }
+    .nav-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--faint-dash); padding: 8px 12px 4px; margin-top: 8px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; color: var(--muted-dash); font-size: 14px; transition: all 0.15s; margin: 2px 0; border: none; background: none; width: 100%; text-align: left; }
+    .nav-item i { font-size: 18px; }
+    .nav-item:hover { background: var(--accent-dim-dash); color: var(--accent-dash); }
+    .nav-item.active { background: var(--accent-dim-dash); colorNo response
