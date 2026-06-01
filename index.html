@@ -1,1201 +1,1180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LOWIST Smart Campus</title>
-
-  <!-- ── BRAND FONTS (Poppins + Playfair Display) ── -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <style>
-    /* ════════════════════════════════════════════════════════
-       GLOBAL RESET & DASHBOARD THEME (unchanged dark theme)
-    ════════════════════════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      /* Dashboard dark theme (original) */
-      --bg: #060d1a; --surface: #0d1b2e; --surface2: #112039;
-      --border: rgba(99,179,237,0.10); --border2: rgba(99,179,237,0.18);
-      --accent: #38bdf8; --accent-dim: rgba(56,189,248,0.12);
-      --green: #22d3a0; --green-dim: rgba(34,211,160,0.12);
-      --red: #f87171; --red-dim: rgba(248,113,113,0.12);
-      --amber: #fbbf24; --amber-dim: rgba(251,191,36,0.12);
-      --text: #e2eff8; --muted: #7fa8c4; --faint: #3a5870;
-      --font-head: 'Space Grotesk', sans-serif; --font-body: 'DM Sans', sans-serif;
-      --radius: 12px; --radius-sm: 8px;
-
-      /* ── BRAND PALETTE (Light of the World Foundation) ── */
-      --brand-teal:        #2F8F8B;
-      --brand-teal-light:  #4FAFA8;
-      --brand-teal-xlight: rgba(47,143,139,0.08);
-      --brand-teal-focus:  rgba(47,143,139,0.18);
-      --brand-dark:        #111111;
-      --brand-gray:        #2A2A2A;
-      --brand-bg:          #F5F5F5;
-      --brand-white:       #FFFFFF;
-      --brand-muted:       #6B7280;
-      --brand-border:      #E2E8F0;
-      --brand-shadow:      0 4px 6px -1px rgba(0,0,0,0.06), 0 20px 40px -8px rgba(0,0,0,0.10);
-      --brand-shadow-lg:   0 8px 16px -2px rgba(0,0,0,0.08), 0 32px 64px -12px rgba(0,0,0,0.14);
-    }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      overflow-x: hidden;
-    }
-
-    /* ════════════════════════════════════════════════════════
-       LOGIN SCREEN — BRAND LIGHT THEME
-       Completely isolated; does not affect dashboard styles
-    ════════════════════════════════════════════════════════ */
-    #login-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--brand-bg);
-      /* Subtle warm texture via gradient mesh */
-      background-image:
-        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(47,143,139,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 90% 80%, rgba(79,175,168,0.06) 0%, transparent 55%);
-    }
-
-    /* ── Animated floating orbs for depth ── */
-    #login-screen::before,
-    #login-screen::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: floatOrb 8s ease-in-out infinite;
-    }
-    #login-screen::before {
-      width: 320px; height: 320px;
-      top: -80px; left: -80px;
-      background: radial-gradient(circle, rgba(47,143,139,0.12) 0%, transparent 70%);
-    }
-    #login-screen::after {
-      width: 240px; height: 240px;
-      bottom: -60px; right: -40px;
-      background: radial-gradient(circle, rgba(79,175,168,0.10) 0%, transparent 70%);
-      animation-delay: -4s;
-    }
-    @keyframes floatOrb {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33%       { transform: translate(20px, -15px) scale(1.05); }
-      66%       { transform: translate(-10px, 10px) scale(0.97); }
-    }
-
-    /* ── Card ── */
-    .login-box {
-      position: relative;
-      z-index: 1;
-      background: var(--brand-white);
-      border: 1px solid var(--brand-border);
-      border-radius: 20px;
-      padding: 44px 40px 36px;
-      width: 440px;
-      max-width: 95vw;
-      box-shadow: var(--brand-shadow-lg);
-      animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(24px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ── Logo block ── */
-    .login-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 28px;
-      gap: 10px;
-    }
-    .login-logo img {
-      width: 72px;
-      height: 72px;
-      object-fit: contain;
-      display: block;
-    }
-    /* Inline SVG fallback logo (used if assets/logo.png doesn't load) */
-    .logo-svg-fallback {
-      width: 72px;
-      height: 72px;
-      display: none; /* shown via JS onerror */
-    }
-    .login-logo .brand-wordmark {
-      text-align: center;
-    }
-    .login-logo .brand-name {
-      font-family: 'Poppins', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--brand-dark);
-      line-height: 1.3;
-    }
-    .login-logo .brand-sub {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 13px;
-      color: var(--brand-teal);
-      letter-spacing: 0.5px;
-      margin-top: 1px;
-    }
-    .logo-divider {
-      width: 40px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--brand-teal), var(--brand-teal-light));
-      border-radius: 2px;
-      margin: 4px auto 0;
-    }
-
-    /* ── Auth titles ── */
-    .login-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--brand-dark);
-      margin-bottom: 4px;
-      text-align: center;
-    }
-    .login-subtitle {
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      color: var(--brand-muted);
-      text-align: center;
-      margin-bottom: 24px;
-      font-weight: 400;
-    }
-
-    /* ── Mode toggle (Sign In / Sign Up) ── */
-    .auth-mode-toggle {
-      display: flex;
-      gap: 4px;
-      background: var(--brand-bg);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 20px;
-      border: 1px solid var(--brand-border);
-    }
-    .auth-mode-btn {
-      flex: 1;
-      padding: 9px;
-      border: none;
-      background: none;
-      border-radius: 7px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      color: var(--brand-muted);
-      cursor: pointer;
-      transition: all 0.18s;
-      font-weight: 500;
-    }
-    .auth-mode-btn.active {
-      background: var(--brand-white);
-      color: var(--brand-teal);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-
-    /* ── Method tabs ── */
-    .login-tabs {
-      display: flex;
-      gap: 4px;
-      background: var(--brand-bg);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 20px;
-      border: 1px solid var(--brand-border);
-    }
-    .login-tab {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      background: none;
-      border-radius: 7px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      color: var(--brand-muted);
-      cursor: pointer;
-      transition: all 0.18s;
-      font-weight: 500;
-    }
-    .login-tab.active {
-      background: var(--brand-white);
-      color: var(--brand-teal);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-
-    /* ── Panels ── */
-    .login-panel { display: none; }
-    .login-panel.active { display: block; }
-
-    /* ── Inputs ── */
-    .login-input {
-      width: 100%;
-      background: var(--brand-white);
-      border: 1.5px solid var(--brand-border);
-      border-radius: 10px;
-      color: var(--brand-dark);
-      padding: 12px 14px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      outline: none;
-      margin-bottom: 12px;
-      transition: border-color 0.18s, box-shadow 0.18s;
-      display: block;
-    }
-    .login-input:focus {
-      border-color: var(--brand-teal);
-      box-shadow: 0 0 0 3px var(--brand-teal-focus);
-    }
-    .login-input::placeholder {
-      color: #CBD5E1;
-      font-weight: 400;
-    }
-
-    /* ── Password wrapper ── */
-    .password-wrap {
-      position: relative;
-      margin-bottom: 12px;
-    }
-    .password-wrap .login-input {
-      margin-bottom: 0;
-      padding-right: 44px;
-    }
-    .eye-btn {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--brand-muted);
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      padding: 4px;
-      transition: color 0.15s;
-    }
-    .eye-btn:hover { color: var(--brand-teal); }
-
-    /* ── Buttons ── */
-    .login-btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all 0.18s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
-      letter-spacing: 0.2px;
-    }
-    /* Primary brand button */
-    .btn-email {
-      background: var(--brand-teal);
-      color: var(--brand-white);
-      box-shadow: 0 2px 8px rgba(47,143,139,0.3);
-    }
-    .btn-email:hover {
-      background: var(--brand-teal-light);
-      box-shadow: 0 4px 14px rgba(47,143,139,0.4);
-      transform: translateY(-1px);
-    }
-    .btn-email:active { transform: translateY(0); }
-
-    .btn-signup {
-      background: var(--brand-teal);
-      color: var(--brand-white);
-      box-shadow: 0 2px 8px rgba(47,143,139,0.3);
-    }
-    .btn-signup:hover {
-      background: var(--brand-teal-light);
-      box-shadow: 0 4px 14px rgba(47,143,139,0.4);
-      transform: translateY(-1px);
-    }
-
-    .btn-phone-send {
-      background: var(--brand-teal-xlight);
-      color: var(--brand-teal);
-      border: 1.5px solid rgba(47,143,139,0.25);
-    }
-    .btn-phone-send:hover {
-      background: rgba(47,143,139,0.14);
-    }
-
-    .btn-google {
-      background: var(--brand-white);
-      color: var(--brand-gray);
-      border: 1.5px solid var(--brand-border);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-    .btn-google:hover {
-      background: var(--brand-bg);
-      border-color: #CBD5E1;
-    }
-
-    .btn-apple {
-      background: var(--brand-dark);
-      color: var(--brand-white);
-    }
-    .btn-apple:hover { background: #333; }
-
-    /* ── Feedback banners ── */
-    .login-error {
-      background: #FEF2F2;
-      color: #DC2626;
-      border: 1px solid #FECACA;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      margin-bottom: 12px;
-      display: none;
-    }
-    .login-error.show { display: block; }
-    .login-success {
-      background: rgba(47,143,139,0.08);
-      color: var(--brand-teal);
-      border: 1px solid rgba(47,143,139,0.2);
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      margin-bottom: 12px;
-      display: none;
-    }
-    .login-success.show { display: block; }
-
-    /* ── Phone OTP ── */
-    #phone-step2 { display: none; }
-    #recaptcha-container { margin-bottom: 12px; }
-
-    /* ── Footer tagline ── */
-    .login-footer-tagline {
-      text-align: center;
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid var(--brand-border);
-      font-family: 'Poppins', sans-serif;
-      font-size: 11px;
-      color: #CBD5E1;
-      letter-spacing: 0.5px;
-    }
-
-    /* ════════════════════════════════════════════════════════
-       DASHBOARD — ORIGINAL DARK THEME (all below unchanged)
-    ════════════════════════════════════════════════════════ */
-    .sidebar{width:240px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100}
-    .sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
-    .logo-mark{font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--accent);letter-spacing:-0.5px}
-    .logo-sub{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
-    .nav{padding:16px 12px;flex:1}
-    .nav-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);padding:8px 12px 4px;margin-top:8px}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;color:var(--muted);font-size:14px;transition:all 0.15s;margin:2px 0;border:none;background:none;width:100%;text-align:left}
-    .nav-item i{font-size:18px}
-    .nav-item:hover{background:var(--accent-dim);color:var(--accent)}
-    .nav-item.active{background:var(--accent-dim);color:var(--accent);font-weight:500;border-left:2px solid var(--accent)}
-    .sidebar-footer{padding:16px 24px;border-top:1px solid var(--border);font-size:12px;color:var(--faint);display:flex;align-items:center;justify-content:space-between}
-    .signout-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:var(--radius-sm)}
-    .signout-btn:hover{background:var(--red-dim)}
-    .main{margin-left:240px;flex:1;min-height:100vh}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:50}
-    .topbar-title{font-family:var(--font-head);font-size:20px;font-weight:600;color:var(--text)}
-    .topbar-right{display:flex;align-items:center;gap:12px}
-    .search-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:8px 16px}
-    .search-bar i{color:var(--muted);font-size:16px}
-    .search-bar input{background:none;border:none;outline:none;color:var(--text);font-family:var(--font-body);font-size:14px;width:200px}
-    .search-bar input::placeholder{color:var(--faint)}
-    .badge-live{display:flex;align-items:center;gap:6px;background:var(--green-dim);color:var(--green);font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid rgba(34,211,160,0.2)}
-    .dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-    .content{padding:28px 32px}
-    .page{display:none}
-    .page.active{display:block}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
-    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-    .stat-card.blue::before{background:var(--accent)}.stat-card.green::before{background:var(--green)}.stat-card.amber::before{background:var(--amber)}.stat-card.red::before{background:var(--red)}
-    .stat-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
-    .stat-icon.blue{background:var(--accent-dim);color:var(--accent)}.stat-icon.green{background:var(--green-dim);color:var(--green)}.stat-icon.amber{background:var(--amber-dim);color:var(--amber)}.stat-icon.red{background:var(--red-dim);color:var(--red)}
-    .stat-value{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--text);line-height:1;margin-bottom:4px}
-    .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px}
-    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-    .section-title{font-family:var(--font-head);font-size:16px;font-weight:600;color:var(--text)}
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-sm);font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s}
-    .btn-primary{background:var(--accent);color:#051a29}.btn-primary:hover{background:#7dd3f7}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2)}.btn-ghost:hover{background:var(--accent-dim);color:var(--accent)}
-    .btn-sm{padding:5px 10px;font-size:12px}
-    .btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
-    .btn-success{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.2)}
-    .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-    table{width:100%;border-collapse:collapse;font-size:13.5px}
-    thead th{padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--surface2)}
-    tbody tr{border-bottom:1px solid var(--border);transition:background 0.12s}tbody tr:last-child{border-bottom:none}tbody tr:hover{background:var(--accent-dim)}
-    td{padding:12px 16px;color:var(--text);vertical-align:middle}
-    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
-    .badge-allowed{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.25)}
-    .badge-denied{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
-    .badge-student{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(56,189,248,0.25)}
-    .badge-staff{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25)}
-    .badge-present{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.25)}
-    .badge-absent{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
-    .badge-late{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25)}
-    .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-dim);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
-    .name-cell{display:flex;align-items:center;gap:10px}
-    .attendance-controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-    .attendance-controls select,.attendance-controls input[type="date"]{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-    .att-stats{display:flex;gap:12px;margin-bottom:20px}
-    .att-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;text-align:center}
-    .att-stat-num{font-family:var(--font-head);font-size:24px;font-weight:700}
-    .att-stat-num.green{color:var(--green)}.att-stat-num.red{color:var(--red)}.att-stat-num.amber{color:var(--amber)}
-    .att-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-top:3px}
-    .mark-btns{display:flex;gap:6px}
-    .dept-overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
-    .dept-overview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
-    .dept-overview-card:hover{border-color:var(--border2);transform:translateY(-1px)}
-    .dept-overview-card.selected{border-color:var(--accent);background:var(--accent-dim)}
-    .dept-card-icon{font-size:22px;margin-bottom:10px}
-    .dept-card-name{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
-    .dept-card-count{font-size:22px;font-weight:700;font-family:var(--font-head);margin-bottom:2px}
-    .dept-card-label{font-size:11px;color:var(--muted)}
-    .dept-search-input{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none}
-    .dept-search-input:focus{border-color:var(--accent)}
-    .dept-filter-select{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center}
-    .modal-bg.open{display:flex}
-    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;width:440px;max-width:95vw}
-    .modal-title{font-family:var(--font-head);font-size:18px;font-weight:600;color:var(--text);margin-bottom:20px}
-    .form-group{margin-bottom:16px}
-    .form-label{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:7px}
-    .form-input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none;transition:border-color 0.15s}
-    .form-input:focus{border-color:var(--accent)}
-    .form-select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none}
-    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
-    .empty{text-align:center;padding:48px;color:var(--faint)}
-    .empty i{font-size:36px;margin-bottom:12px;display:block}
-    .empty p{font-size:14px}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .spinner{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:40px auto}
-    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px 20px;font-size:14px;color:var(--text);z-index:999;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all 0.25s;pointer-events:none}
-    .toast.show{transform:translateY(0);opacity:1}
-    .toast.success i{color:var(--green)}.toast.error i{color:var(--red)}
-    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-
-    @media(max-width:900px){
-      .sidebar{width:64px}.sidebar .logo-sub,.sidebar .nav-item span,.sidebar-footer span,.logo-mark{display:none}
-      .main{margin-left:64px}.stats-grid{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.dept-overview-grid{grid-template-columns:1fr 1fr}
-      .login-box{padding:32px 24px 28px}
-    }
-    @media(max-width:480px){
-      .login-box{border-radius:16px;padding:28px 20px 24px}
-      .login-logo img{width:56px;height:56px}
-      .login-logo .brand-name{font-size:10px;letter-spacing:2px}
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Student Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Variables ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+:root {
+  --cream:      #F7F3ED;
+  --cream-dark: #EDE7DC;
+  --ink:        #1A1612;
+  --ink-mid:    #4A3F35;
+  --ink-light:  #8C7B6E;
+  --terra:      #C4603A;
+  --terra-dim:  rgba(196,96,58,0.10);
+  --terra-mid:  rgba(196,96,58,0.22);
+  --teal:       #2A7F78;
+  --teal-dim:   rgba(42,127,120,0.12);
+  --amber:      #D4960A;
+  --amber-dim:  rgba(212,150,10,0.12);
+  --border:     rgba(26,22,18,0.09);
+  --border-mid: rgba(26,22,18,0.15);
+  --shadow-sm:  0 1px 3px rgba(26,22,18,0.06), 0 4px 12px rgba(26,22,18,0.04);
+  --shadow-md:  0 4px 8px rgba(26,22,18,0.06), 0 16px 40px rgba(26,22,18,0.08);
+  --shadow-lg:  0 8px 16px rgba(26,22,18,0.06), 0 32px 72px rgba(26,22,18,0.14);
+  --font-head:  'Lora', Georgia, serif;
+  --font-body:  'Outfit', sans-serif;
+  --r:          14px;
+  --r-sm:       8px;
+  --sidebar-w:  340px;
+}
+ 
+html, body {
+  height: 100%;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+ 
+/* ─── Layout Shell ──────────────────────────────────── */
+.shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+ 
+/* ─── Sidebar ───────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  z-index: 10;
+}
+ 
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+ 
+.sidebar-brand {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+ 
+.sidebar-brand span {
+  color: var(--terra);
+}
+ 
+.sidebar-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+}
+ 
+.sidebar-search {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+ 
+.search-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--r-sm);
+  padding: 9px 14px;
+  gap: 9px;
+}
+ 
+.search-wrap svg {
+  width: 15px;
+  height: 15px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+ 
+.search-wrap input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  width: 100%;
+}
+ 
+.search-wrap input::placeholder {
+  color: rgba(255,255,255,0.28);
+}
+ 
+.sidebar-label {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 14px 20px 8px;
+  font-weight: 500;
+}
+ 
+.student-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 12px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+ 
+.student-list::-webkit-scrollbar { width: 4px; }
+.student-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+ 
+/* ─── Student Card (sidebar) ────────────────────────── */
+.s-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  margin-bottom: 3px;
+  border: 1px solid transparent;
+  position: relative;
+}
+ 
+.s-card:hover {
+  background: rgba(255,255,255,0.05);
+}
+ 
+.s-card.active {
+  background: var(--terra-dim);
+  border-color: rgba(196,96,58,0.22);
+}
+ 
+.s-card.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--terra);
+  border-radius: 0 2px 2px 0;
+}
+ 
+.s-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px 12px 6px 6px; /* rounded top corners */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+ 
+.s-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ 
+.s-info { flex: 1; min-width: 0; }
+ 
+.s-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 
+.s-dept {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 
+.s-att-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+ 
+.att-high { background: rgba(42,127,120,0.18); color: #5ECFC5; }
+.att-mid  { background: rgba(212,150,10,0.18); color: #F0B429; }
+.att-low  { background: rgba(196,96,58,0.22); color: #E8815E; }
+ 
+/* ─── Main Panel ────────────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--cream);
+}
+ 
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--cream);
+  flex-shrink: 0;
+}
+ 
+.topbar-title {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+ 
+.topbar-meta {
+  font-size: 13px;
+  color: var(--ink-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.live-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--teal);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+ 
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+ 
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-mid) transparent;
+}
+ 
+/* ─── Empty State ───────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 14px;
+  color: var(--ink-light);
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+ 
+.empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+ 
+.empty-state h3 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  color: var(--ink-mid);
+  font-weight: 600;
+}
+ 
+.empty-state p {
+  font-size: 14px;
+  max-width: 260px;
+  line-height: 1.6;
+}
+ 
+/* ─── Profile View ──────────────────────────────────── */
+.profile-view {
+  animation: slideUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+ 
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+ 
+/* Profile hero — the card with rounded top */
+.profile-hero {
+  background: var(--ink);
+  border-radius: var(--r) var(--r) 0 0;
+  padding: 36px 36px 0;
+  position: relative;
+  overflow: hidden;
+}
+ 
+.profile-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,96,58,0.22) 0%, transparent 70%);
+  pointer-events: none;
+}
+ 
+.profile-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(42,127,120,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+ 
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  margin-bottom: 24px;
+  transition: color 0.15s;
+  font-family: var(--font-body);
+}
+ 
+.back-btn:hover { color: rgba(255,255,255,0.85); }
+ 
+.back-btn svg { width: 16px; height: 16px; }
+ 
+.hero-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+ 
+.profile-avatar-lg {
+  width: 96px;
+  height: 96px;
+  border-radius: 22px 22px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  margin-bottom: -1px;
+}
+ 
+.profile-avatar-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ 
+.hero-text { flex: 1; padding-bottom: 28px; }
+ 
+.hero-name {
+  font-family: var(--font-head);
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+ 
+.hero-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+ 
+.hero-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 99px;
+  letter-spacing: 0.2px;
+}
+ 
+.tag-dept  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); }
+.tag-id    { background: var(--terra-dim); color: #E8815E; border: 1px solid rgba(196,96,58,0.3); }
+.tag-course{ background: var(--teal-dim); color: #5ECFC5; border: 1px solid rgba(42,127,120,0.3); }
+ 
+/* Profile body */
+.profile-body {
+  background: #fff;
+  border-radius: 0 0 var(--r) var(--r);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+}
+ 
+/* Quick stats strip */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+ 
+.q-stat {
+  padding: 20px 20px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+ 
+.q-stat:last-child { border-right: none; }
+ 
+.q-stat-num {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+ 
+.q-stat-num.terra { color: var(--terra); }
+.q-stat-num.teal  { color: var(--teal); }
+.q-stat-num.amber { color: var(--amber); }
+ 
+.q-stat-label {
+  font-size: 11px;
+  color: var(--ink-light);
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+ 
+/* Sections grid */
+.sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+ 
+.section-block {
+  padding: 24px 24px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+ 
+.section-block:nth-child(2n) { border-right: none; }
+.section-block:nth-last-child(-n+2) { border-bottom: none; }
+ 
+.section-ttl {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--ink-light);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+ 
+.section-ttl-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+ 
+.dot-terra { background: var(--terra); }
+.dot-teal  { background: var(--teal); }
+.dot-amber { background: var(--amber); }
+.dot-ink   { background: var(--ink-mid); }
+ 
+/* Attendance bar */
+.att-bar-wrap { margin-bottom: 8px; }
+ 
+.att-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+ 
+.att-pct-big {
+  font-family: var(--font-head);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ink);
+}
+ 
+.att-status-label {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+ 
+.att-bar-track {
+  height: 8px;
+  background: var(--cream-dark);
+  border-radius: 99px;
+  overflow: hidden;
+}
+ 
+.att-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+ 
+.att-breakdown {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+ 
+.att-b-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-light);
+}
+ 
+.att-b-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+}
+ 
+/* Login entries */
+.login-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+ 
+.login-entry:last-child { border-bottom: none; }
+ 
+.login-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--teal-dim);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+ 
+.login-icon svg { width: 15px; height: 15px; color: var(--teal); }
+ 
+.login-time {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+ 
+.login-ago {
+  font-size: 12px;
+  color: var(--ink-light);
+  margin-top: 1px;
+}
+ 
+.login-badge {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: var(--teal-dim);
+  color: var(--teal);
+  font-weight: 600;
+}
+ 
+/* Classes today */
+.class-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+ 
+.class-item:last-child { border-bottom: none; }
+ 
+.class-time-block {
+  text-align: center;
+  min-width: 52px;
+  flex-shrink: 0;
+}
+ 
+.class-time {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--terra);
+}
+ 
+.class-period {
+  font-size: 10px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+ 
+.class-vline {
+  width: 2px;
+  height: 36px;
+  background: var(--border-mid);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+ 
+.class-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+ 
+.class-room {
+  font-size: 12px;
+  color: var(--ink-light);
+  margin-top: 2px;
+}
+ 
+.class-status {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+ 
+.cs-upcoming { background: var(--terra-dim); color: var(--terra); }
+.cs-done     { background: var(--cream-dark); color: var(--ink-light); }
+.cs-now      { background: var(--teal-dim); color: var(--teal); }
+ 
+/* ─── Responsive ────────────────────────────────────── */
+@media (max-width: 900px) {
+  .shell { flex-direction: column; height: auto; overflow: auto; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 45vh;
+  }
+  .main { overflow: visible; }
+  .content-area { overflow: visible; padding: 20px; }
+  .quick-stats { grid-template-columns: repeat(2,1fr); }
+  .sections-grid { grid-template-columns: 1fr; }
+  .section-block { border-right: none; }
+  .section-block:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .section-block:last-child { border-bottom: none; }
+  .topbar { padding: 16px 20px; }
+}
+ 
+@media (max-width: 560px) {
+  .hero-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .hero-text { padding-bottom: 0; }
+  .profile-hero { padding: 28px 20px 24px; }
+  .profile-avatar-lg { width: 76px; height: 76px; font-size: 30px; }
+  .hero-name { font-size: 21px; }
+  .q-stat-num { font-size: 22px; }
+  .att-pct-big { font-size: 28px; }
+}
+ 
+/* ─── Animations ────────────────────────────────────── */
+.s-card {
+  animation: cardIn 0.3s ease both;
+}
+ 
+@keyframes cardIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+</style>
 </head>
 <body>
-
-<!-- ══════════════════════════════════════════════════════════
-     LOGIN SCREEN — BRAND REDESIGN
-     Logo + Poppins typography + brand teal color system
-══════════════════════════════════════════════════════════ -->
-<div id="login-screen">
-  <div class="login-box">
-
-    <!-- Logo: tries assets/logo.png first, falls back to inline SVG -->
-    <div class="login-logo">
-      <img
-        src="assets/logo.png"
-        alt="The Light of the World Foundation logo"
-        width="72" height="72"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
-      />
-      <!-- Inline SVG fallback: stylised hand + globe -->
-      <svg class="logo-svg-fallback" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="36" cy="28" rx="16" ry="16" fill="#2F8F8B" opacity="0.15"/>
-        <circle cx="36" cy="26" r="13" fill="#2F8F8B"/>
-        <path d="M23 26 Q36 18 49 26 Q36 34 23 26Z" fill="#4FAFA8" opacity="0.6"/>
-        <ellipse cx="36" cy="26" rx="5" ry="13" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-        <line x1="23" y1="26" x2="49" y2="26" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-        <path d="M30 46 C28 44 27 40 28 36 L32 34 C33 38 34 42 36 44 C34 45 32 46 30 46Z" fill="#111"/>
-        <path d="M36 44 C37 42 38 38 40 35 L44 37 C44 41 43 45 41 47 C39 47 37 46 36 44Z" fill="#111"/>
-        <path d="M28 36 C27 32 28 28 30 27 L36 44 L32 34Z" fill="#1A1A1A"/>
-        <path d="M40 35 C42 28 45 27 44 33 L44 37Z" fill="#1A1A1A"/>
-      </svg>
-
-      <div class="brand-wordmark">
-        <div class="brand-name">The Light of the World</div>
-        <div class="brand-sub">foundation</div>
-        <div class="logo-divider"></div>
+ 
+<div class="shell">
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">Acad<span>Track</span></div>
+      <div class="sidebar-sub">Student Management Portal</div>
+    </div>
+    <div class="sidebar-search">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search students…" oninput="filterStudents(this.value)">
       </div>
     </div>
-
-    <div class="login-title" id="auth-title">Welcome back</div>
-    <div class="login-subtitle" id="auth-subtitle">Sign in to access the dashboard</div>
-
-    <div class="login-error" id="login-error"></div>
-    <div class="login-success" id="login-success"></div>
-
-    <!-- Sign In / Sign Up toggle -->
-    <div class="auth-mode-toggle">
-      <button class="auth-mode-btn active" id="mode-signin" onclick="switchMode('signin')">Sign In</button>
-      <button class="auth-mode-btn" id="mode-signup" onclick="switchMode('signup')">Sign Up</button>
-    </div>
-
-    <!-- Method tabs -->
-    <div class="login-tabs" id="method-tabs">
-      <button class="login-tab active" onclick="switchTab('email',this)">Email</button>
-      <button class="login-tab" onclick="switchTab('phone',this)">Phone</button>
-      <button class="login-tab" onclick="switchTab('social',this)">Social</button>
-    </div>
-
-    <!-- Email panel -->
-    <div class="login-panel active" id="panel-email">
-      <input class="login-input" id="email-input" type="email" placeholder="Email address" />
-      <div class="password-wrap">
-        <input class="login-input" id="password-input" type="password" placeholder="Password" />
-        <button class="eye-btn" id="eye-btn" type="button"><i class="ti ti-eye" id="eye-icon"></i></button>
-      </div>
-      <button class="login-btn btn-email" id="email-signin-btn">
-        <i class="ti ti-login"></i> Sign In
-      </button>
-    </div>
-
-    <!-- Sign-up panel -->
-    <div class="login-panel" id="panel-signup">
-      <input class="login-input" id="signup-email" type="email" placeholder="Email address" />
-      <div class="password-wrap">
-        <input class="login-input" id="signup-password" type="password" placeholder="Password (min 6 characters)" />
-        <button class="eye-btn" id="eye-btn2" type="button"><i class="ti ti-eye" id="eye-icon2"></i></button>
-      </div>
-      <input class="login-input" id="signup-confirm" type="password" placeholder="Confirm password" />
-      <button class="login-btn btn-signup" id="signup-btn">
-        <i class="ti ti-user-plus"></i> Create Account
-      </button>
-    </div>
-
-    <!-- Phone panel -->
-    <div class="login-panel" id="panel-phone">
-      <div id="phone-step1">
-        <input class="login-input" id="phone-input" type="tel" placeholder="+1 234 567 8900" />
-        <div id="recaptcha-container"></div>
-        <button class="login-btn btn-phone-send" id="send-otp-btn">
-          <i class="ti ti-device-mobile"></i> Send OTP Code
-        </button>
-      </div>
-      <div id="phone-step2">
-        <p style="font-family:'Poppins',sans-serif;color:var(--brand-muted);font-size:13px;margin-bottom:12px">Enter the code sent to your phone</p>
-        <input class="login-input" id="otp-input" type="text" placeholder="Enter OTP code" />
-        <button class="login-btn btn-email" id="verify-otp-btn"><i class="ti ti-check"></i> Verify Code</button>
-        <button class="login-btn btn-phone-send" onclick="resetPhone()" style="margin-top:6px"><i class="ti ti-arrow-left"></i> Back</button>
+    <div class="sidebar-label">All Students</div>
+    <div class="student-list" id="studentList"></div>
+  </aside>
+ 
+  <!-- ── Main ── -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Student Dashboard</div>
+      <div class="topbar-meta">
+        <div class="live-dot"></div>
+        <span id="topbarDate"></span>
       </div>
     </div>
-
-    <!-- Social panel -->
-    <div class="login-panel" id="panel-social">
-      <button class="login-btn btn-google" id="google-signin-btn">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.8 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.9 19 12 24 12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.8 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.7-3.3-11.3-8H6.3C9.7 35.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.2C42 35.2 44 30 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-        Continue with Google
-      </button>
-      <button class="login-btn btn-apple" id="apple-signin-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        Continue with Apple
-      </button>
+    <div class="content-area" id="contentArea">
+      <!-- Default empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🎓</div>
+        <h3>Select a student</h3>
+        <p>Click any student from the list to view their full academic profile.</p>
+      </div>
     </div>
-
-    <!-- Footer tagline -->
-    <div class="login-footer-tagline">Empowering communities through education</div>
-  </div>
+  </main>
 </div>
-
-<!-- ══════════════════════════════════════════════════════════
-     DASHBOARD SIDEBAR & MAIN (all original, untouched)
-══════════════════════════════════════════════════════════ -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-mark">LOWIST</div>
-    <div class="logo-sub">Smart Campus</div>
-  </div>
-  <nav class="nav">
-    <div class="nav-label">Overview</div>
-    <button class="nav-item active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></button>
-    <div class="nav-label">Management</div>
-    <button class="nav-item" onclick="showPage('students',this)"><i class="ti ti-users"></i><span>Students</span></button>
-    <button class="nav-item" onclick="showPage('departments',this)"><i class="ti ti-building"></i><span>Departments</span></button>
-    <button class="nav-item" onclick="showPage('attendance',this)"><i class="ti ti-calendar-check"></i><span>Attendance</span></button>
-    <button class="nav-item" onclick="showPage('logs',this)"><i class="ti ti-activity"></i><span>Live Logs</span></button>
-  </nav>
-  <div class="sidebar-footer">
-    <span id="user-email-display" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px"></span>
-    <button class="signout-btn" onclick="doSignOut()"><i class="ti ti-logout"></i></button>
-  </div>
-</aside>
-
-<main class="main">
-  <div class="topbar">
-    <div class="topbar-title" id="pageTitle">Dashboard</div>
-    <div class="topbar-right">
-      <div class="search-bar"><i class="ti ti-search"></i><input type="text" id="globalSearch" placeholder="Search anything..." oninput="handleGlobalSearch(this.value)"></div>
-      <div class="badge-live"><div class="dot-live"></div>Live</div>
-    </div>
-  </div>
-  <div class="content">
-    <!-- Dashboard page -->
-    <div class="page active" id="page-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card blue"><div class="stat-icon blue"><i class="ti ti-users"></i></div><div class="stat-value" id="stat-students">—</div><div class="stat-label">Total Students</div></div>
-        <div class="stat-card green"><div class="stat-icon green"><i class="ti ti-calendar-check"></i></div><div class="stat-value" id="stat-present">—</div><div class="stat-label">Present Today</div></div>
-        <div class="stat-card amber"><div class="stat-icon amber"><i class="ti ti-activity"></i></div><div class="stat-value" id="stat-logs">—</div><div class="stat-label">Live Log Events</div></div>
-        <div class="stat-card red"><div class="stat-icon red"><i class="ti ti-shield-x"></i></div><div class="stat-value" id="stat-denied">—</div><div class="stat-label">Denied Today</div></div>
-      </div>
-      <div class="two-col">
-        <div>
-          <div class="section-header"><div class="section-title">Recent Students</div><button class="btn btn-ghost btn-sm" onclick="showPage('students',document.querySelector('[onclick*=students]'))">View all</button></div>
-          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Role</th><th>Dept</th></tr></thead><tbody id="dash-students"><tr><td colspan="3"><div class="spinner"></div></td></tr></tbody></table></div>
-        </div>
-        <div>
-          <div class="section-header"><div class="section-title">Recent Activity</div><button class="btn btn-ghost btn-sm" onclick="showPage('logs',document.querySelector('[onclick*=logs]'))">View all</button></div>
-          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Status</th></tr></thead><tbody id="dash-logs"><tr><td colspan="3"><div class="spinner"></div></td></tr></tbody></table></div>
-        </div>
-      </div>
-    </div>
-    <!-- Students page -->
-    <div class="page" id="page-students">
-      <div class="section-header"><div class="section-title">All Students</div><button class="btn btn-primary" onclick="openModal('addStudent')"><i class="ti ti-plus"></i> Add Student</button></div>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Student ID</th><th>Role</th><th>Department</th><th>UID</th></tr></thead><tbody id="students-tbody"><tr><td colspan="5"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-    <!-- Departments page -->
-    <div class="page" id="page-departments">
-      <div class="dept-overview-grid" id="dept-cards-row"></div>
-      <div class="section-header">
-        <div class="section-title" id="dept-table-title">All Departments</div>
-        <div style="display:flex;gap:8px">
-          <input class="dept-search-input" id="dept-search" placeholder="Search students..." oninput="renderDeptTable()" style="width:220px">
-          <select class="dept-filter-select" id="dept-filter-select" onchange="renderDeptTable()">
-            <option value="">All Departments</option>
-            <option value="Engineering">Engineering</option>
-            <option value="Science">Science</option>
-            <option value="Arts">Arts</option>
-            <option value="Business">Business</option>
-            <option value="Medicine">Medicine</option>
-          </select>
-        </div>
-      </div>
-      <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Student ID</th><th>Department</th><th>Status</th><th>UID</th><th>Change Dept</th></tr></thead><tbody id="dept-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-    <!-- Attendance page -->
-    <div class="page" id="page-attendance">
-      <div class="section-header"><div class="section-title">Attendance</div><button class="btn btn-primary" onclick="openModal('markAttendance')"><i class="ti ti-calendar-plus"></i> Mark Attendance</button></div>
-      <div class="attendance-controls">
-        <input type="date" id="att-date" onchange="renderAttendance()">
-        <select id="att-dept" onchange="renderAttendance()"><option value="">All Departments</option></select>
-        <select id="att-status" onchange="renderAttendance()"><option value="">All Status</option><option value="Present">Present</option><option value="Absent">Absent</option><option value="Late">Late</option></select>
-        <button class="btn btn-ghost" onclick="exportAttendanceCSV()"><i class="ti ti-download"></i> Export CSV</button>
-      </div>
-      <div class="att-stats">
-        <div class="att-stat"><div class="att-stat-num green" id="att-count-present">0</div><div class="att-stat-label">Present</div></div>
-        <div class="att-stat"><div class="att-stat-num red" id="att-count-absent">0</div><div class="att-stat-label">Absent</div></div>
-        <div class="att-stat"><div class="att-stat-num amber" id="att-count-late">0</div><div class="att-stat-label">Late</div></div>
-        <div class="att-stat"><div class="att-stat-num" id="att-count-pct" style="color:var(--accent)">0%</div><div class="att-stat-label">Attendance Rate</div></div>
-      </div>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Student ID</th><th>Department</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead><tbody id="attendance-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-    <!-- Logs page -->
-    <div class="page" id="page-logs">
-      <div class="section-header">
-        <div class="section-title">Live Activity Log</div>
-        <select id="log-filter" class="form-select" style="width:auto;padding:8px 14px" onchange="renderLogs()"><option value="">All Status</option><option value="Allowed">Allowed</option><option value="Denied">Denied</option></select>
-      </div>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Status</th><th>Time</th></tr></thead><tbody id="logs-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-  </div>
-</main>
-
-<!-- ── Modals (original, untouched) ── -->
-<div class="modal-bg" id="modal-addStudent">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-user-plus" style="color:var(--accent)"></i> Add Student</div>
-    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="add-name" placeholder="e.g. Ahmad Rizal"></div>
-    <div class="form-group"><label class="form-label">Student ID</label><input class="form-input" id="add-sid" placeholder="e.g. S2024001"></div>
-    <div class="form-group"><label class="form-label">Role</label><select class="form-select" id="add-role"><option value="Student">Student</option><option value="Staff">Staff</option><option value="Lecturer">Lecturer</option></select></div>
-    <div class="form-group"><label class="form-label">Department</label><select class="form-select" id="add-dept"><option value="">— Select —</option><option value="Engineering">Engineering</option><option value="Science">Science</option><option value="Arts">Arts</option><option value="Business">Business</option><option value="Medicine">Medicine</option></select></div>
-    <div class="form-group"><label class="form-label">UID</label><input class="form-input" id="add-uid" placeholder="e.g. A1B2C3D4"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('addStudent')">Cancel</button><button class="btn btn-primary" onclick="addStudent()"><i class="ti ti-check"></i> Save</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="modal-markAttendance">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-calendar-plus" style="color:var(--accent)"></i> Mark Attendance</div>
-    <div class="form-group"><label class="form-label">Student</label><select class="form-select" id="mark-student"></select></div>
-    <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="mark-date"></div>
-    <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="mark-status"><option value="Present">Present</option><option value="Absent">Absent</option><option value="Late">Late</option></select></div>
-    <div class="form-group"><label class="form-label">Note (optional)</label><input class="form-input" id="mark-note" placeholder="e.g. Medical leave"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('markAttendance')">Cancel</button><button class="btn btn-primary" onclick="saveAttendance()"><i class="ti ti-check"></i> Save</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="modal-changeDept">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-building" style="color:var(--accent)"></i> Change Department</div>
-    <div class="form-group"><label class="form-label">Student</label><input class="form-input" id="change-dept-student-name" disabled><input type="hidden" id="change-dept-doc-id"></div>
-    <div class="form-group"><label class="form-label">New Department</label><select class="form-select" id="change-dept-value"><option value="">— No Department —</option><option value="Engineering">Engineering</option><option value="Science">Science</option><option value="Arts">Arts</option><option value="Business">Business</option><option value="Medicine">Medicine</option></select></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('changeDept')">Cancel</button><button class="btn btn-primary" onclick="saveDeptChange()"><i class="ti ti-check"></i> Save</button></div>
-  </div>
-</div>
-<div class="toast" id="toast"><i class="ti ti-check-circle"></i><span id="toast-msg"></span></div>
-
-<!-- ══════════════════════════════════════════════════════════
-     JAVASCRIPT — original logic, fully preserved
-══════════════════════════════════════════════════════════ -->
+ 
 <script>
-  firebase.initializeApp({
-    apiKey: "AIzaSyAP1FMBJckEkYFpaynypw9QT0Yf2ei9Q9o",
-    authDomain: "rcz-university-system.firebaseapp.com",
-    projectId: "rcz-university-system",
-    storageBucket: "rcz-university-system.firebasestorage.app",
-    messagingSenderId: "18705411316",
-    appId: "1:18705411316:web:545385d4c689b9297e82a1"
+/* ─── Mock Data ─────────────────────────────────────── */
+const STUDENTS = [
+  {
+    id: "STU-2024-001",
+    name: "Amara Osei",
+    department: "Computer Science",
+    course: "BSc Software Engineering",
+    year: "Year 3",
+    attendance: 91,
+    attended: 82, total: 90,
+    avatar: null,
+    color: "#C4603A",
+    lastLogins: [
+      { time: "Today, 8:14 AM", ago: "2 hours ago", device: "Campus Portal" },
+      { time: "Yesterday, 6:55 PM", ago: "18 hours ago", device: "Mobile App" },
+      { time: "Mon, 9:02 AM", ago: "2 days ago", device: "Campus Portal" },
+    ],
+    classesToday: [
+      { time: "8:00", period: "AM", name: "Data Structures & Algorithms", room: "Lab B-201", status: "done" },
+      { time: "10:30", period: "AM", name: "Software Architecture", room: "Hall C-105", status: "done" },
+      { time: "1:00", period: "PM", name: "Database Systems", room: "Room A-302", status: "now" },
+      { time: "3:30", period: "PM", name: "Machine Learning Intro", room: "Lab B-204", status: "upcoming" },
+    ],
+    gpa: "3.8",
+    credits: 96
+  },
+  {
+    id: "STU-2024-002",
+    name: "Luca Ferretti",
+    department: "Electrical Engineering",
+    course: "BEng Electrical Systems",
+    year: "Year 2",
+    attendance: 74,
+    attended: 59, total: 80,
+    avatar: null,
+    color: "#2A7F78",
+    lastLogins: [
+      { time: "Today, 9:30 AM", ago: "45 minutes ago", device: "Campus Portal" },
+      { time: "Friday, 4:12 PM", ago: "3 days ago", device: "Library Kiosk" },
+    ],
+    classesToday: [
+      { time: "9:00", period: "AM", name: "Circuit Analysis", room: "Lab E-102", status: "done" },
+      { time: "11:00", period: "AM", name: "Signals & Systems", room: "Room E-210", status: "done" },
+      { time: "2:00", period: "PM", name: "Electromagnetics", room: "Hall D-001", status: "upcoming" },
+    ],
+    gpa: "2.9",
+    credits: 54
+  },
+  {
+    id: "STU-2024-003",
+    name: "Priya Nair",
+    department: "Business Administration",
+    course: "BBA Marketing & Strategy",
+    year: "Year 4",
+    attendance: 97,
+    attended: 97, total: 100,
+    avatar: null,
+    color: "#7C5CBF",
+    lastLogins: [
+      { time: "Today, 7:48 AM", ago: "3 hours ago", device: "Mobile App" },
+      { time: "Yesterday, 8:22 AM", ago: "Yesterday", device: "Campus Portal" },
+      { time: "Sun, 11:30 PM", ago: "2 days ago", device: "Mobile App" },
+      { time: "Sat, 3:15 PM", ago: "3 days ago", device: "Home Access" },
+    ],
+    classesToday: [
+      { time: "8:30", period: "AM", name: "Brand Management", room: "Room B-110", status: "done" },
+      { time: "10:00", period: "AM", name: "Digital Marketing", room: "Lab M-201", status: "done" },
+      { time: "12:00", period: "PM", name: "Strategic Management", room: "Hall A-001", status: "now" },
+      { time: "2:30", period: "PM", name: "Consumer Behaviour", room: "Room B-205", status: "upcoming" },
+      { time: "4:00", period: "PM", name: "Business Ethics", room: "Room B-110", status: "upcoming" },
+    ],
+    gpa: "3.95",
+    credits: 118
+  },
+  {
+    id: "STU-2024-004",
+    name: "James Okonkwo",
+    department: "Medicine",
+    course: "MBBS Medicine & Surgery",
+    year: "Year 1",
+    attendance: 88,
+    attended: 79, total: 90,
+    avatar: null,
+    color: "#C4603A",
+    lastLogins: [
+      { time: "Today, 6:50 AM", ago: "4 hours ago", device: "Campus Portal" },
+      { time: "Yesterday, 11:55 PM", ago: "Yesterday", device: "Mobile App" },
+    ],
+    classesToday: [
+      { time: "7:00", period: "AM", name: "Human Anatomy", room: "Lab M-001", status: "done" },
+      { time: "9:30", period: "AM", name: "Medical Biochemistry", room: "Room M-104", status: "done" },
+      { time: "1:30", period: "PM", name: "Physiology", room: "Hall M-202", status: "upcoming" },
+    ],
+    gpa: "3.6",
+    credits: 30
+  },
+  {
+    id: "STU-2024-005",
+    name: "Sophie Blanchard",
+    department: "Psychology",
+    course: "BSc Clinical Psychology",
+    year: "Year 2",
+    attendance: 62,
+    attended: 50, total: 80,
+    avatar: null,
+    color: "#D4960A",
+    lastLogins: [
+      { time: "Wed, 2:10 PM", ago: "5 days ago", device: "Campus Portal" },
+      { time: "Mon, 9:00 AM", ago: "7 days ago", device: "Mobile App" },
+    ],
+    classesToday: [
+      { time: "10:00", period: "AM", name: "Cognitive Psychology", room: "Room P-105", status: "done" },
+      { time: "3:00", period: "PM", name: "Research Methods", room: "Lab P-201", status: "upcoming" },
+    ],
+    gpa: "2.4",
+    credits: 44
+  },
+  {
+    id: "STU-2024-006",
+    name: "Yuki Tanaka",
+    department: "Physics",
+    course: "BSc Theoretical Physics",
+    year: "Year 3",
+    attendance: 85,
+    attended: 77, total: 90,
+    avatar: null,
+    color: "#2A7F78",
+    lastLogins: [
+      { time: "Today, 8:59 AM", ago: "1 hour ago", device: "Mobile App" },
+      { time: "Yesterday, 7:20 PM", ago: "Yesterday", device: "Campus Portal" },
+      { time: "Tue, 8:45 AM", ago: "3 days ago", device: "Campus Portal" },
+    ],
+    classesToday: [
+      { time: "9:00", period: "AM", name: "Quantum Mechanics", room: "Room P-301", status: "done" },
+      { time: "11:30", period: "AM", name: "Thermodynamics", room: "Hall P-101", status: "done" },
+      { time: "2:00", period: "PM", name: "Electromagnetism", room: "Lab P-205", status: "now" },
+      { time: "4:30", period: "PM", name: "Mathematical Physics", room: "Room P-301", status: "upcoming" },
+    ],
+    gpa: "3.7",
+    credits: 88
+  },
+];
+ 
+/* ─── State ─────────────────────────────────────────── */
+let activeId = null;
+let filtered = [...STUDENTS];
+ 
+/* ─── Helpers ───────────────────────────────────────── */
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+ 
+function attClass(pct) {
+  if (pct >= 80) return 'att-high';
+  if (pct >= 65) return 'att-mid';
+  return 'att-low';
+}
+ 
+function attColor(pct) {
+  if (pct >= 80) return '#2A7F78';
+  if (pct >= 65) return '#D4960A';
+  return '#C4603A';
+}
+ 
+function attLabel(pct) {
+  if (pct >= 80) return { text: 'Good Standing', cls: 'att-high' };
+  if (pct >= 65) return { text: 'At Risk', cls: 'att-mid' };
+  return { text: 'Critical', cls: 'att-low' };
+}
+ 
+function formatDate() {
+  return new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' });
+}
+ 
+/* ─── Render Sidebar List ───────────────────────────── */
+function renderList(data) {
+  const list = document.getElementById('studentList');
+  if (!data.length) {
+    list.innerHTML = `<div style="text-align:center;padding:24px 16px;color:rgba(255,255,255,0.3);font-size:13px">No students match your search.</div>`;
+    return;
+  }
+  list.innerHTML = data.map((s, i) => `
+    <div class="s-card ${activeId === s.id ? 'active' : ''}"
+         onclick="selectStudent('${s.id}')"
+         style="animation-delay:${i * 0.04}s">
+      <div class="s-avatar" style="background:${s.color}">
+        ${initials(s.name)}
+      </div>
+      <div class="s-info">
+        <div class="s-name">${s.name}</div>
+        <div class="s-dept">${s.department} · ${s.year}</div>
+      </div>
+      <span class="s-att-pill ${attClass(s.attendance)}">${s.attendance}%</span>
+    </div>
+  `).join('');
+}
+ 
+/* ─── Render Profile ─────────────────────────────────── */
+function renderProfile(s) {
+  const lbl = attLabel(s.attendance);
+  const col = attColor(s.attendance);
+ 
+  const loginsHTML = s.lastLogins.map((l, i) => `
+    <div class="login-entry">
+      <div class="login-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="login-time">${l.time}</div>
+        <div class="login-ago">${l.device}</div>
+      </div>
+      ${i === 0 ? '<span class="login-badge">Latest</span>' : `<span style="margin-left:auto;font-size:12px;color:var(--ink-light)">${l.ago}</span>`}
+    </div>
+  `).join('');
+ 
+  const classesHTML = s.classesToday.map(c => {
+    const statusMap = { now: 'In Progress', done: 'Completed', upcoming: 'Upcoming' };
+    const clsMap    = { now: 'cs-now', done: 'cs-done', upcoming: 'cs-upcoming' };
+    return `
+      <div class="class-item">
+        <div class="class-time-block">
+          <div class="class-time">${c.time}</div>
+          <div class="class-period">${c.period}</div>
+        </div>
+        <div class="class-vline"></div>
+        <div>
+          <div class="class-name">${c.name}</div>
+          <div class="class-room">${c.room}</div>
+        </div>
+        <span class="class-status ${clsMap[c.status]}">${statusMap[c.status]}</span>
+      </div>
+    `;
+  }).join('');
+ 
+  const nowCount = s.classesToday.filter(c => c.status === 'now').length;
+  const upcomingCount = s.classesToday.filter(c => c.status === 'upcoming').length;
+ 
+  return `
+    <div class="profile-view">
+      <!-- Hero -->
+      <div class="profile-hero">
+        <button class="back-btn" onclick="goBack()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          All Students
+        </button>
+        <div class="hero-inner">
+          <div class="profile-avatar-lg" style="background:${s.color}">
+            ${initials(s.name)}
+          </div>
+          <div class="hero-text">
+            <div class="hero-name">${s.name}</div>
+            <div class="hero-tags">
+              <span class="hero-tag tag-id">${s.id}</span>
+              <span class="hero-tag tag-course">${s.course}</span>
+              <span class="hero-tag tag-dept">${s.department}</span>
+              <span class="hero-tag tag-dept">${s.year}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Profile body -->
+      <div class="profile-body">
+        <!-- Quick stats -->
+        <div class="quick-stats">
+          <div class="q-stat">
+            <div class="q-stat-num terra">${s.attendance}%</div>
+            <div class="q-stat-label">Attendance</div>
+          </div>
+          <div class="q-stat">
+            <div class="q-stat-num teal">${s.gpa}</div>
+            <div class="q-stat-label">GPA</div>
+          </div>
+          <div class="q-stat">
+            <div class="q-stat-num amber">${s.classesToday.length}</div>
+            <div class="q-stat-label">Classes Today</div>
+          </div>
+          <div class="q-stat">
+            <div class="q-stat-num">${s.credits}</div>
+            <div class="q-stat-label">Credits</div>
+          </div>
+        </div>
+ 
+        <!-- Sections grid -->
+        <div class="sections-grid">
+          <!-- Attendance -->
+          <div class="section-block">
+            <div class="section-ttl">
+              <div class="section-ttl-dot dot-terra"></div>
+              Attendance Record
+            </div>
+            <div class="att-bar-wrap">
+              <div class="att-bar-header">
+                <div class="att-pct-big">${s.attendance}%</div>
+                <span class="att-status-label ${lbl.cls}">${lbl.text}</span>
+              </div>
+              <div class="att-bar-track">
+                <div class="att-bar-fill" id="attFill" style="width:0%;background:${col}"></div>
+              </div>
+              <div class="att-breakdown">
+                <div class="att-b-item">
+                  <div class="att-b-dot" style="background:${col}"></div>
+                  ${s.attended} attended
+                </div>
+                <div class="att-b-item">
+                  <div class="att-b-dot" style="background:var(--cream-dark)"></div>
+                  ${s.total - s.attended} missed
+                </div>
+                <div class="att-b-item">
+                  <div class="att-b-dot" style="background:var(--border-mid)"></div>
+                  ${s.total} total
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Last Login -->
+          <div class="section-block">
+            <div class="section-ttl">
+              <div class="section-ttl-dot dot-teal"></div>
+              Recent Logins
+            </div>
+            ${loginsHTML}
+          </div>
+ 
+          <!-- Classes Today -->
+          <div class="section-block" style="grid-column: 1 / -1">
+            <div class="section-ttl">
+              <div class="section-ttl-dot dot-amber"></div>
+              Today's Schedule
+              <span style="margin-left:auto;font-size:11px;color:var(--ink-light);font-weight:400">
+                ${nowCount > 0 ? `<span style="color:var(--teal);font-weight:600">${nowCount} now</span> · ` : ''}${upcomingCount} upcoming
+              </span>
+            </div>
+            ${classesHTML}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+ 
+/* ─── Interactions ──────────────────────────────────── */
+function selectStudent(id) {
+  activeId = id;
+  const student = STUDENTS.find(s => s.id === id);
+  const content = document.getElementById('contentArea');
+  const titleEl = document.getElementById('topbarTitle');
+ 
+  titleEl.textContent = student.name;
+  content.innerHTML = renderProfile(student);
+  renderList(filtered);
+ 
+  // Animate attendance bar after render
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const fill = document.getElementById('attFill');
+      if (fill) fill.style.width = student.attendance + '%';
+    }, 80);
   });
-  const db = firebase.firestore();
-  const auth = firebase.auth();
-
-  let studentsData=[], logsData=[], attendanceData=[];
-  let confirmationResult=null, recaptchaVerifier=null;
-  const todayStr = new Date().toISOString().slice(0,10);
-
-  const DEPARTMENTS = [
-    {name:'Engineering',icon:'ti-tools',    color:'var(--accent)', dimColor:'var(--accent-dim)'},
-    {name:'Science',    icon:'ti-flask',     color:'var(--green)',  dimColor:'var(--green-dim)'},
-    {name:'Arts',       icon:'ti-palette',   color:'#c084fc',       dimColor:'rgba(192,132,252,0.12)'},
-    {name:'Business',   icon:'ti-briefcase', color:'var(--amber)',  dimColor:'var(--amber-dim)'},
-    {name:'Medicine',   icon:'ti-heart-plus',color:'var(--red)',    dimColor:'var(--red-dim)'},
-  ];
-
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('user-email-display').textContent = user.email || user.phoneNumber || 'Signed in';
-      initData();
-    } else {
-      document.getElementById('login-screen').style.display = 'flex';
-    }
-  });
-
-  function setupButtons() {
-    document.getElementById('email-signin-btn').addEventListener('click', signInEmail);
-    document.getElementById('signup-btn').addEventListener('click', doSignUp);
-    document.getElementById('google-signin-btn').addEventListener('click', signInGoogle);
-    document.getElementById('apple-signin-btn').addEventListener('click', signInApple);
-    document.getElementById('send-otp-btn').addEventListener('click', sendOTP);
-    document.getElementById('verify-otp-btn').addEventListener('click', verifyOTP);
-    document.getElementById('eye-btn').addEventListener('click', () => toggleEye('password-input','eye-icon'));
-    document.getElementById('eye-btn2').addEventListener('click', () => toggleEye('signup-password','eye-icon2'));
-    document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') signInEmail(); });
-    document.getElementById('email-input').addEventListener('keydown', e => { if(e.key==='Enter') signInEmail(); });
-    document.getElementById('signup-confirm').addEventListener('keydown', e => { if(e.key==='Enter') doSignUp(); });
-  }
-  setupButtons();
-
-  function toggleEye(inputId, iconId) {
-    const input = document.getElementById(inputId);
-    const icon  = document.getElementById(iconId);
-    if (input.type === 'password') { input.type = 'text'; icon.className = 'ti ti-eye-off'; }
-    else { input.type = 'password'; icon.className = 'ti ti-eye'; }
-  }
-
-  function switchMode(mode) {
-    document.querySelectorAll('.auth-mode-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('mode-' + mode).classList.add('active');
-    if (mode === 'signup') {
-      document.getElementById('auth-title').textContent = 'Create account';
-      document.getElementById('auth-subtitle').textContent = 'Fill in your details to get started';
-      document.getElementById('method-tabs').style.display = 'none';
-      document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById('panel-signup').classList.add('active');
-    } else {
-      document.getElementById('auth-title').textContent = 'Welcome back';
-      document.getElementById('auth-subtitle').textContent = 'Sign in to access the dashboard';
-      document.getElementById('method-tabs').style.display = 'flex';
-      document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById('panel-email').classList.add('active');
-      document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.login-tab').classList.add('active');
-    }
-    hideError(); hideSuccess();
-  }
-
-  function switchTab(tab, btn) {
-    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + tab).classList.add('active');
-    hideError();
-    if (tab === 'phone' && !recaptchaVerifier) setupRecaptcha();
-  }
-
-  function showError(msg) { const el=document.getElementById('login-error'); el.textContent=msg; el.classList.add('show'); }
-  function hideError() { document.getElementById('login-error').classList.remove('show'); }
-  function showSuccess(msg) { const el=document.getElementById('login-success'); el.textContent=msg; el.classList.add('show'); }
-  function hideSuccess() { document.getElementById('login-success').classList.remove('show'); }
-
-  async function signInEmail() {
-    const email = document.getElementById('email-input').value.trim();
-    const password = document.getElementById('password-input').value;
-    if (!email || !password) { showError('Please enter your email and password'); return; }
-    try { await auth.signInWithEmailAndPassword(email, password); }
-    catch(e) { showError(e.message); }
-  }
-
-  async function doSignUp() {
-    const email    = document.getElementById('signup-email').value.trim();
-    const password = document.getElementById('signup-password').value;
-    const confirm  = document.getElementById('signup-confirm').value;
-    if (!email || !password) { showError('Please fill in all fields'); return; }
-    if (password.length < 6) { showError('Password must be at least 6 characters'); return; }
-    if (password !== confirm) { showError('Passwords do not match'); return; }
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      showSuccess('Account created! Signing you in...');
-    } catch(e) { showError(e.message); }
-  }
-
-  async function signInGoogle() {
-    try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-    catch(e) { showError(e.message); }
-  }
-
-  async function signInApple() {
-    try { await auth.signInWithPopup(new firebase.auth.OAuthProvider('apple.com')); }
-    catch(e) { showError(e.message); }
-  }
-
-  function setupRecaptcha() {
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size:'normal', callback:()=>{} });
-    recaptchaVerifier.render();
-  }
-
-  async function sendOTP() {
-    const phone = document.getElementById('phone-input').value.trim();
-    if (!phone) { showError('Please enter a phone number'); return; }
-    try {
-      confirmationResult = await auth.signInWithPhoneNumber(phone, recaptchaVerifier);
-      document.getElementById('phone-step1').style.display = 'none';
-      document.getElementById('phone-step2').style.display = 'block';
-      hideError();
-    } catch(e) { showError(e.message); }
-  }
-
-  async function verifyOTP() {
-    const code = document.getElementById('otp-input').value.trim();
-    if (!code) { showError('Please enter the OTP code'); return; }
-    try { await confirmationResult.confirm(code); }
-    catch(e) { showError('Invalid code. Please try again.'); }
-  }
-
-  function resetPhone() {
-    document.getElementById('phone-step1').style.display = 'block';
-    document.getElementById('phone-step2').style.display = 'none';
-    document.getElementById('otp-input').value = '';
-    hideError();
-  }
-
-  async function doSignOut() { await auth.signOut(); }
-
-  function initData() {
-    document.getElementById('att-date').value  = todayStr;
-    document.getElementById('mark-date').value = todayStr;
-    db.collection("users").onSnapshot(snap => {
-      studentsData = [];
-      snap.forEach(d => studentsData.push({id:d.id,...d.data()}));
-      renderStudents(studentsData); renderDashStudents(); updateDeptFilter();
-      document.getElementById('stat-students').textContent = studentsData.length;
-      if (document.getElementById('page-departments').classList.contains('active')) renderDeptPage();
-    });
-    db.collection("logs").orderBy("time","desc").limit(50).onSnapshot(snap => {
-      logsData = [];
-      snap.forEach(d => logsData.push({id:d.id,...d.data()}));
-      renderLogs(); renderDashLogs(); updateDashStats();
-    });
-    db.collection("attendance").onSnapshot(snap => {
-      attendanceData = [];
-      snap.forEach(d => attendanceData.push({id:d.id,...d.data()}));
-      renderAttendance(); updatePresentStat();
-    });
-  }
-
-  function showPage(id, btn) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-'+id).classList.add('active');
-    if (btn) btn.classList.add('active');
-    const titles = {dashboard:'Dashboard',students:'Students',departments:'Departments',attendance:'Attendance',logs:'Live Logs'};
-    document.getElementById('pageTitle').textContent = titles[id]||id;
-    if (id==='departments') renderDeptPage();
-  }
-
-  function initials(name) { if(!name)return'?'; return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
-
-  function showToast(msg, type='success') {
-    const t = document.getElementById('toast');
-    t.className = 'toast '+type;
-    t.querySelector('i').className = type==='success'?'ti ti-check-circle':'ti ti-alert-circle';
-    document.getElementById('toast-msg').textContent = msg;
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3000);
-  }
-
-  function openModal(id) {
-    if (id==='markAttendance') {
-      document.getElementById('mark-student').innerHTML = studentsData.map(s=>`<option value="${s.uid||s.name}">${s.name} (${s.Student_ID||'N/A'})</option>`).join('');
-    }
-    document.getElementById('modal-'+id).classList.add('open');
-  }
-  function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
-  document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e => { if(e.target===bg) bg.classList.remove('open'); }));
-
-  function renderStudents(data) {
-    const tbody = document.getElementById('students-tbody');
-    if (!data.length) { tbody.innerHTML=`<tr><td colspan="5"><div class="empty"><i class="ti ti-users-off"></i><p>No students found</p></div></td></tr>`; return; }
-    tbody.innerHTML = data.map(s=>`
-      <tr>
-        <td><div class="name-cell"><div class="avatar">${initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-        <td>${s.Student_ID||'—'}</td>
-        <td><span class="badge ${s.role==='Student'?'badge-student':'badge-staff'}">${s.role||'—'}</span></td>
-        <td>${s.department||'<span style="color:var(--faint)">Unassigned</span>'}</td>
-        <td style="font-family:monospace;font-size:12px;color:var(--muted)">${s.uid||'—'}</td>
-      </tr>`).join('');
-  }
-
-  function renderDashStudents() {
-    document.getElementById('dash-students').innerHTML = studentsData.slice(0,6).map(s=>`
-      <tr>
-        <td><div class="name-cell"><div class="avatar">${initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-        <td><span class="badge ${s.role==='Student'?'badge-student':'badge-staff'}">${s.role||'—'}</span></td>
-        <td style="color:var(--muted)">${s.department||'—'}</td>
-      </tr>`).join('');
-  }
-
-  function updateDeptFilter() {
-    const sel=document.getElementById('att-dept'), cur=sel.value;
-    sel.innerHTML='<option value="">All Departments</option>'+DEPARTMENTS.map(d=>`<option value="${d.name}"${d.name===cur?' selected':''}>${d.name}</option>`).join('');
-  }
-
-  async function addStudent() {
-    const name=document.getElementById('add-name').value.trim(), sid=document.getElementById('add-sid').value.trim();
-    const role=document.getElementById('add-role').value, dept=document.getElementById('add-dept').value, uid=document.getElementById('add-uid').value.trim();
-    if (!name) { showToast('Name is required','error'); return; }
-    try {
-      await db.collection("users").add({name,Student_ID:sid,role,department:dept,uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-      closeModal('addStudent');
-      ['add-name','add-sid','add-uid'].forEach(id=>document.getElementById(id).value='');
-      document.getElementById('add-dept').value='';
-      showToast('Student added successfully');
-    } catch(e) { showToast('Error: '+e.message,'error'); }
-  }
-
-  function renderDeptPage() { renderDeptCards(); renderDeptTable(); }
-
-  function renderDeptCards() {
-    const sel=document.getElementById('dept-filter-select').value;
-    document.getElementById('dept-cards-row').innerHTML = DEPARTMENTS.map(d=>{
-      const count=studentsData.filter(s=>s.department===d.name).length;
-      return `<div class="dept-overview-card ${sel===d.name?'selected':''}" onclick="filterByDept('${d.name}')" style="border-top:2px solid ${d.color}">
-        <div class="dept-card-icon" style="color:${d.color}"><i class="ti ${d.icon}"></i></div>
-        <div class="dept-card-name">${d.name}</div>
-        <div class="dept-card-count" style="color:${d.color}">${count}</div>
-        <div class="dept-card-label">students</div>
-      </div>`;
-    }).join('');
-  }
-
-  function filterByDept(name) {
-    const sel=document.getElementById('dept-filter-select');
-    sel.value=sel.value===name?'':name;
-    renderDeptTable(); renderDeptCards();
-  }
-
-  function renderDeptTable() {
-    const search=document.getElementById('dept-search').value.toLowerCase();
-    const deptF=document.getElementById('dept-filter-select').value;
-    renderDeptCards();
-    document.getElementById('dept-table-title').textContent=deptF?`${deptF} Students`:'All Departments';
-    let data=studentsData;
-    if(deptF) data=data.filter(s=>s.department===deptF);
-    if(search) data=data.filter(s=>(s.name||'').toLowerCase().includes(search)||(s.Student_ID||'').toLowerCase().includes(search));
-    const tbody=document.getElementById('dept-tbody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i class="ti ti-building-off"></i><p>No students found</p></div></td></tr>`;return;}
-    tbody.innerHTML=data.map(s=>{
-      const dObj=DEPARTMENTS.find(d=>d.name===s.department);
-      const dBadge=s.department?`<span style="background:${dObj?dObj.dimColor:'var(--accent-dim)'};color:${dObj?dObj.color:'var(--accent)'};border:1px solid ${dObj?dObj.color+'33':'var(--accent)'};padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600">${s.department}</span>`:`<span style="color:var(--faint);font-size:12px">Unassigned</span>`;
-      return `<tr>
-        <td><div class="name-cell"><div class="avatar">${initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-        <td style="color:var(--muted)">${s.Student_ID||'—'}</td>
-        <td>${dBadge}</td>
-        <td><span class="badge badge-student">${s.status||s.role||'—'}</span></td>
-        <td style="font-family:monospace;font-size:12px;color:var(--muted)">${s.uid||'—'}</td>
-        <td><button class="btn btn-ghost btn-sm" onclick="openChangeDept('${s.id}','${(s.name||'').replace(/'/g,"\\'")}','${s.department||''}')"><i class="ti ti-pencil"></i> Change</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  function openChangeDept(docId,name,currentDept){
-    document.getElementById('change-dept-doc-id').value=docId;
-    document.getElementById('change-dept-student-name').value=name;
-    document.getElementById('change-dept-value').value=currentDept||'';
-    openModal('changeDept');
-  }
-
-  async function saveDeptChange(){
-    const docId=document.getElementById('change-dept-doc-id').value;
-    const newDept=document.getElementById('change-dept-value').value;
-    try{
-      await db.collection("users").doc(docId).update({department:newDept});
-      closeModal('changeDept');
-      showToast('Department updated to '+(newDept||'Unassigned'));
-    }catch(e){showToast('Error: '+e.message,'error');}
-  }
-
-  function renderLogs(){
-    const filter=document.getElementById('log-filter').value;
-    const data=filter?logsData.filter(l=>l.status===filter):logsData;
-    const tbody=document.getElementById('logs-tbody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="4"><div class="empty"><i class="ti ti-activity-off"></i><p>No logs found</p></div></td></tr>`;return;}
-    tbody.innerHTML=data.map(l=>`
-      <tr>
-        <td><div class="name-cell"><div class="avatar">${initials(l.name)}</div><span>${l.name||'—'}</span></div></td>
-        <td>${l.location||'—'}</td>
-        <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${l.status||'—'}</span></td>
-        <td style="color:var(--muted);font-size:12px">${l.time?new Date(l.time.toDate()).toLocaleString():'—'}</td>
-      </tr>`).join('');
-  }
-
-  function renderDashLogs(){
-    document.getElementById('dash-logs').innerHTML=logsData.slice(0,6).map(l=>`
-      <tr><td>${l.name||'—'}</td><td style="color:var(--muted)">${l.location||'—'}</td>
-      <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${l.status||'—'}</span></td></tr>`).join('');
-  }
-
-  function updateDashStats(){
-    document.getElementById('stat-logs').textContent=logsData.length;
-    document.getElementById('stat-denied').textContent=logsData.filter(l=>l.status==='Denied').length;
-  }
-
-  function renderAttendance(){
-    const dateVal=document.getElementById('att-date').value;
-    const deptVal=document.getElementById('att-dept').value;
-    const statusVal=document.getElementById('att-status').value;
-    let data=attendanceData;
-    if(dateVal) data=data.filter(a=>a.date===dateVal);
-    if(deptVal) data=data.filter(a=>a.department===deptVal);
-    if(statusVal) data=data.filter(a=>a.status===statusVal);
-    const present=data.filter(a=>a.status==='Present').length;
-    const absent=data.filter(a=>a.status==='Absent').length;
-    const late=data.filter(a=>a.status==='Late').length;
-    const total=data.length;
-    document.getElementById('att-count-present').textContent=present;
-    document.getElementById('att-count-absent').textContent=absent;
-    document.getElementById('att-count-late').textContent=late;
-    document.getElementById('att-count-pct').textContent=total>0?Math.round((present/total)*100)+'%':'0%';
-    const tbody=document.getElementById('attendance-tbody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i class="ti ti-calendar-off"></i><p>No attendance records</p></div></td></tr>`;return;}
-    tbody.innerHTML=data.map(a=>{
-      const bc=a.status==='Present'?'badge-present':a.status==='Absent'?'badge-absent':'badge-late';
-      return `<tr>
-        <td><div class="name-cell"><div class="avatar">${initials(a.studentName)}</div><span>${a.studentName||'—'}</span></div></td>
-        <td style="color:var(--muted)">${a.studentId||'—'}</td>
-        <td>${a.department||'—'}</td>
-        <td><span class="badge ${bc}">${a.status||'—'}</span></td>
-        <td style="color:var(--muted);font-size:12px">${a.time||'—'}</td>
-        <td><div class="mark-btns">
-          <button class="btn btn-success btn-sm" onclick="updateAttStatus('${a.id}','Present')"><i class="ti ti-check"></i></button>
-          <button class="btn btn-sm" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.2)" onclick="updateAttStatus('${a.id}','Late')"><i class="ti ti-clock"></i></button>
-          <button class="btn btn-danger btn-sm" onclick="updateAttStatus('${a.id}','Absent')"><i class="ti ti-x"></i></button>
-        </div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  function updatePresentStat(){
-    document.getElementById('stat-present').textContent=attendanceData.filter(a=>a.date===todayStr&&a.status==='Present').length;
-  }
-
-  async function saveAttendance(){
-    const studentVal=document.getElementById('mark-student').value;
-    const student=studentsData.find(s=>s.uid===studentVal||s.name===studentVal);
-    const dateVal=document.getElementById('mark-date').value;
-    const statusVal=document.getElementById('mark-status').value;
-    const noteVal=document.getElementById('mark-note').value.trim();
-    if(!studentVal||!dateVal){showToast('Please select student and date','error');return;}
-    try{
-      await db.collection("attendance").add({
-        studentName:student?student.name:studentVal,
-        studentId:student?student.Student_ID||'':'',
-        department:student?student.department||'':'',
-        uid:studentVal,date:dateVal,status:statusVal,note:noteVal,
-        time:new Date().toLocaleTimeString(),
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
-      closeModal('markAttendance');
-      document.getElementById('mark-note').value='';
-      showToast('Attendance saved');
-    }catch(e){showToast('Error: '+e.message,'error');}
-  }
-
-  async function updateAttStatus(docId,status){
-    try{
-      await db.collection("attendance").doc(docId).update({status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      showToast('Status updated to '+status);
-    }catch(e){showToast('Error: '+e.message,'error');}
-  }
-
-  function exportAttendanceCSV(){
-    const dateVal=document.getElementById('att-date').value;
-    const data=dateVal?attendanceData.filter(a=>a.date===dateVal):attendanceData;
-    if(!data.length){showToast('No data to export','error');return;}
-    const header=['Name','Student ID','Department','Status','Date','Time','Note'];
-    const rows=data.map(a=>[a.studentName,a.studentId,a.department,a.status,a.date,a.time,a.note||''].map(v=>`"${v}"`).join(','));
-    const csv=[header.join(','),...rows].join('\n');
-    const blob=new Blob([csv],{type:'text/csv'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url; a.download=`attendance-${dateVal||'all'}.csv`; a.click();
-    URL.revokeObjectURL(url);
-    showToast('CSV exported');
-  }
-
-  function handleGlobalSearch(val){
-    const q=val.toLowerCase();
-    if(!q){renderStudents(studentsData);return;}
-    renderStudents(studentsData.filter(s=>
-      (s.name&&s.name.toLowerCase().includes(q))||
-      (s.Student_ID&&s.Student_ID.toLowerCase().includes(q))||
-      (s.department&&s.department.toLowerCase().includes(q))||
-      (s.uid&&s.uid.toLowerCase().includes(q))
-    ));
-  }
+}
+ 
+function goBack() {
+  activeId = null;
+  const content = document.getElementById('contentArea');
+  const titleEl = document.getElementById('topbarTitle');
+ 
+  titleEl.textContent = 'Student Dashboard';
+  content.innerHTML = `
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">🎓</div>
+      <h3>Select a student</h3>
+      <p>Click any student from the list to view their full academic profile.</p>
+    </div>
+  `;
+  renderList(filtered);
+}
+ 
+function filterStudents(query) {
+  const q = query.trim().toLowerCase();
+  filtered = q
+    ? STUDENTS.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.department.toLowerCase().includes(q) ||
+        s.course.toLowerCase().includes(q) ||
+        s.id.toLowerCase().includes(q)
+      )
+    : [...STUDENTS];
+  renderList(filtered);
+}
+ 
+/* ─── Init ──────────────────────────────────────────── */
+document.getElementById('topbarDate').textContent = formatDate();
+renderList(STUDENTS);
 </script>
 </body>
-</html>
-
-Done
