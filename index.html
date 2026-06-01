@@ -3,792 +3,309 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LOWIST Smart Campus</title>
+  <title>The Light of the World Foundation</title>
+
+  <!-- Fonts: Poppins for UI, Playfair Display for branding -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ============================================
+       CSS VARIABLES — Brand Color System
+       These variables are specifically for the LOGIN/AUTH screen
+       The existing dashboard variables remain untouched to preserve its dark theme.
+    ============================================ */
     :root {
-      --bg: #060d1a; --surface: #0d1b2e; --surface2: #112039;
-      --border: rgba(99,179,237,0.10); --border2: rgba(99,179,237,0.18);
-      --accent: #38bdf8; --accent-dim: rgba(56,189,248,0.12);
-      --green: #22d3a0; --green-dim: rgba(34,211,160,0.12);
-      --red: #f87171; --red-dim: rgba(248,113,113,0.12);
-      --amber: #fbbf24; --amber-dim: rgba(251,191,36,0.12);
-      --text: #e2eff8; --muted: #7fa8c4; --faint: #3a5870;
-      --font-head: 'Space Grotesk', sans-serif; --font-body: 'DM Sans', sans-serif;
-      --radius: 12px; --radius-sm: 8px;
+      /* Brand colors from logo */
+      --teal:        #2F8F8B;
+      --teal-light:  #4FAFA8;
+      --teal-dim:    rgba(47,143,139,0.12); /* Light transparent version for backgrounds */
+      --teal-border: rgba(47,143,139,0.3); /* Slightly stronger transparent version for borders */
+      --dark:        #111111;
+      --gray:        #2A2A2A;
+      --muted:       #6B7280; /* Muted text for light background */
+      --faint:       #9CA3AF; /* Faint text/placeholders for light background */
+      --bg-page:     #F5F5F5; /* Page background color for login */
+      --white:       #FFFFFF;
+      --shadow:      0 4px 24px rgba(0,0,0,0.08); /* Soft shadow for form card */
+      --shadow-lg:   0 8px 40px rgba(0,0,0,0.12); /* Larger shadow for form card */
+
+      /* Typography for Login/Auth Screen */
+      --font-brand:  'Playfair Display', serif;
+      --font-ui:     'Poppins', sans-serif; /* General UI elements */
+      --font-head:   'Poppins', sans-serif; /* Titles and headings on login */
+      --font-body:   'Poppins', sans-serif; /* Body text on login */
+      --radius:      12px;
+      --radius-sm:   8px;
+      --radius-lg:   16px; /* Larger radius for the login box */
+
+      /* Existing Dashboard dark theme variables (unchanged to avoid conflict) */
+      --bg-dash:          #060d1a;
+      --surface-dash:     #0d1b2e;
+      --surface2-dash:    #112039;
+      --border-dash:      rgba(99,179,237,0.10);
+      --border2-dash:     rgba(99,179,237,0.18);
+      --accent-dash:      #38bdf8;
+      --accent-dim-dash:  rgba(56,189,248,0.12);
+      --green-dash:       #22d3a0;
+      --green-dim-dash:   rgba(34,211,160,0.12);
+      --red-dash:         #f87171;
+      --red-dim-dash:     rgba(248,113,113,0.12);
+      --amber-dash:       #fbbf24;
+      --amber-dim-dash:   rgba(251,191,36,0.12);
+      --text-dash:        #e2eff8;
+      --muted-dash:       #7fa8c4;
+      --faint-dash:       #3a5870;
+      --font-head-dash: 'Space Grotesk', sans-serif;
+      --font-body-dash: 'DM Sans', sans-serif;
     }
-    body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; overflow-x: hidden; }
-    #login-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-    .login-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 40px; width: 420px; max-width: 95vw; }
-    .login-logo { text-align: center; margin-bottom: 24px; }
-    .login-logo .logo-mark { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--accent); }
-    .login-logo .logo-sub { font-size: 12px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
-    .login-title { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 6px; text-align: center; }
-    .login-subtitle { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 24px; }
-    .auth-mode-toggle { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 20px; }
-    .auth-mode-btn { flex: 1; padding: 9px; border: none; background: none; border-radius: 6px; font-family: var(--font-body); font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
-    .auth-mode-btn.active { background: var(--surface); color: var(--accent); border: 1px solid var(--border2); }
-    .login-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 20px; }
-    .login-tab { flex: 1; padding: 8px; border: none; background: none; border-radius: 6px; font-family: var(--font-body); font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
-    .login-tab.active { background: var(--surface); color: var(--accent); border: 1px solid var(--border2); }
+
+    /* Universal box-sizing and reset margins/paddings */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Body styles apply to the entire document, overridden by #login-screen for login */
+    body {
+      font-family: var(--font-body-dash); /* Default body font for the entire app */
+      background: var(--bg-dash);         /* Default background for the entire app */
+      color: var(--text-dash);            /* Default text color for the entire app */
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       LOGIN / AUTH SCREEN — Brand Styled
+       These styles specifically target the login form and its components
+    ============================================ */
+    #login-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-page); /* Page background as specified */
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px; /* Padding for responsiveness on smaller screens */
+    }
+
+    .login-box {
+      background: var(--white); /* White background for the form card */
+      border-radius: 20px;     /* Rounded corners */
+      box-shadow: var(--shadow-lg); /* Soft shadow */
+      padding: 44px 40px 36px; /* Increased padding for better spacing */
+      width: 100%;
+      max-width: 420px;        /* Max width for the form card */
+    }
+
+    /* Logo section */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 28px; /* Spacing below the logo section */
+    }
+
+    .login-logo img {
+      width: 80px;            /* Sizing for the logo image */
+      height: auto;
+      margin-bottom: 14px;    /* Spacing between logo image and brand name */
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Fallback SVG logo styles */
+    .login-logo .logo-svg-wrap {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-logo .brand-name {
+      font-family: var(--font-brand); /* Playfair Display for brand name */
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);     /* Dark color for brand name */
+      letter-spacing: 0.5px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .login-logo .brand-sub {
+      font-family: var(--font-ui); /* Poppins for sub-brand */
+      font-size: 11px;
+      color: var(--muted);    /* Muted color for sub-brand */
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .login-title {
+      font-family: var(--font-ui); /* Poppins for titles */
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);     /* Dark color for titles */
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: var(--muted);    /* Muted color for subtitles */
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    /* Auth mode toggle (Sign In / Sign Up) */
+    .auth-mode-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-page); /* Light background for the toggle container */
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+
+    .auth-mode-btn {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      background: none;
+      border-radius: 6px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--muted);    /* Muted text for inactive buttons */
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+
+    .auth-mode-btn.active {
+      background: var(--white); /* White background for active button */
+      color: var(--teal);     /* Teal text for active button */
+      border: 1px solid var(--teal-border); /* Teal border for active button */
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); /* Soft shadow for active button */
+    }
+
+    /* Method tabs (Email, Phone, Social) */
+    .login-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-page); /* Light background for the tabs container */
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+
+    .login-tab {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: none;
+      border-radius: 6px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--muted);    /* Muted text for inactive tabs */
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+
+    .login-tab.active {
+      background: var(--white); /* White background for active tab */
+      color: var(--teal);     /* Teal text for active tab */
+      border: 1px solid var(--teal-border); /* Teal border for active tab */
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); /* Soft shadow for active tab */
+    }
+
     .login-panel { display: none; }
     .login-panel.active { display: block; }
+
+    /* Inputs */
+    .login-input {
+      width: 100%;
+      background: var(--white); /* White background for inputs */
+      border: 1.5px solid #E5E7EB; /* Clean light gray border */
+      border-radius: var(--radius-sm);
+      color: var(--dark);     /* Dark text color for input values */
+      padding: 12px 14px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      display: block;
+    }
+
+    .login-input:focus {
+      border-color: var(--teal); /* Teal border on focus */
+      box-shadow: 0 0 0 3px var(--teal-dim); /* Soft teal shadow on focus */
+    }
+
+    .login-input::placeholder { color: var(--faint); } /* Faint color for placeholders */
+
+    /* Password eye toggle */
     .password-wrap { position: relative; margin-bottom: 12px; }
     .password-wrap .login-input { margin-bottom: 0; padding-right: 44px; }
-    .eye-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; display: flex; align-items: center; padding: 4px; }
-    .eye-btn:hover { color: var(--accent); }
-    .login-input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); padding: 12px 14px; font-family: var(--font-body); font-size: 14px; outline: none; margin-bottom: 12px; transition: border-color 0.15s; display: block; }
-    .login-input:focus { border-color: var(--accent); }
-    .login-input::placeholder { color: var(--faint); }
-    .login-btn { width: 100%; padding: 13px; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
-    .btn-email { background: var(--accent); color: #051a29; }
-    .btn-email:hover { background: #7dd3f7; }
-    .btn-signup { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.3); }
-    .btn-signup:hover { background: rgba(34,211,160,0.25); }
-    .btn-google { background: white; color: #333; border: 1px solid #ddd; }
-    .btn-google:hover { background: #f5f5f5; }
-    .btn-apple { background: #000; color: white; }
-    .btn-apple:hover { background: #222; }
-    .btn-phone-send { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.3); }
-    .btn-phone-send:hover { background: rgba(34,211,160,0.2); }
-    .login-error { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 12px; display: none; }
-    .login-error.show { display: block; }
-    .login-success { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,211,160,0.2); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 12px; display: none; }
-    .login-success.show { display: block; }
-    #phone-step2 { display: none; }
-    .sidebar { width: 240px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100; }
-    .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
-    .logo-mark { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
-    .logo-sub { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
-    .nav { padding: 16px 12px; flex: 1; }
-    .nav-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--faint); padding: 8px 12px 4px; margin-top: 8px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; color: var(--muted); font-size: 14px; transition: all 0.15s; margin: 2px 0; border: none; background: none; width: 100%; text-align: left; }
-    .nav-item i { font-size: 18px; }
-    .nav-item:hover { background: var(--accent-dim); color: var(--accent); }
-    .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; border-left: 2px solid var(--accent); }
-    .sidebar-footer { padding: 16px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--faint); display: flex; align-items: center; justify-content: space-between; }
-    .signout-btn { background: none; border: none; color: var(--red); cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: var(--radius-sm); }
-    .signout-btn:hover { background: var(--red-dim); }
-    .main { margin-left: 240px; flex: 1; min-height: 100vh; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 50; }
-    .topbar-title { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--text); }
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .search-bar { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 8px 16px; }
-    .search-bar i { color: var(--muted); font-size: 16px; }
-    .search-bar input { background: none; border: none; outline: none; color: var(--text); font-family: var(--font-body); font-size: 14px; width: 200px; }
-    .search-bar input::placeholder { color: var(--faint); }
-    .badge-live { display: flex; align-items: center; gap: 6px; background: var(--green-dim); color: var(--green); font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(34,211,160,0.2); }
-    .dot-live { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
-    .content { padding: 28px 32px; }
-    .page { display: none; }
-    .page.active { display: block; }
-    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; }
-    .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
-    .stat-card.blue::before{background:var(--accent)} .stat-card.green::before{background:var(--green)} .stat-card.amber::before{background:var(--amber)} .stat-card.red::before{background:var(--red)}
-    .stat-icon { width:36px; height:36px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:14px; }
-    .stat-icon.blue{background:var(--accent-dim);color:var(--accent)} .stat-icon.green{background:var(--green-dim);color:var(--green)} .stat-icon.amber{background:var(--amber-dim);color:var(--amber)} .stat-icon.red{background:var(--red-dim);color:var(--red)}
-    .stat-value { font-family:var(--font-head); font-size:28px; font-weight:700; color:var(--text); line-height:1; margin-bottom:4px; }
-    .stat-label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; }
-    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-    .section-title { font-family:var(--font-head); font-size:16px; font-weight:600; color:var(--text); }
-    .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-sm); font-family:var(--font-body); font-size:13px; font-weight:500; cursor:pointer; border:none; transition:all 0.15s; }
-    .btn-primary{background:var(--accent);color:#051a29} .btn-primary:hover{background:#7dd3f7}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2)} .btn-ghost:hover{background:var(--accent-dim);color:var(--accent)}
-    .btn-sm{padding:5px 10px;font-size:12px}
-    .btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
-    .btn-success{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.2)}
-    .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-    table{width:100%;border-collapse:collapse;font-size:13.5px}
-    thead th{padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--surface2)}
-    tbody tr{border-bottom:1px solid var(--border);transition:background 0.12s} tbody tr:last-child{border-bottom:none} tbody tr:hover{background:var(--accent-dim)}
-    td{padding:12px 16px;color:var(--text);vertical-align:middle}
-    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
-    .badge-allowed{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.25)}
-    .badge-denied{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
-    .badge-student{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(56,189,248,0.25)}
-    .badge-staff{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25)}
-    .badge-present{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.25)}
-    .badge-absent{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
-    .badge-late{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25)}
-    .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-dim);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
-    .name-cell{display:flex;align-items:center;gap:10px}
-    .attendance-controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-    .attendance-controls select,.attendance-controls input[type="date"]{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-    .att-stats{display:flex;gap:12px;margin-bottom:20px}
-    .att-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;text-align:center}
-    .att-stat-num{font-family:var(--font-head);font-size:24px;font-weight:700}
-    .att-stat-num.green{color:var(--green)} .att-stat-num.red{color:var(--red)} .att-stat-num.amber{color:var(--amber)}
-    .att-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-top:3px}
-    .mark-btns{display:flex;gap:6px}
-    .dept-overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
-    .dept-overview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
-    .dept-overview-card:hover{border-color:var(--border2);transform:translateY(-1px)}
-    .dept-overview-card.selected{border-color:var(--accent);background:var(--accent-dim)}
-    .dept-card-icon{font-size:22px;margin-bottom:10px}
-    .dept-card-name{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
-    .dept-card-count{font-size:22px;font-weight:700;font-family:var(--font-head);margin-bottom:2px}
-    .dept-card-label{font-size:11px;color:var(--muted)}
-    .dept-search-input{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none}
-    .dept-search-input:focus{border-color:var(--accent)}
-    .dept-filter-select{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center}
-    .modal-bg.open{display:flex}
-    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;width:440px;max-width:95vw}
-    .modal-title{font-family:var(--font-head);font-size:18px;font-weight:600;color:var(--text);margin-bottom:20px}
-    .form-group{margin-bottom:16px}
-    .form-label{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:7px}
-    .form-input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none;transition:border-color 0.15s}
-    .form-input:focus{border-color:var(--accent)}
-    .form-select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none}
-    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
-    .empty{text-align:center;padding:48px;color:var(--faint)}
-    .empty i{font-size:36px;margin-bottom:12px;display:block}
-    .empty p{font-size:14px}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .spinner{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:40px auto}
-    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px 20px;font-size:14px;color:var(--text);z-index:999;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all 0.25s;pointer-events:none}
-    .toast.show{transform:translateY(0);opacity:1}
-    .toast.success i{color:var(--green)} .toast.error i{color:var(--red)}
-    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    #recaptcha-container{margin-bottom:12px}
-    @media(max-width:900px){
-      .sidebar{width:64px} .sidebar .logo-sub,.sidebar .nav-item span,.sidebar-footer span,.logo-mark{display:none}
-      .main{margin-left:64px} .stats-grid{grid-template-columns:1fr 1fr} .two-col{grid-template-columns:1fr} .dept-overview-grid{grid-template-columns:1fr 1fr}
+    .eye-btn {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--faint); cursor: pointer;
+      font-size: 18px; display: flex; align-items: center; padding: 4px;
+      transition: color 0.15s;
     }
-  </style>
-</head>
-<body>
+    .eye-btn:hover { color: var(--teal); }
 
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="logo-mark">LOWIST</div>
-      <div class="logo-sub">Smart Campus</div>
-    </div>
-    <div class="login-title" id="auth-title">Welcome back</div>
-    <div class="login-subtitle" id="auth-subtitle">Sign in to access the dashboard</div>
-    <div class="login-error" id="login-error"></div>
-    <div class="login-success" id="login-success"></div>
-    <div class="auth-mode-toggle">
-      <button class="auth-mode-btn active" id="mode-signin" onclick="switchMode('signin')">Sign In</button>
-      <button class="auth-mode-btn" id="mode-signup" onclick="switchMode('signup')">Sign Up</button>
-    </div>
-    <div class="login-tabs" id="method-tabs">
-      <button class="login-tab active" onclick="switchTab('email',this)">Email</button>
-      <button class="login-tab" onclick="switchTab('phone',this)">Phone</button>
-      <button class="login-tab" onclick="switchTab('social',this)">Social</button>
-    </div>
-    <div class="login-panel active" id="panel-email">
-      <input class="login-input" id="email-input" type="email" placeholder="Email address" />
-      <div class="password-wrap">
-        <input class="login-input" id="password-input" type="password" placeholder="Password" />
-        <button class="eye-btn" id="eye-btn" type="button"><i class="ti ti-eye" id="eye-icon"></i></button>
-      </div>
-      <button class="login-btn btn-email" id="email-signin-btn">
-        <i class="ti ti-login"></i> Sign In
-      </button>
-    </div>
-    <div class="login-panel" id="panel-signup">
-      <input class="login-input" id="signup-email" type="email" placeholder="Email address" />
-      <div class="password-wrap">
-        <input class="login-input" id="signup-password" type="password" placeholder="Password (min 6 characters)" />
-        <button class="eye-btn" id="eye-btn2" type="button"><i class="ti ti-eye" id="eye-icon2"></i></button>
-      </div>
-      <input class="login-input" id="signup-confirm" type="password" placeholder="Confirm password" />
-      <button class="login-btn btn-signup" id="signup-btn">
-        <i class="ti ti-user-plus"></i> Create Account
-      </button>
-    </div>
-    <div class="login-panel" id="panel-phone">
-      <div id="phone-step1">
-        <input class="login-input" id="phone-input" type="tel" placeholder="+1 234 567 8900" />
-        <div id="recaptcha-container"></div>
-        <button class="login-btn btn-phone-send" id="send-otp-btn">
-          <i class="ti ti-device-mobile"></i> Send OTP Code
-        </button>
-      </div>
-      <div id="phone-step2">
-        <p style="color:var(--muted);font-size:13px;margin-bottom:12px">Enter the code sent to your phone</p>
-        <input class="login-input" id="otp-input" type="text" placeholder="Enter OTP code" />
-        <button class="login-btn btn-email" id="verify-otp-btn"><i class="ti ti-check"></i> Verify Code</button>
-        <button class="login-btn btn-phone-send" onclick="resetPhone()" style="margin-top:6px"><i class="ti ti-arrow-left"></i> Back</button>
-      </div>
-    </div>
-    <div class="login-panel" id="panel-social">
-      <button class="login-btn btn-google" id="google-signin-btn">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.8 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.9 19 12 24 12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.8 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.7-3.3-11.3-8H6.3C9.7 35.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.2C42 35.2 44 30 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-        Continue with Google
-      </button>
-      <button class="login-btn btn-apple" id="apple-signin-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        Continue with Apple
-      </button>
-    </div>
-  </div>
-</div>
-
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-mark">LOWIST</div>
-    <div class="logo-sub">Smart Campus</div>
-  </div>
-  <nav class="nav">
-    <div class="nav-label">Overview</div>
-    <button class="nav-item active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></button>
-    <div class="nav-label">Management</div>
-    <button class="nav-item" onclick="showPage('students',this)"><i class="ti ti-users"></i><span>Students</span></button>
-    <button class="nav-item" onclick="showPage('departments',this)"><i class="ti ti-building"></i><span>Departments</span></button>
-    <button class="nav-item" onclick="showPage('attendance',this)"><i class="ti ti-calendar-check"></i><span>Attendance</span></button>
-    <button class="nav-item" onclick="showPage('logs',this)"><i class="ti ti-activity"></i><span>Live Logs</span></button>
-  </nav>
-  <div class="sidebar-footer">
-    <span id="user-email-display" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px"></span>
-    <button class="signout-btn" onclick="doSignOut()"><i class="ti ti-logout"></i></button>
-  </div>
-</aside>
-
-<main class="main">
-  <div class="topbar">
-    <div class="topbar-title" id="pageTitle">Dashboard</div>
-    <div class="topbar-right">
-      <div class="search-bar"><i class="ti ti-search"></i><input type="text" id="globalSearch" placeholder="Search anything..." oninput="handleGlobalSearch(this.value)"></div>
-      <div class="badge-live"><div class="dot-live"></div>Live</div>
-    </div>
-  </div>
-  <div class="content">
-    <div class="page active" id="page-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card blue"><div class="stat-icon blue"><i class="ti ti-users"></i></div><div class="stat-value" id="stat-students">—</div><div class="stat-label">Total Students</div></div>
-        <div class="stat-card green"><div class="stat-icon green"><i class="ti ti-calendar-check"></i></div><div class="stat-value" id="stat-present">—</div><div class="stat-label">Present Today</div></div>
-        <div class="stat-card amber"><div class="stat-icon amber"><i class="ti ti-activity"></i></div><div class="stat-value" id="stat-logs">—</div><div class="stat-label">Live Log Events</div></div>
-        <div class="stat-card red"><div class="stat-icon red"><i class="ti ti-shield-x"></i></div><div class="stat-value" id="stat-denied">—</div><div class="stat-label">Denied Today</div></div>
-      </div>
-      <div class="two-col">
-        <div>
-          <div class="section-header"><div class="section-title">Recent Students</div><button class="btn btn-ghost btn-sm" onclick="showPage('students',document.querySelector('[onclick*=students]'))">View all</button></div>
-          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Role</th><th>Dept</th></tr></thead><tbody id="dash-students"><tr><td colspan="3"><div class="spinner"></div></td></tr></tbody></table></div>
-        </div>
-        <div>
-          <div class="section-header"><div class="section-title">Recent Activity</div><button class="btn btn-ghost btn-sm" onclick="showPage('logs',document.querySelector('[onclick*=logs]'))">View all</button></div>
-          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Status</th></tr></thead><tbody id="dash-logs"><tr><td colspan="3"><div class="spinner"></div></td></tr></tbody></table></div>
-        </div>
-      </div>
-    </div>
-    <div class="page" id="page-students">
-      <div class="section-header"><div class="section-title">All Students</div><button class="btn btn-primary" onclick="openModal('addStudent')"><i class="ti ti-plus"></i> Add Student</button></div>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Student ID</th><th>Role</th><th>Department</th><th>UID</th></tr></thead><tbody id="students-tbody"><tr><td colspan="5"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-    <div class="page" id="page-departments">
-      <div class="dept-overview-grid" id="dept-cards-row"></div>
-      <div class="section-header">
-        <div class="section-title" id="dept-table-title">All Departments</div>
-        <div style="display:flex;gap:8px">
-          <input class="dept-search-input" id="dept-search" placeholder="Search students..." oninput="renderDeptTable()" style="width:220px">
-          <select class="dept-filter-select" id="dept-filter-select" onchange="renderDeptTable()">
-            <option value="">All Departments</option>
-            <option value="Engineering">Engineering</option>
-            <option value="Science">Science</option>
-            <option value="Arts">Arts</option>
-            <option value="Business">Business</option>
-            <option value="Medicine">Medicine</option>
-          </select>
-        </div>
-      </div>
-      <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Student ID</th><th>Department</th><th>Status</th><th>UID</th><th>Change Dept</th></tr></thead><tbody id="dept-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-    <div class="page" id="page-attendance">
-      <div class="section-header"><div class="section-title">Attendance</div><button class="btn btn-primary" onclick="openModal('markAttendance')"><i class="ti ti-calendar-plus"></i> Mark Attendance</button></div>
-      <div class="attendance-controls">
-        <input type="date" id="att-date" onchange="renderAttendance()">
-        <select id="att-dept" onchange="renderAttendance()"><option value="">All Departments</option></select>
-        <select id="att-status" onchange="renderAttendance()"><option value="">All Status</option><option value="Present">Present</option><option value="Absent">Absent</option><option value="Late">Late</option></select>
-        <button class="btn btn-ghost" onclick="exportAttendanceCSV()"><i class="ti ti-download"></i> Export CSV</button>
-      </div>
-      <div class="att-stats">
-        <div class="att-stat"><div class="att-stat-num green" id="att-count-present">0</div><div class="att-stat-label">Present</div></div>
-        <div class="att-stat"><div class="att-stat-num red" id="att-count-absent">0</div><div class="att-stat-label">Absent</div></div>
-        <div class="att-stat"><div class="att-stat-num amber" id="att-count-late">0</div><div class="att-stat-label">Late</div></div>
-        <div class="att-stat"><div class="att-stat-num" id="att-count-pct" style="color:var(--accent)">0%</div><div class="att-stat-label">Attendance Rate</div></div>
-      </div>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Student ID</th><th>Department</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead><tbody id="attendance-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-    <div class="page" id="page-logs">
-      <div class="section-header">
-        <div class="section-title">Live Activity Log</div>
-        <select id="log-filter" class="form-select" style="width:auto;padding:8px 14px" onchange="renderLogs()"><option value="">All Status</option><option value="Allowed">Allowed</option><option value="Denied">Denied</option></select>
-      </div>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Status</th><th>Time</th></tr></thead><tbody id="logs-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-  </div>
-</main>
-
-<div class="modal-bg" id="modal-addStudent">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-user-plus" style="color:var(--accent)"></i> Add Student</div>
-    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="add-name" placeholder="e.g. Ahmad Rizal"></div>
-    <div class="form-group"><label class="form-label">Student ID</label><input class="form-input" id="add-sid" placeholder="e.g. S2024001"></div>
-    <div class="form-group"><label class="form-label">Role</label><select class="form-select" id="add-role"><option value="Student">Student</option><option value="Staff">Staff</option><option value="Lecturer">Lecturer</option></select></div>
-    <div class="form-group"><label class="form-label">Department</label><select class="form-select" id="add-dept"><option value="">— Select —</option><option value="Engineering">Engineering</option><option value="Science">Science</option><option value="Arts">Arts</option><option value="Business">Business</option><option value="Medicine">Medicine</option></select></div>
-    <div class="form-group"><label class="form-label">UID</label><input class="form-input" id="add-uid" placeholder="e.g. A1B2C3D4"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('addStudent')">Cancel</button><button class="btn btn-primary" onclick="addStudent()"><i class="ti ti-check"></i> Save</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="modal-markAttendance">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-calendar-plus" style="color:var(--accent)"></i> Mark Attendance</div>
-    <div class="form-group"><label class="form-label">Student</label><select class="form-select" id="mark-student"></select></div>
-    <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="mark-date"></div>
-    <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="mark-status"><option value="Present">Present</option><option value="Absent">Absent</option><option value="Late">Late</option></select></div>
-    <div class="form-group"><label class="form-label">Note (optional)</label><input class="form-input" id="mark-note" placeholder="e.g. Medical leave"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('markAttendance')">Cancel</button><button class="btn btn-primary" onclick="saveAttendance()"><i class="ti ti-check"></i> Save</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="modal-changeDept">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-building" style="color:var(--accent)"></i> Change Department</div>
-    <div class="form-group"><label class="form-label">Student</label><input class="form-input" id="change-dept-student-name" disabled><input type="hidden" id="change-dept-doc-id"></div>
-    <div class="form-group"><label class="form-label">New Department</label><select class="form-select" id="change-dept-value"><option value="">— No Department —</option><option value="Engineering">Engineering</option><option value="Science">Science</option><option value="Arts">Arts</option><option value="Business">Business</option><option value="Medicine">Medicine</option></select></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('changeDept')">Cancel</button><button class="btn btn-primary" onclick="saveDeptChange()"><i class="ti ti-check"></i> Save</button></div>
-  </div>
-</div>
-<div class="toast" id="toast"><i class="ti ti-check-circle"></i><span id="toast-msg"></span></div>
-
-<script>
-  firebase.initializeApp({
-    apiKey: "AIzaSyAP1FMBJckEkYFpaynypw9QT0Yf2ei9Q9o",
-    authDomain: "rcz-university-system.firebaseapp.com",
-    projectId: "rcz-university-system",
-    storageBucket: "rcz-university-system.firebasestorage.app",
-    messagingSenderId: "18705411316",
-    appId: "1:18705411316:web:545385d4c689b9297e82a1"
-  });
-  const db = firebase.firestore();
-  const auth = firebase.auth();
-
-  let studentsData=[], logsData=[], attendanceData=[];
-  let confirmationResult=null, recaptchaVerifier=null;
-  const todayStr = new Date().toISOString().slice(0,10);
-
-  const DEPARTMENTS = [
-    {name:'Engineering',icon:'ti-tools',    color:'var(--accent)', dimColor:'var(--accent-dim)'},
-    {name:'Science',    icon:'ti-flask',     color:'var(--green)',  dimColor:'var(--green-dim)'},
-    {name:'Arts',       icon:'ti-palette',   color:'#c084fc',       dimColor:'rgba(192,132,252,0.12)'},
-    {name:'Business',   icon:'ti-briefcase', color:'var(--amber)',  dimColor:'var(--amber-dim)'},
-    {name:'Medicine',   icon:'ti-heart-plus',color:'var(--red)',    dimColor:'var(--red-dim)'},
-  ];
-
-  // ── Auth state ──────────────────────────────
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('user-email-display').textContent = user.email || user.phoneNumber || 'Signed in';
-      initData();
-    } else {
-      document.getElementById('login-screen').style.display = 'flex';
+    /* Buttons */
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-  });
 
-  // ── FIX: Wire buttons immediately, no DOMContentLoaded ──
-  function setupButtons() {
-    document.getElementById('email-signin-btn').addEventListener('click', signInEmail);
-    document.getElementById('signup-btn').addEventListener('click', doSignUp);
-    document.getElementById('google-signin-btn').addEventListener('click', signInGoogle);
-    document.getElementById('apple-signin-btn').addEventListener('click', signInApple);
-    document.getElementById('send-otp-btn').addEventListener('click', sendOTP);
-    document.getElementById('verify-otp-btn').addEventListener('click', verifyOTP);
-    document.getElementById('eye-btn').addEventListener('click', () => toggleEye('password-input','eye-icon'));
-    document.getElementById('eye-btn2').addEventListener('click', () => toggleEye('signup-password','eye-icon2'));
-    document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') signInEmail(); });
-    document.getElementById('email-input').addEventListener('keydown', e => { if(e.key==='Enter') signInEmail(); });
-    document.getElementById('signup-confirm').addEventListener('keydown', e => { if(e.key==='Enter') doSignUp(); });
-  }
-  setupButtons();
-
-  function toggleEye(inputId, iconId) {
-    const input = document.getElementById(inputId);
-    const icon  = document.getElementById(iconId);
-    if (input.type === 'password') { input.type = 'text'; icon.className = 'ti ti-eye-off'; }
-    else { input.type = 'password'; icon.className = 'ti ti-eye'; }
-  }
-
-  function switchMode(mode) {
-    document.querySelectorAll('.auth-mode-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('mode-' + mode).classList.add('active');
-    if (mode === 'signup') {
-      document.getElementById('auth-title').textContent = 'Create account';
-      document.getElementById('auth-subtitle').textContent = 'Fill in your details to get started';
-      document.getElementById('method-tabs').style.display = 'none';
-      document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById('panel-signup').classList.add('active');
-    } else {
-      document.getElementById('auth-title').textContent = 'Welcome back';
-      document.getElementById('auth-subtitle').textContent = 'Sign in to access the dashboard';
-      document.getElementById('method-tabs').style.display = 'flex';
-      document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById('panel-email').classList.add('active');
-      document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.login-tab').classList.add('active');
+    /* Primary teal button for Email Sign-in */
+    .btn-email {
+      background: var(--teal); /* Teal background */
+      color: var(--white);     /* White text */
+      box-shadow: 0 2px 8px rgba(47,143,139,0.25); /* Subtle shadow */
     }
-    hideError(); hideSuccess();
-  }
-
-  function switchTab(tab, btn) {
-    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + tab).classList.add('active');
-    hideError();
-    if (tab === 'phone' && !recaptchaVerifier) setupRecaptcha();
-  }
-
-  function showError(msg) { const el=document.getElementById('login-error'); el.textContent=msg; el.classList.add('show'); }
-  function hideError() { document.getElementById('login-error').classList.remove('show'); }
-  function showSuccess(msg) { const el=document.getElementById('login-success'); el.textContent=msg; el.classList.add('show'); }
-  function hideSuccess() { document.getElementById('login-success').classList.remove('show'); }
-
-  async function signInEmail() {
-    const email = document.getElementById('email-input').value.trim();
-    const password = document.getElementById('password-input').value;
-    if (!email || !password) { showError('Please enter your email and password'); return; }
-    try { await auth.signInWithEmailAndPassword(email, password); }
-    catch(e) { showError(e.message); }
-  }
-
-  async function doSignUp() {
-    const email    = document.getElementById('signup-email').value.trim();
-    const password = document.getElementById('signup-password').value;
-    const confirm  = document.getElementById('signup-confirm').value;
-    if (!email || !password) { showError('Please fill in all fields'); return; }
-    if (password.length < 6) { showError('Password must be at least 6 characters'); return; }
-    if (password !== confirm) { showError('Passwords do not match'); return; }
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      showSuccess('Account created! Signing you in...');
-    } catch(e) { showError(e.message); }
-  }
-
-  async function signInGoogle() {
-    try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-    catch(e) { showError(e.message); }
-  }
-
-  async function signInApple() {
-    try { await auth.signInWithPopup(new firebase.auth.OAuthProvider('apple.com')); }
-    catch(e) { showError(e.message); }
-  }
-
-  function setupRecaptcha() {
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size:'normal', callback:()=>{} });
-    recaptchaVerifier.render();
-  }
-
-  async function sendOTP() {
-    const phone = document.getElementById('phone-input').value.trim();
-    if (!phone) { showError('Please enter a phone number'); return; }
-    try {
-      confirmationResult = await auth.signInWithPhoneNumber(phone, recaptchaVerifier);
-      document.getElementById('phone-step1').style.display = 'none';
-      document.getElementById('phone-step2').style.display = 'block';
-      hideError();
-    } catch(e) { showError(e.message); }
-  }
-
-  async function verifyOTP() {
-    const code = document.getElementById('otp-input').value.trim();
-    if (!code) { showError('Please enter the OTP code'); return; }
-    try { await confirmationResult.confirm(code); }
-    catch(e) { showError('Invalid code. Please try again.'); }
-  }
-
-  function resetPhone() {
-    document.getElementById('phone-step1').style.display = 'block';
-    document.getElementById('phone-step2').style.display = 'none';
-    document.getElementById('otp-input').value = '';
-    hideError();
-  }
-
-  async function doSignOut() { await auth.signOut(); }
-
-  function initData() {
-    document.getElementById('att-date').value  = todayStr;
-    document.getElementById('mark-date').value = todayStr;
-    db.collection("users").onSnapshot(snap => {
-      studentsData = [];
-      snap.forEach(d => studentsData.push({id:d.id,...d.data()}));
-      renderStudents(studentsData); renderDashStudents(); updateDeptFilter();
-      document.getElementById('stat-students').textContent = studentsData.length;
-      if (document.getElementById('page-departments').classList.contains('active')) renderDeptPage();
-    });
-    db.collection("logs").orderBy("time","desc").limit(50).onSnapshot(snap => {
-      logsData = [];
-      snap.forEach(d => logsData.push({id:d.id,...d.data()}));
-      renderLogs(); renderDashLogs(); updateDashStats();
-    });
-    db.collection("attendance").onSnapshot(snap => {
-      attendanceData = [];
-      snap.forEach(d => attendanceData.push({id:d.id,...d.data()}));
-      renderAttendance(); updatePresentStat();
-    });
-  }
-
-  function showPage(id, btn) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-'+id).classList.add('active');
-    if (btn) btn.classList.add('active');
-    const titles = {dashboard:'Dashboard',students:'Students',departments:'Departments',attendance:'Attendance',logs:'Live Logs'};
-    document.getElementById('pageTitle').textContent = titles[id]||id;
-    if (id==='departments') renderDeptPage();
-  }
-
-  function initials(name) { if(!name)return'?'; return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
-
-  function showToast(msg, type='success') {
-    const t = document.getElementById('toast');
-    t.className = 'toast '+type;
-    t.querySelector('i').className = type==='success'?'ti ti-check-circle':'ti ti-alert-circle';
-    document.getElementById('toast-msg').textContent = msg;
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3000);
-  }
-
-  function openModal(id) {
-    if (id==='markAttendance') {
-      document.getElementById('mark-student').innerHTML = studentsData.map(s=>`<option value="${s.uid||s.name}">${s.name} (${s.Student_ID||'N/A'})</option>`).join('');
+    .btn-email:hover {
+      background: var(--teal-light); /* Lighter teal on hover */
+      box-shadow: 0 4px 12px rgba(47,143,139,0.35); /* Larger shadow on hover */
+      transform: translateY(-1px); /* Slight lift on hover */
     }
-    document.getElementById('modal-'+id).classList.add('open');
-  }
-  function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
-  document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e => { if(e.target===bg) bg.classList.remove('open'); }));
 
-  function renderStudents(data) {
-    const tbody = document.getElementById('students-tbody');
-    if (!data.length) { tbody.innerHTML=`<tr><td colspan="5"><div class="empty"><i class="ti ti-users-off"></i><p>No students found</p></div></td></tr>`; return; }
-    tbody.innerHTML = data.map(s=>`
-      <tr>
-        <td><div class="name-cell"><div class="avatar">${initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-        <td>${s.Student_ID||'—'}</td>
-        <td><span class="badge ${s.role==='Student'?'badge-student':'badge-staff'}">${s.role||'—'}</span></td>
-        <td>${s.department||'<span style="color:var(--faint)">Unassigned</span>'}</td>
-        <td style="font-family:monospace;font-size:12px;color:var(--muted)">${s.uid||'—'}</td>
-      </tr>`).join('');
-  }
+    /* Primary teal button for Sign-up */
+    .btn-signup {
+      background: var(--teal); /* Teal background */
+      color: var(--white);     /* White text */
+      box-shadow: 0 2px 8px rgba(47,143,139,0.25);
+    }
+    .btn-signup:hover {
+      background: var(--teal-light); /* Lighter teal on hover */
+      box-shadow: 0 4px 12px rgba(47,143,139,0.35);
+      transform: translateY(-1px);
+    }
 
-  function renderDashStudents() {
-    document.getElementById('dash-students').innerHTML = studentsData.slice(0,6).map(s=>`
-      <tr>
-        <td><div class="name-cell"><div class="avatar">${initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-        <td><span class="badge ${s.role==='Student'?'badge-student':'badge-staff'}">${s.role||'—'}</span></td>
-        <td style="color:var(--muted)">${s.department||'—'}</td>
-      </tr>`).join('');
-  }
-
-  function updateDeptFilter() {
-    const sel=document.getElementById('att-dept'), cur=sel.value;
-    sel.innerHTML='<option value="">All Departments</option>'+DEPARTMENTS.map(d=>`<option value="${d.name}"${d.name===cur?' selected':''}>${d.name}</option>`).join('');
-  }
-
-  async function addStudent() {
-    const name=document.getElementById('add-name').value.trim(), sid=document.getElementById('add-sid').value.trim();
-    const role=document.getElementById('add-role').value, dept=document.getElementById('add-dept').value, uid=document.getElementById('add-uid').value.trim();
-    if (!name) { showToast('Name is required','error'); return; }
-    try {
-      await db.collection("users").add({name,Student_ID:sid,role,department:dept,uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-      closeModal('addStudent');
-      ['add-name','add-sid','add-uid'].forEach(id=>document.getElementById(id).value='');
-      document.getElementById('add-dept').value='';
-      showToast('Student added successfully');
-    } catch(e) { showToast('Error: '+e.message,'error'); }
-  }
-
-  function renderDeptPage() { renderDeptCards(); renderDeptTable(); }
-
-  function renderDeptCards() {
-    const sel=document.getElementById('dept-filter-select').value;
-    document.getElementById('dept-cards-row').innerHTML = DEPARTMENTS.map(d=>{
-      const count=studentsData.filter(s=>s.department===d.name).length;
-      return `<div class="dept-overview-card ${sel===d.name?'selected':''}" onclick="filterByDept('${d.name}')" style="border-top:2px solid ${d.color}">
-        <div class="dept-card-icon" style="color:${d.color}"><i class="ti ${d.icon}"></i></div>
-        <div class="dept-card-name">${d.name}</div>
-        <div class="dept-card-count" style="color:${d.color}">${count}</div>
-        <div class="dept-card-label">students</div>
-      </div>`;
-    }).join('');
-  }
-
-  function filterByDept(name) {
-    const sel=document.getElementById('dept-filter-select');
-    sel.value=sel.value===name?'':name;
-    renderDeptTable(); renderDeptCards();
-  }
-
-  function renderDeptTable() {
-    const search=document.getElementById('dept-search').value.toLowerCase();
-    const deptF=document.getElementById('dept-filter-select').value;
-    renderDeptCards();
-    document.getElementById('dept-table-title').textContent=deptF?`${deptF} Students`:'All Departments';
-    let data=studentsData;
-    if(deptF) data=data.filter(s=>s.department===deptF);
-    if(search) data=data.filter(s=>(s.name||'').toLowerCase().includes(search)||(s.Student_ID||'').toLowerCase().includes(search));
-    const tbody=document.getElementById('dept-tbody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i class="ti ti-building-off"></i><p>No students found</p></div></td></tr>`;return;}
-    tbody.innerHTML=data.map(s=>{
-      const dObj=DEPARTMENTS.find(d=>d.name===s.department);
-      const dBadge=s.department?`<span style="background:${dObj?dObj.dimColor:'var(--accent-dim)'};color:${dObj?dObj.color:'var(--accent)'};border:1px solid ${dObj?dObj.color+'33':'var(--accent)'};padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600">${s.department}</span>`:`<span style="color:var(--faint);font-size:12px">Unassigned</span>`;
-      return `<tr>
-        <td><div class="name-cell"><div class="avatar">${initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-        <td style="color:var(--muted)">${s.Student_ID||'—'}</td>
-        <td>${dBadge}</td>
-        <td><span class="badge badge-student">${s.status||s.role||'—'}</span></td>
-        <td style="font-family:monospace;font-size:12px;color:var(--muted)">${s.uid||'—'}</td>
-        <td><button class="btn btn-ghost btn-sm" onclick="openChangeDept('${s.id}','${(s.name||'').replace(/'/g,"\\'")}','${s.department||''}')"><i class="ti ti-pencil"></i> Change</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  function openChangeDept(docId,name,currentDept){
-    document.getElementById('change-dept-doc-id').value=docId;
-    document.getElementById('change-dept-student-name').value=name;
-    document.getElementById('change-dept-value').value=currentDept||'';
-    openModal('changeDept');
-  }
-
-  async function saveDeptChange(){
-    const docId=document.getElementById('change-dept-doc-id').value;
-    const newDept=document.getElementById('change-dept-value').value;
-    try{
-      await db.collection("users").doc(docId).update({department:newDept});
-      closeModal('changeDept');
-      showToast('Department updated to '+(newDept||'Unassigned'));
-    }catch(e){showToast('Error: '+e.message,'error');}
-  }
-
-  function renderLogs(){
-    const filter=document.getElementById('log-filter').value;
-    const data=filter?logsData.filter(l=>l.status===filter):logsData;
-    const tbody=document.getElementById('logs-tbody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="4"><div class="empty"><i class="ti ti-activity-off"></i><p>No logs found</p></div></td></tr>`;return;}
-    tbody.innerHTML=data.map(l=>`
-      <tr>
-        <td><div class="name-cell"><div class="avatar">${initials(l.name)}</div><span>${l.name||'—'}</span></div></td>
-        <td>${l.location||'—'}</td>
-        <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${l.status||'—'}</span></td>
-        <td style="color:var(--muted);font-size:12px">${l.time?new Date(l.time.toDate()).toLocaleString():'—'}</td>
-      </tr>`).join('');
-  }
-
-  function renderDashLogs(){
-    document.getElementById('dash-logs').innerHTML=logsData.slice(0,6).map(l=>`
-      <tr><td>${l.name||'—'}</td><td style="color:var(--muted)">${l.location||'—'}</td>
-      <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${l.status||'—'}</span></td></tr>`).join('');
-  }
-
-  function updateDashStats(){
-    document.getElementById('stat-logs').textContent=logsData.length;
-    document.getElementById('stat-denied').textContent=logsData.filter(l=>l.status==='Denied').length;
-  }
-
-  function renderAttendance(){
-    const dateVal=document.getElementById('att-date').value;
-    const deptVal=document.getElementById('att-dept').value;
-    const statusVal=document.getElementById('att-status').value;
-    let data=attendanceData;
-    if(dateVal) data=data.filter(a=>a.date===dateVal);
-    if(deptVal) data=data.filter(a=>a.department===deptVal);
-    if(statusVal) data=data.filter(a=>a.status===statusVal);
-    const present=data.filter(a=>a.status==='Present').length;
-    const absent=data.filter(a=>a.status==='Absent').length;
-    const late=data.filter(a=>a.status==='Late').length;
-    const total=data.length;
-    document.getElementById('att-count-present').textContent=present;
-    document.getElementById('att-count-absent').textContent=absent;
-    document.getElementById('att-count-late').textContent=late;
-    document.getElementById('att-count-pct').textContent=total>0?Math.round((present/total)*100)+'%':'0%';
-    const tbody=document.getElementById('attendance-tbody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i class="ti ti-calendar-off"></i><p>No attendance records</p></div></td></tr>`;return;}
-    tbody.innerHTML=data.map(a=>{
-      const bc=a.status==='Present'?'badge-present':a.status==='Absent'?'badge-absent':'badge-late';
-      return `<tr>
-        <td><div class="name-cell"><div class="avatar">${initials(a.studentName)}</div><span>${a.studentName||'—'}</span></div></td>
-        <td style="color:var(--muted)">${a.studentId||'—'}</td>
-        <td>${a.department||'—'}</td>
-        <td><span class="badge ${bc}">${a.status||'—'}</span></td>
-        <td style="color:var(--muted);font-size:12px">${a.time||'—'}</td>
-        <td><div class="mark-btns">
-          <button class="btn btn-success btn-sm" onclick="updateAttStatus('${a.id}','Present')"><i class="ti ti-check"></i></button>
-          <button class="btn btn-sm" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.2)" onclick="updateAttStatus('${a.id}','Late')"><i class="ti ti-clock"></i></button>
-          <button class="btn btn-danger btn-sm" onclick="updateAttStatus('${a.id}','Absent')"><i class="ti ti-x"></i></button>
-        </div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  function updatePresentStat(){
-    document.getElementById('stat-present').textContent=attendanceData.filter(a=>a.date===todayStr&&a.status==='Present').length;
-  }
-
-  async function saveAttendance(){
-    const studentVal=document.getElementById('mark-student').value;
-    const student=studentsData.find(s=>s.uid===studentVal||s.name===studentVal);
-    const dateVal=document.getElementById('mark-date').value;
-    const statusVal=document.getElementById('mark-status').value;
-    const noteVal=document.getElementById('mark-note').value.trim();
-    if(!studentVal||!dateVal){showToast('Please select student and date','error');return;}
-    try{
-      await db.collection("attendance").add({
-        studentName:student?student.name:studentVal,
-        studentId:student?student.Student_ID||'':'',
-        department:student?student.department||'':'',
-        uid:studentVal,date:dateVal,status:statusVal,note:noteVal,
-        time:new Date().toLocaleTimeString(),
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
-      closeModal('markAttendance');
-      document.getElementById('mark-note').value='';
-      showToast('Attendance saved');
-    }catch(e){showToast('Error: '+e.message,'error');}
-  }
-
-  async function updateAttStatus(docId,status){
-    try{
-      await db.collection("attendance").doc(docId).update({status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      showToast('Status updated to '+status);
-    }catch(e){showToast('Error: '+e.message,'error');}
-  }
-
-  function exportAttendanceCSV(){
-    const dateVal=document.getElementById('att-date').value;
-    const data=dateVal?attendanceData.filter(a=>a.date===dateVal):attendanceData;
-    if(!data.length){showToast('No data to export','error');return;}
-    const header=['Name','Student ID','Department','Status','Date','Time','Note'];
-    const rows=data.map(a=>[a.studentName,a.studentId,a.department,a.status,a.date,a.time,a.note||''].map(v=>`"${v}"`).join(','));
-    const csv=[header.join(','),...rows].join('\n');
-    const blob=new Blob([csv],{type:'text/csv'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url; a.download=`attendance-${dateVal||'all'}.csv`; a.click();
-    URL.revokeObjectURL(url);
-    showToast('CSV exported');
-  }
-
-  function handleGlobalSearch(val){
-    const q=val.toLowerCase();
-    if(!q){renderStudents(studentsData);return;}
-    renderStudents(studentsData.filter(s=>
-      (s.name&&s.name.toLowerCase().includes(q))||
-      (s.Student_ID&&s.Student_ID.toLowerCase().includes(q))||
-      (s.department&&s.department.toLowerCase().includes(q))||
-      (s.uid&&s.uid.toLowerCase().includes(q))
-    ));
-  }
-</script>
-</body>
-</html>
+    /* Google Sign-in button */
+    .btn-google {
+      background: var(--white); /* White background */
+      color: var(--gray);      /* Gray text */
+      border: 1.5px solid #E5E7EB; /* Light borderNo response
