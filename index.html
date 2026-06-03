@@ -899,6 +899,67 @@
     appId: "1:18705411316:web:545385d4c689b9297e82a1"
   });
   const db   = firebase.firestore();
+  async function loadDashboardData() {
+  try {
+    const studentsSnap = await db.collection("students").get();
+    const staffSnap = await db.collection("staff").get();
+    const usersSnap = await db.collection("users").get();
+
+    const students = studentsSnap.docs.map(doc => ({
+      id: doc.id,
+      type: "Student",
+      ...doc.data()
+    }));
+
+    const staff = staffSnap.docs.map(doc => ({
+      id: doc.id,
+      type: "Staff",
+      ...doc.data()
+    }));
+
+    const users = usersSnap.docs.map(doc => ({
+      id: doc.id,
+      type: "User",
+      ...doc.data()
+    }));
+
+    const allData = [...students, ...staff, ...users];
+
+    console.log("ALL DATA:", allData);
+
+    renderAllData(allData);
+
+  } catch (error) {
+    console.error("Error loading dashboard:", error);
+  }
+}
+  function renderAllData(data) {
+  const container = document.getElementById("dashboard");
+
+  if (!container) {
+    console.error("No #dashboard element found");
+    return;
+  
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(person => {
+    const div = document.createElement("div");
+    div.style.border = "1px solid #ccc";
+    div.style.margin = "10px";
+    div.style.padding = "10px";
+    div.style.borderRadius = "10px";
+
+    div.innerHTML = `
+      <h3>${person.name || person.fullName || "No Name"}</h3>
+      <p>Type: ${person.type}</p>
+      <p>ID: ${person.id}</p>
+    `;
+
+    container.appendChild(div);
+  });
+}
   const auth = firebase.auth();
 
   /* ── State ── */
@@ -1125,6 +1186,7 @@
       snap.forEach(d => attendanceData.push({id:d.id, ...d.data()}));
       renderAttendance(); updatePresentStat();
     });
+    loadDashboardData();
   }
 
   /* ══════════════════════════════════════════════════════
