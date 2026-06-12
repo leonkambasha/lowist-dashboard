@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -35,7 +35,7 @@
       --brand-shadow-lg:0 8px 16px -2px rgba(0,0,0,0.08),0 32px 64px -12px rgba(0,0,0,0.14);
     }
     body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
-
+ 
     /* ─── LOGIN ─── */
     #login-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:var(--brand-bg);background-image:radial-gradient(ellipse 80% 60% at 10% 20%,rgba(47,143,139,0.07) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 90% 80%,rgba(79,175,168,0.06) 0%,transparent 55%)}
     #login-screen::before,#login-screen::after{content:'';position:absolute;border-radius:50%;pointer-events:none;animation:floatOrb 8s ease-in-out infinite}
@@ -85,7 +85,7 @@
     #phone-step2{display:none}
     #recaptcha-container{margin-bottom:12px}
     .login-footer-tagline{text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--brand-border);font-family:'Poppins',sans-serif;font-size:11px;color:#CBD5E1;letter-spacing:0.5px}
-
+ 
     /* ─── ADMIN UNLOCK MODAL ─── */
     .admin-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .admin-modal-overlay.open{display:flex}
@@ -99,7 +99,7 @@
     .admin-unlock-actions{display:flex;gap:10px;justify-content:flex-end}
     .admin-unlock-err{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25);border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:12px;display:none}
     .admin-unlock-err.show{display:block}
-
+ 
     /* ─── SIDEBAR ─── */
     .admin-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(251,191,36,0.15);color:var(--amber);border:1px solid rgba(251,191,36,0.3);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;letter-spacing:0.5px;margin-top:6px}
     .admin-badge i{font-size:12px}
@@ -129,7 +129,7 @@
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
     .content{padding:28px 32px}
     .page{display:none}.page.active{display:block}
-
+ 
     /* ─── STATS & TABLES ─── */
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
     .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
@@ -169,7 +169,7 @@
     .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-dim);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
     .name-cell{display:flex;align-items:center;gap:10px}
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-
+ 
     /* ─── PEOPLE PAGE HEADER CONTROLS ─── */
     .people-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
     .filter-pill{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all 0.15s}
@@ -182,7 +182,7 @@
     .people-search{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:8px 14px;font-family:var(--font-body);font-size:13px;outline:none;min-width:220px}
     .people-search:focus{border-color:var(--accent)}
     .people-count-chip{font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:4px 10px;border-radius:999px;margin-left:auto}
-
+ 
     /* ─── STUDENT/PEOPLE CARD GRID ─── */
     .students-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:4px}
     .stu-card{background:var(--surface);border:1px solid var(--border);border-radius:16px 16px 10px 10px;overflow:hidden;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s,border-color 0.18s;position:relative}
@@ -209,9 +209,9 @@
     .av-staff{background:var(--amber-dim);color:var(--amber)}
     .av-lecturer{background:var(--green-dim);color:var(--green)}
     .av-professor{background:var(--purple-dim);color:var(--purple)}
-
+ 
     /* ─── PROFILE OVERLAY ─── */
-    #profile-overlay{position:fixed;top:0;right:-100%;bottom:0;width:min(620px,100vw);background:var(--bg);border-left:1px solid var(--border2);z-index:300;overflow-y:auto;transition:right 0.35s cubic-bezier(0.22,1,0.36,1);box-shadow:-8px 0 40px rgba(0,0,0,0.4)}
+    #profile-overlay{position:fixed;top:0;right:-100%;bottom:0;width:min(680px,100vw);background:var(--bg);border-left:1px solid var(--border2);z-index:300;overflow-y:auto;transition:right 0.35s cubic-bezier(0.22,1,0.36,1);box-shadow:-8px 0 40px rgba(0,0,0,0.4)}
     #profile-overlay.open{right:0}
     #overlay-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:299;backdrop-filter:blur(2px)}
     #overlay-backdrop.open{display:block}
@@ -235,6 +235,7 @@
     .tag-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.2)}
     .tag-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
     .tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(192,132,252,0.2)}
+    .tag-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
     .prof-body{padding:24px 28px}
     .prof-section{margin-bottom:24px}
     .prof-section-title{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
@@ -248,6 +249,17 @@
     .info-row i{font-size:17px;color:var(--accent);margin-top:1px;flex-shrink:0}
     .info-row-label{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:0.6px}
     .info-row-value{font-size:14px;color:var(--text);font-weight:500;margin-top:2px}
+ 
+    /* ─── PERSONAL INFO GRID (new) ─── */
+    .personal-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+    .personal-info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:12px}
+    .personal-info-card .pic-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .personal-info-card .pic-label{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px}
+    .personal-info-card .pic-value{font-size:15px;font-weight:600;color:var(--text)}
+ 
+    /* blood group badge styling */
+    .blood-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.3);border-radius:6px;padding:2px 10px;font-size:15px;font-weight:700;font-family:var(--font-head)}
+ 
     .att-bar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:8px}
     .att-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
     .att-pct{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--text)}
@@ -261,8 +273,8 @@
     .login-sub{font-size:11px;color:var(--muted);margin-top:2px}
     .login-badge{margin-left:auto;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--green-dim);color:var(--green);flex-shrink:0}
     .no-classes{text-align:center;padding:24px;color:var(--faint);font-size:13px}
-
-    /* ─── STATISTICS GRAPH (Student Profile) ─── */
+ 
+    /* ─── STATISTICS GRAPH ─── */
     .stats-period-toggle{display:flex;gap:4px;background:var(--surface2);border-radius:8px;padding:3px;margin-bottom:16px;border:1px solid var(--border)}
     .period-btn{flex:1;padding:6px 8px;border:none;background:none;border-radius:6px;font-family:var(--font-body);font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.15s;font-weight:500}
     .period-btn.active{background:var(--accent);color:#051a29;font-weight:600}
@@ -270,8 +282,8 @@
     .chart-legend{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
     .chart-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
     .chart-legend-dot{width:8px;height:8px;border-radius:50%}
-
-    /* ─── ATTENDANCE / DEPT / LOGS ─── */
+ 
+    /* ─── ATTENDANCE ─── */
     .attendance-controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
     .attendance-controls select,.attendance-controls input[type="date"]{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
     .att-stats{display:flex;gap:12px;margin-bottom:20px}
@@ -291,9 +303,11 @@
     .dept-search-input{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none}
     .dept-search-input:focus{border-color:var(--accent)}
     .dept-filter-select{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:9px 14px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-
-    /* ─── CCTV SECTION ─── */
-    .cctv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+ 
+    /* ═══════════════════════════════
+       CCTV SECTION — ENHANCED
+    ═══════════════════════════════ */
+    .cctv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
     .cctv-status-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
     .cctv-chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:5px 12px;border-radius:999px}
     .cctv-chip.online{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,160,0.2)}
@@ -315,7 +329,7 @@
     .cctv-offline-screen{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0a1420;gap:10px}
     .cctv-offline-screen i{font-size:32px;color:var(--faint)}
     .cctv-offline-screen p{font-size:12px;color:var(--faint);font-weight:500}
-    .cctv-controls{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+    .cctv-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
     .cctv-layout-btn{padding:7px 13px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all 0.15s;display:flex;align-items:center;gap:5px}
     .cctv-layout-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
     .cctv-layout-btn:hover{background:var(--accent-dim);color:var(--accent)}
@@ -334,7 +348,36 @@
     .cctv-nostream i{font-size:36px;color:var(--faint)}
     .cctv-nostream p{font-size:12px;color:var(--faint);text-align:center;max-width:160px;line-height:1.5}
     .cctv-nostream small{font-size:10px;color:var(--faint);opacity:0.6}
-
+ 
+    /* ─── CCTV ZONE TABS ─── */
+    .cctv-zone-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .zone-tab{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all 0.15s;letter-spacing:0.3px}
+    .zone-tab:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+    .zone-tab.active{color:#051a29;border-color:transparent}
+    .zone-tab.zone-all.active{background:var(--accent)}
+    .zone-tab.zone-north.active{background:#a78bfa}
+    .zone-tab.zone-south.active{background:#34d399}
+    .zone-tab.zone-east.active{background:#f59e0b}
+    .zone-tab.zone-west.active{background:#f87171}
+    .zone-tab.zone-custom.active{background:var(--purple)}
+    .zone-count-pill{background:rgba(255,255,255,0.2);border-radius:99px;padding:1px 7px;font-size:10px;font-weight:700}
+    .zone-manage-btn{margin-left:auto;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--radius-sm);font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all 0.15s}
+    .zone-manage-btn:hover{background:var(--amber-dim);color:var(--amber);border-color:var(--amber)}
+ 
+    /* Zone badge on feed */
+    .cctv-zone-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase;pointer-events:none}
+    .zone-badge-north{background:#7c3aed;color:#fff}
+    .zone-badge-south{background:#059669;color:#fff}
+    .zone-badge-east{background:#d97706;color:#fff}
+    .zone-badge-west{background:#dc2626;color:#fff}
+    .zone-badge-custom{background:#7c3aed;color:#fff}
+ 
+    /* Empty zone state */
+    .cctv-zone-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px;gap:12px;background:var(--surface);border:1px dashed var(--border2);border-radius:var(--radius)}
+    .cctv-zone-empty i{font-size:36px;color:var(--faint)}
+    .cctv-zone-empty p{font-size:13px;color:var(--faint)}
+    .cctv-zone-empty small{font-size:11px;color:var(--faint);opacity:0.6}
+ 
     /* ─── MODALS ─── */
     .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center}
     .modal-bg.open{display:flex}
@@ -344,20 +387,29 @@
     .form-label{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:7px}
     .form-input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none;transition:border-color 0.15s}
     .form-input:focus{border-color:var(--accent)}
+    .form-input.invalid{border-color:var(--red)!important;box-shadow:0 0 0 2px rgba(248,113,113,0.15)}
+    .form-hint{font-size:11px;color:var(--faint);margin-top:5px}
+    .form-err{font-size:11px;color:var(--red);margin-top:5px;display:none}
+    .form-err.show{display:block}
     .form-select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);padding:10px 14px;font-family:var(--font-body);font-size:14px;outline:none}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
     .empty{text-align:center;padding:48px;color:var(--faint)}
     .empty i{font-size:36px;margin-bottom:12px;display:block}
     .empty p{font-size:14px}
     @keyframes spin{to{transform:rotate(360deg)}}
     .spinner{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:40px auto}
-    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px 20px;font-size:14px;color:var(--text);z-index:999;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all 0.25s;pointer-events:none}
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px 20px;font-size:14px;color:var(--text);z-index:9999;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all 0.25s;pointer-events:none;max-width:360px}
     .toast.show{transform:translateY(0);opacity:1}
-    .toast.success i{color:var(--green)}.toast.error i{color:var(--red)}
-
-    /* hidden file input */
+    .toast.success i{color:var(--green)}.toast.error i{color:var(--red)}.toast.info i{color:var(--accent)}
+ 
+    /* Upload progress */
+    .upload-progress-bar{height:3px;background:var(--border);border-radius:99px;margin-top:8px;overflow:hidden;display:none}
+    .upload-progress-bar.show{display:block}
+    .upload-progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.2s;width:0%}
+ 
     #photo-file-input{display:none}
-
+ 
     /* ─── RESPONSIVE ─── */
     @media(max-width:900px){
       .sidebar{width:64px}
@@ -370,12 +422,14 @@
       #profile-overlay{width:100vw}
       .cctv-grid{grid-template-columns:1fr}
       .cctv-two-col{grid-template-columns:1fr}
+      .personal-info-grid{grid-template-columns:1fr}
     }
     @media(max-width:600px){
       .login-box{padding:32px 24px 28px}
       .prof-stats-row{grid-template-columns:1fr 1fr}
       .people-controls{gap:6px}
       .cctv-grid.layout-3{grid-template-columns:1fr 1fr}
+      .form-row{grid-template-columns:1fr}
     }
     @media(max-width:480px){
       .login-box{border-radius:16px;padding:28px 20px 24px}
@@ -385,7 +439,7 @@
   </style>
 </head>
 <body>
-
+ 
 <!-- ─── LOGIN ─── -->
 <div id="login-screen">
   <div class="login-box">
@@ -462,12 +516,12 @@
     <div class="login-footer-tagline">Empowering communities through education</div>
   </div>
 </div>
-
+ 
 <!-- ─── ADMIN UNLOCK MODAL ─── -->
 <div class="admin-modal-overlay" id="admin-unlock-modal">
   <div class="admin-unlock-box">
     <div class="admin-unlock-title"><i class="ti ti-shield-lock"></i> Admin Access Required</div>
-    <div class="admin-unlock-sub">This action requires admin privileges. Enter your <strong style="color:var(--amber)">Firebase UID</strong> to verify identity and unlock admin features.<br><br>Your UID must exist in the <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px">admins</code> collection in Firestore.</div>
+    <div class="admin-unlock-sub">Enter your <strong style="color:var(--amber)">Firebase UID</strong> to verify identity.<br><br>Your UID must exist in the <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px">admins</code> collection in Firestore.</div>
     <div class="admin-unlock-err" id="admin-unlock-err"></div>
     <input class="admin-uid-input" id="admin-uid-input" type="text" placeholder="Paste your Firebase UID here..." autocomplete="off" spellcheck="false"/>
     <div class="admin-unlock-hint"><i class="ti ti-info-circle" style="color:var(--accent);font-size:14px"></i> Find your UID in Firebase Console → Authentication → Users</div>
@@ -477,17 +531,36 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- ─── ADD CAMERA MODAL ─── -->
 <div class="modal-bg" id="modal-addCamera">
-  <div class="modal" style="width:520px">
+  <div class="modal" style="width:540px">
     <div class="modal-title"><i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed</div>
     <div style="background:var(--amber-dim);border:1px solid rgba(251,191,36,0.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--amber);display:flex;gap:8px">
       <i class="ti ti-info-circle" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
-      <div><strong>Hikvision / Dahua setup:</strong> Your NVR converts RTSP to HLS. Paste the HLS (.m3u8) URL from your NVR's web portal, or the direct RTSP URL if using a relay server (MediaMTX).</div>
+      <div><strong>Hikvision / Dahua:</strong> Paste the HLS (.m3u8) URL from your NVR portal, or RTSP URL if using a relay (MediaMTX).</div>
     </div>
-    <div class="form-group"><label class="form-label">Camera Name</label><input class="form-input" id="cam-name" placeholder="e.g. Main Entrance — Hikvision DS-2CD2143G2"></div>
-    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="cam-location" placeholder="e.g. Block A, Ground Floor"></div>
+    <div class="form-group"><label class="form-label">Camera Name *</label><input class="form-input" id="cam-name" placeholder="e.g. Main Entrance — Hikvision DS-2CD2143G2"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="cam-location" placeholder="e.g. Block A, Ground Floor"></div>
+      <div class="form-group">
+        <label class="form-label">Zone / Section</label>
+        <select class="form-select" id="cam-zone">
+          <option value="North">🧭 North Section</option>
+          <option value="South">🧭 South Section</option>
+          <option value="East">🧭 East Section</option>
+          <option value="West">🧭 West Section</option>
+          <option value="Main Gate">🚪 Main Gate</option>
+          <option value="Library">📚 Library</option>
+          <option value="Dormitories">🏠 Dormitories</option>
+          <option value="Custom">⚙️ Custom…</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" id="cam-zone-custom-wrap" style="display:none">
+      <label class="form-label">Custom Zone Name</label>
+      <input class="form-input" id="cam-zone-custom" placeholder="e.g. Sports Complex">
+    </div>
     <div class="form-group">
       <label class="form-label">Stream Type</label>
       <select class="form-select" id="cam-stream-type" onchange="toggleStreamFields()">
@@ -499,43 +572,59 @@
     <div class="form-group">
       <label class="form-label" id="cam-url-label">Stream URL</label>
       <input class="form-input" id="cam-url" placeholder="http://your-nvr-ip:port/stream/channel1/stream.m3u8" style="font-family:monospace;font-size:12px">
-      <div style="font-size:11px;color:var(--faint);margin-top:6px" id="cam-url-hint">
-        Hikvision NVR path: <code style="color:var(--accent)">rtsp://admin:pass@nvr-ip:554/Streaming/Channels/101</code> → convert to HLS via MediaMTX
+      <div class="form-hint" id="cam-url-hint">Hikvision NVR RTSP → convert to HLS via MediaMTX</div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Camera Model</label>
+        <select class="form-select" id="cam-model">
+          <option value="Hikvision DS-2CD2143G2-I">Hikvision DS-2CD2143G2-I (4MP)</option>
+          <option value="Hikvision DS-2CD2T47G2-L">Hikvision DS-2CD2T47G2-L (4MP Out)</option>
+          <option value="Hikvision DS-7608NI-K2">Hikvision DS-7608NI-K2 (NVR)</option>
+          <option value="Dahua IPC-HDW2849H">Dahua IPC-HDW2849H (8MP)</option>
+          <option value="Dahua NVR2108HS-8P-S3">Dahua NVR2108HS (NVR)</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Camera Model</label>
-      <select class="form-select" id="cam-model">
-        <option value="Hikvision DS-2CD2143G2-I">Hikvision DS-2CD2143G2-I (4MP Indoor)</option>
-        <option value="Hikvision DS-2CD2T47G2-L">Hikvision DS-2CD2T47G2-L (4MP Outdoor)</option>
-        <option value="Hikvision DS-7608NI-K2">Hikvision DS-7608NI-K2 (NVR)</option>
-        <option value="Dahua IPC-HDW2849H">Dahua IPC-HDW2849H (8MP Indoor)</option>
-        <option value="Dahua IPC-HFW2849S-S-IL">Dahua IPC-HFW2849S-S-IL (8MP Outdoor)</option>
-        <option value="Dahua NVR2108HS-8P-S3">Dahua NVR2108HS-8P-S3 (NVR)</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Status</label>
-      <select class="form-select" id="cam-status">
-        <option value="online">Online</option>
-        <option value="offline">Offline / Placeholder</option>
-      </select>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="cam-status">
+          <option value="online">Online</option>
+          <option value="offline">Offline / Placeholder</option>
+        </select>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('addCamera')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveCamera()"><i class="ti ti-check"></i> Add Camera</button>
+      <button class="btn btn-primary" id="cam-save-btn" onclick="saveCamera()"><i class="ti ti-check"></i> Add Camera</button>
     </div>
   </div>
 </div>
-
+ 
+<!-- ─── MANAGE ZONES MODAL ─── -->
+<div class="modal-bg" id="modal-manageZones">
+  <div class="modal" style="width:440px">
+    <div class="modal-title"><i class="ti ti-map-2" style="color:var(--amber)"></i> Manage Camera Zones</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Zones group cameras by physical location. Rename or remove zones below, or add new ones.</p>
+    <div id="zones-list-ui" style="margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px;margin-bottom:4px">
+      <input class="form-input" id="new-zone-input" placeholder="New zone name…" style="flex:1">
+      <button class="btn btn-primary" onclick="addCustomZone()"><i class="ti ti-plus"></i> Add</button>
+    </div>
+    <p class="form-hint">Built-in zones (North, South, East, West) can't be removed.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('manageZones')">Done</button>
+    </div>
+  </div>
+</div>
+ 
 <!-- ─── PROFILE OVERLAY ─── -->
 <div id="overlay-backdrop" onclick="closeProfile()"></div>
 <div id="profile-overlay"><div id="profile-content"></div></div>
-
+ 
 <!-- hidden photo input -->
-<input type="file" id="photo-file-input" accept="image/*">
-
+<input type="file" id="photo-file-input" accept="image/jpeg,image/png,image/webp,image/gif">
+ 
 <!-- ─── SIDEBAR ─── -->
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -562,7 +651,7 @@
     <button class="signout-btn" onclick="doSignOut()"><i class="ti ti-logout"></i></button>
   </div>
 </aside>
-
+ 
 <!-- ─── MAIN ─── -->
 <main class="main">
   <div class="topbar">
@@ -576,7 +665,7 @@
     </div>
   </div>
   <div class="content">
-
+ 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="stats-grid">
@@ -602,7 +691,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- PEOPLE PAGE -->
     <div class="page" id="page-people">
       <div class="section-header" style="margin-bottom:12px">
@@ -629,7 +718,7 @@
         <div style="grid-column:1/-1"><div class="spinner"></div></div>
       </div>
     </div>
-
+ 
     <!-- DEPARTMENTS PAGE -->
     <div class="page" id="page-departments">
       <div class="dept-overview-grid" id="dept-cards-row"></div>
@@ -659,7 +748,7 @@
         <tbody id="dept-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table>
       </div>
     </div>
-
+ 
     <!-- ATTENDANCE PAGE -->
     <div class="page" id="page-attendance">
       <div class="section-header"><div class="section-title">Attendance</div><button class="btn btn-primary" onclick="openModal('markAttendance')"><i class="ti ti-calendar-plus"></i> Mark Attendance</button></div>
@@ -678,7 +767,7 @@
       <div class="table-wrap"><table><thead><tr><th>Name</th><th>ID</th><th>Dept</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead>
       <tbody id="attendance-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
-
+ 
     <!-- LOGS PAGE -->
     <div class="page" id="page-logs">
       <div class="section-header">
@@ -688,7 +777,7 @@
       <div class="table-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Status</th><th>Time</th></tr></thead>
       <tbody id="logs-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
-
+ 
     <!-- ADMIN PANEL PAGE -->
     <div class="page" id="page-admins">
       <div class="section-header">
@@ -706,7 +795,7 @@
         <tbody id="admins-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
       </div>
     </div>
-
+ 
     <!-- ═══ CCTV PAGE ═══ -->
     <div class="page" id="page-cctv">
       <div class="cctv-header">
@@ -720,7 +809,12 @@
           </div>
         </div>
       </div>
-
+ 
+      <!-- Zone navigation bar -->
+      <div class="cctv-zone-bar" id="cctv-zone-bar">
+        <!-- populated by renderZoneTabs() -->
+      </div>
+ 
       <!-- Layout controls -->
       <div class="cctv-controls">
         <button class="cctv-layout-btn active" id="layout-btn-2" onclick="setCctvLayout(2,this)"><i class="ti ti-layout-2"></i> 2×2</button>
@@ -729,9 +823,8 @@
         <button class="cctv-layout-btn" id="layout-btn-4" onclick="setCctvLayout(4,this)"><i class="ti ti-layout-grid-add"></i> 4-Up</button>
         <button class="cctv-add-btn" onclick="openModal('addCamera')"><i class="ti ti-plus"></i> Add Camera</button>
       </div>
-
+ 
       <div class="cctv-two-col">
-        <!-- Feed grid -->
         <div>
           <div class="cctv-grid layout-4" id="cctv-feed-grid"></div>
         </div>
@@ -756,50 +849,81 @@
         </div>
       </div>
     </div>
-
+ 
   </div>
 </main>
-
+ 
 <!-- ─── MODALS ─── -->
 <div class="modal-bg" id="modal-addPerson">
-  <div class="modal">
+  <div class="modal" style="width:520px">
     <div class="modal-title"><i class="ti ti-user-plus" style="color:var(--accent)"></i> Add Person</div>
-    <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="add-name" placeholder="e.g. Ahmad Rizal"></div>
-    <div class="form-group"><label class="form-label">Student / Staff ID</label><input class="form-input" id="add-sid" placeholder="e.g. S2024001"></div>
-    <div class="form-group"><label class="form-label">Role *</label>
-      <select class="form-select" id="add-role" onchange="syncCollectionFromRole(this.value)">
-        <option value="Student">Student</option>
-        <option value="Staff">Staff</option>
-        <option value="Lecturer">Lecturer</option>
-        <option value="Professor">Professor</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="add-name" placeholder="e.g. Ahmad Rizal"></div>
+      <div class="form-group"><label class="form-label">Student / Staff ID</label><input class="form-input" id="add-sid" placeholder="e.g. S2024001"></div>
     </div>
-    <div class="form-group"><label class="form-label">Save to Collection</label>
-      <select class="form-select" id="add-collection">
-        <option value="students">students</option>
-        <option value="staff">staff</option>
-        <option value="users">users</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Role *</label>
+        <select class="form-select" id="add-role" onchange="syncCollectionFromRole(this.value)">
+          <option value="Student">Student</option>
+          <option value="Staff">Staff</option>
+          <option value="Lecturer">Lecturer</option>
+          <option value="Professor">Professor</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Save to Collection</label>
+        <select class="form-select" id="add-collection">
+          <option value="students">students</option>
+          <option value="staff">staff</option>
+          <option value="users">users</option>
+        </select>
+      </div>
     </div>
-    <div class="form-group"><label class="form-label">Department</label>
-      <select class="form-select" id="add-dept">
-        <option value="">— Select —</option>
-        <option value="Engineering">Engineering</option>
-        <option value="Science">Science</option>
-        <option value="Arts">Arts</option>
-        <option value="Business">Business</option>
-        <option value="Medicine">Medicine</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Department</label>
+        <select class="form-select" id="add-dept">
+          <option value="">— Select —</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Science">Science</option>
+          <option value="Arts">Arts</option>
+          <option value="Business">Business</option>
+          <option value="Medicine">Medicine</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Age</label>
+        <input class="form-input" id="add-age" type="number" min="1" max="120" placeholder="e.g. 21">
+        <div class="form-err" id="add-age-err">Age must be between 1 and 120</div>
+      </div>
     </div>
-    <div class="form-group"><label class="form-label">Card UID</label><input class="form-input" id="add-uid" placeholder="e.g. A1B2C3D4"></div>
-    <div class="form-group"><label class="form-label">Course / Specialization</label><input class="form-input" id="add-course" placeholder="e.g. BSc Computer Science"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Height (cm)</label>
+        <input class="form-input" id="add-height" type="number" min="50" max="300" placeholder="e.g. 170">
+        <div class="form-err" id="add-height-err">Height must be between 50 and 300 cm</div>
+      </div>
+      <div class="form-group"><label class="form-label">Blood Group</label>
+        <select class="form-select" id="add-bloodgroup">
+          <option value="">— Unknown —</option>
+          <option value="A+">A+</option>
+          <option value="A-">A−</option>
+          <option value="B+">B+</option>
+          <option value="B-">B−</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB−</option>
+          <option value="O+">O+</option>
+          <option value="O-">O−</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Card UID</label><input class="form-input" id="add-uid" placeholder="e.g. A1B2C3D4"></div>
+      <div class="form-group"><label class="form-label">Course / Specialization</label><input class="form-input" id="add-course" placeholder="e.g. BSc Computer Science"></div>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('addPerson')">Cancel</button>
       <button class="btn btn-primary" onclick="addPerson()"><i class="ti ti-check"></i> Save</button>
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-bg" id="modal-markAttendance">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-calendar-plus" style="color:var(--accent)"></i> Mark Attendance</div>
@@ -810,7 +934,7 @@
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('markAttendance')">Cancel</button><button class="btn btn-primary" onclick="saveAttendance()"><i class="ti ti-check"></i> Save</button></div>
   </div>
 </div>
-
+ 
 <div class="modal-bg" id="modal-changeDept">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-building" style="color:var(--accent)"></i> Change Department</div>
@@ -828,7 +952,7 @@
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('changeDept')">Cancel</button><button class="btn btn-primary" onclick="saveDeptChange()"><i class="ti ti-check"></i> Save</button></div>
   </div>
 </div>
-
+ 
 <div class="modal-bg" id="modal-addAdmin">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-shield-plus" style="color:var(--amber)"></i> Add Admin</div>
@@ -837,9 +961,9 @@
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('addAdmin')">Cancel</button><button class="btn btn-amber" onclick="saveNewAdmin()"><i class="ti ti-check"></i> Grant Admin</button></div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"><i class="ti ti-check-circle"></i><span id="toast-msg"></span></div>
-
+ 
 <script>
 /* ═══ FIREBASE INIT ═══ */
 firebase.initializeApp({
@@ -854,13 +978,15 @@ firebase.initializeApp({
 const db      = firebase.firestore();
 const auth    = firebase.auth();
 const storage = firebase.storage();
-
+ 
 /* ═══ STATE ═══ */
 let studentsData   = [];
 let logsData       = [];
 let attendanceData = [];
 let adminsData     = [];
-let cctvCameras    = [];   // local camera list (also persisted to Firestore)
+let cctvCameras    = [];
+let customZones    = [];   // user-created zone names
+let activeCctvZone = 'All';
 let confirmationResult = null, recaptchaVerifier = null;
 let activeStudentId    = null;
 let currentUserIsAdmin = false;
@@ -870,9 +996,15 @@ let selectedCameraIdx  = null;
 let studentChart       = null;
 let currentProfileDocId = null;
 let currentProfilePeriod = 'week';
+let _pendingPhotoDocId = null;
+let _pendingPhotoCol   = null;
 const todayStr = new Date().toISOString().slice(0,10);
 const _coll = { users:[], students:[], staff:[] };
-
+ 
+/* ═══ BUILT-IN ZONES ═══ */
+const BUILTIN_ZONES = ['North','South','East','West'];
+const PRESET_ZONES  = ['North','South','East','West','Main Gate','Library','Dormitories'];
+ 
 /* ═══ CONFIG ═══ */
 const DEPARTMENTS = [
   {name:'Engineering', icon:'ti-tools',     color:'var(--accent)',  dim:'var(--accent-dim)'},
@@ -887,6 +1019,15 @@ const ROLE_CONFIG = {
   Lecturer:  {badge:'badge-lecturer', avClass:'av-lecturer', band:'band-lecturer', tagClass:'tag-green',  label:'Lecturer'},
   Professor: {badge:'badge-professor',avClass:'av-professor',band:'band-professor',tagClass:'tag-purple', label:'Professor'},
 };
+const ZONE_COLORS = {
+  All:'var(--accent)', North:'#7c3aed', South:'#059669',
+  East:'#d97706', West:'#dc2626',
+};
+const BLOOD_GROUP_COLORS = {
+  'A+':'#f87171','A-':'#fb923c','B+':'#facc15','B-':'#4ade80',
+  'AB+':'#60a5fa','AB-':'#c084fc','O+':'#34d399','O-':'#f472b6',
+};
+ 
 function roleConf(role){return ROLE_CONFIG[role]||ROLE_CONFIG['Student'];}
 function initials(n){if(!n)return'?';return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
 function attColor(p){return p>=80?'#22d3a0':p>=60?'#fbbf24':'#f87171';}
@@ -906,7 +1047,7 @@ function studentLogins(name){
     location:l.location||'Campus',status:l.status||'—'
   }));
 }
-
+ 
 /* ═══ ADMIN ═══ */
 async function checkAdminStatus(uid){
   try{const d=await db.collection('admins').doc(uid).get();currentUserIsAdmin=d.exists;}
@@ -950,7 +1091,7 @@ async function verifyAdminUID(){
   currentUserIsAdmin=true;
   closeAdminModal();applyAdminUI();showToast('Admin access unlocked','success');
 }
-
+ 
 /* ═══ AUTH ═══ */
 auth.onAuthStateChanged(async user=>{
   if(user){
@@ -975,6 +1116,10 @@ function setupButtons(){
   document.getElementById('password-input').addEventListener('keydown',e=>{if(e.key==='Enter')signInEmail();});
   document.getElementById('email-input').addEventListener('keydown',e=>{if(e.key==='Enter')signInEmail();});
   document.getElementById('signup-confirm').addEventListener('keydown',e=>{if(e.key==='Enter')doSignUp();});
+  // Zone custom toggle
+  document.getElementById('cam-zone').addEventListener('change',function(){
+    document.getElementById('cam-zone-custom-wrap').style.display=this.value==='Custom'?'block':'none';
+  });
 }
 setupButtons();
 function toggleEye(i,ic){const inp=document.getElementById(i),icon=document.getElementById(ic);inp.type=inp.type==='password'?'text':'password';icon.className=inp.type==='password'?'ti ti-eye':'ti ti-eye-off';}
@@ -1040,7 +1185,7 @@ async function verifyOTP(){
 }
 function resetPhone(){document.getElementById('phone-step1').style.display='block';document.getElementById('phone-step2').style.display='none';document.getElementById('otp-input').value='';hideErr();}
 async function doSignOut(){await auth.signOut();}
-
+ 
 /* ═══ DATA ═══ */
 function mergeAndRefresh(){
   const seen=new Set();
@@ -1081,13 +1226,16 @@ function initData(){
   db.collection('cctv_cameras').onSnapshot(snap=>{
     cctvCameras=[];
     snap.forEach(d=>cctvCameras.push({id:d.id,...d.data()}));
-    renderCctvGrid();updateCctvStatusBar();
-  },err=>{
-    // If collection doesn't exist yet, start empty
-    cctvCameras=[];renderCctvGrid();updateCctvStatusBar();
-  });
+    // Collect custom zones
+    const zones=new Set();
+    cctvCameras.forEach(c=>{if(c.zone&&!BUILTIN_ZONES.includes(c.zone)&&c.zone!=='Main Gate'&&c.zone!=='Library'&&c.zone!=='Dormitories')zones.add(c.zone);});
+    customZones=[...zones];
+    renderZoneTabs();
+    renderCctvGrid();
+    updateCctvStatusBar();
+  },err=>{cctvCameras=[];renderZoneTabs();renderCctvGrid();updateCctvStatusBar();});
 }
-
+ 
 /* ═══ PAGE NAV ═══ */
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1098,9 +1246,9 @@ function showPage(id,btn){
   document.getElementById('pageTitle').textContent=titles[id]||id;
   if(id==='departments')renderDeptPage();
   if(id==='admins')applyAdminUI();
-  if(id==='cctv'){renderCctvGrid();updateCctvStatusBar();}
+  if(id==='cctv'){renderZoneTabs();renderCctvGrid();updateCctvStatusBar();}
 }
-
+ 
 /* ═══ ROLE STATS ═══ */
 function updateRoleStats(){
   const count=role=>studentsData.filter(s=>(s.role||'').toLowerCase()===role.toLowerCase()).length;
@@ -1109,7 +1257,7 @@ function updateRoleStats(){
   document.getElementById('stat-role-lecturer').textContent=count('Lecturer');
   document.getElementById('stat-role-professor').textContent=count('Professor');
 }
-
+ 
 /* ═══ PEOPLE PAGE ═══ */
 function setRoleFilter(role,btn){
   activeRoleFilter=role;
@@ -1133,7 +1281,7 @@ function renderStudentsGrid(data){
     const pct=studentAttPct(s.name);
     const col=pct!==null?attColor(pct):'var(--faint)';
     const avatarHTML=s.photoURL
-      ?`<div class="stu-card-avatar"><img src="${s.photoURL}" alt="${s.name}"></div>`
+      ?`<div class="stu-card-avatar"><img src="${s.photoURL}" alt="${s.name}" onerror="this.parentElement.innerHTML='${initials(s.name)}'"></div>`
       :`<div class="stu-card-avatar ${rc.avClass}">${initials(s.name)}</div>`;
     return `
       <div class="stu-card ${activeStudentId===s.id?'active':''}"
@@ -1145,6 +1293,7 @@ function renderStudentsGrid(data){
           <div class="stu-card-name">${s.name||'—'}</div>
           <div class="stu-card-id">${s.Student_ID||'No ID'}</div>
           <div class="stu-card-dept ${rc.avClass}" style="padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;display:inline-block;margin-bottom:14px">${s.role||'—'}</div>
+          ${s.bloodGroup?`<div style="font-size:11px;color:var(--muted);margin-bottom:8px">🩸 ${s.bloodGroup}${s.age?' · '+s.age+'y':''}</div>`:''}
           <div class="stu-card-footer">
             <div class="stu-card-att">
               <div class="stu-card-att-dot" style="background:${col}"></div>
@@ -1156,8 +1305,10 @@ function renderStudentsGrid(data){
       </div>`;
   }).join('');
 }
-
-/* ═══ PROFILE OVERLAY ═══ */
+ 
+/* ═══════════════════════════════
+   PROFILE OVERLAY — ENHANCED
+═══════════════════════════════ */
 function openProfile(docId){
   const s=studentsData.find(x=>x.id===docId);
   if(!s)return;
@@ -1176,11 +1327,11 @@ function openProfile(docId){
   const col=pct!==null?attColor(pct):'var(--faint)';
   const lbl=pct!==null?attLabel(pct):{text:'No data',cls:'badge-absent'};
   const classes=s.classesToday||[];
-
+ 
   const avatarContent=s.photoURL
-    ?`<img src="${s.photoURL}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover">`
+    ?`<img src="${s.photoURL}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span>${initials(s.name)}</span>'">`
     :`<span>${initials(s.name)}</span>`;
-
+ 
   const loginHTML=logins.length
     ?logins.map((l,i)=>`
       <div class="login-entry">
@@ -1189,18 +1340,14 @@ function openProfile(docId){
         ${i===0?'<span class="login-badge">Latest</span>':''}
       </div>`).join('')
     :'<div class="no-classes">No login activity in logs.</div>';
-
+ 
   let classHTML;
   if(classes.length){
-    classHTML=classes.map(c=>{
-      const sm={now:'In Progress',done:'Completed',upcoming:'Upcoming'};
-      const st=c.status||'upcoming';
-      return `<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="text-align:center;min-width:46px"><div style="font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--amber)">${c.time||'—'}</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${c.period||''}</div></div>
-        <div style="width:2px;height:32px;background:var(--border2);border-radius:2px"></div>
-        <div><div style="font-size:14px;font-weight:500;color:var(--text)">${c.name||'—'}</div><div style="font-size:11px;color:var(--muted)">${c.room||'—'}</div></div>
-      </div>`;
-    }).join('');
+    classHTML=classes.map(c=>`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="text-align:center;min-width:46px"><div style="font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--amber)">${c.time||'—'}</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${c.period||''}</div></div>
+      <div style="width:2px;height:32px;background:var(--border2);border-radius:2px"></div>
+      <div><div style="font-size:14px;font-weight:500;color:var(--text)">${c.name||'—'}</div><div style="font-size:11px;color:var(--muted)">${c.room||'—'}</div></div>
+    </div>`).join('');
   }else if(todayRecs.length){
     classHTML=todayRecs.map(a=>`
       <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
@@ -1211,12 +1358,42 @@ function openProfile(docId){
   }else{
     classHTML='<div class="no-classes">No class data for today.</div>';
   }
-
+ 
+  // Personal info cards — new section
+  const bloodColor=s.bloodGroup?BLOOD_GROUP_COLORS[s.bloodGroup]||'var(--red)':'var(--faint)';
+  const personalInfoHTML=`
+    <div class="personal-info-grid">
+      <div class="personal-info-card">
+        <div class="pic-icon" style="background:var(--amber-dim);color:var(--amber)"><i class="ti ti-calendar-user"></i></div>
+        <div>
+          <div class="pic-label">Age</div>
+          <div class="pic-value">${s.age?s.age+' years':'—'}</div>
+        </div>
+      </div>
+      <div class="personal-info-card">
+        <div class="pic-icon" style="background:var(--green-dim);color:var(--green)"><i class="ti ti-ruler"></i></div>
+        <div>
+          <div class="pic-label">Height</div>
+          <div class="pic-value">${s.height?s.height+' cm':'—'}</div>
+        </div>
+      </div>
+      <div class="personal-info-card" style="grid-column:1/-1">
+        <div class="pic-icon" style="background:var(--red-dim);color:var(--red)"><i class="ti ti-drop"></i></div>
+        <div style="display:flex;align-items:center;gap:12px;flex:1">
+          <div>
+            <div class="pic-label">Blood Group</div>
+            <div class="pic-value">${s.bloodGroup||'—'}</div>
+          </div>
+          ${s.bloodGroup?`<span class="blood-badge" style="background:${bloodColor}20;color:${bloodColor};border-color:${bloodColor}40">${s.bloodGroup}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+ 
   document.getElementById('profile-content').innerHTML=`
     <div class="prof-hero">
       <button class="prof-back-btn" onclick="closeProfile()"><i class="ti ti-arrow-left"></i> Back</button>
       <div class="prof-hero-inner">
-        <div class="prof-avatar-lg ${rc.avClass}" onclick="triggerPhotoUpload('${s.id}','${s._col||'users'}')">
+        <div class="prof-avatar-lg ${rc.avClass}" onclick="triggerPhotoUpload('${s.id}','${(s._col||'users').replace(/'/g,"\\'")}')" title="Click to change photo">
           ${avatarContent}
           <div class="prof-avatar-upload-hint">
             <i class="ti ti-camera"></i>
@@ -1229,9 +1406,14 @@ function openProfile(docId){
             <span class="prof-tag tag-blue">${s.Student_ID||'No ID'}</span>
             <span class="prof-tag ${rc.tagClass}">${s.role||'—'}</span>
             ${s.department?`<span class="prof-tag tag-amber">${s.department}</span>`:''}
+            ${s.bloodGroup?`<span class="prof-tag tag-red">🩸 ${s.bloodGroup}</span>`:''}
             ${s._col?`<span class="prof-tag" style="background:var(--surface2);color:var(--faint);border:1px solid var(--border)">${s._col}</span>`:''}
           </div>
         </div>
+      </div>
+      <!-- upload progress bar -->
+      <div class="upload-progress-bar" id="upload-prog-bar">
+        <div class="upload-progress-fill" id="upload-prog-fill"></div>
       </div>
     </div>
     <div class="prof-body">
@@ -1240,7 +1422,13 @@ function openProfile(docId){
         <div class="prof-stat-box"><div class="prof-stat-num green">${recs.length}</div><div class="prof-stat-label">Records</div></div>
         <div class="prof-stat-box"><div class="prof-stat-num amber">${classes.length||todayRecs.length}</div><div class="prof-stat-label">Today</div></div>
       </div>
-
+ 
+      <!-- ─── PERSONAL INFO ─── -->
+      <div class="prof-section">
+        <div class="prof-section-title">Personal Information</div>
+        ${personalInfoHTML}
+      </div>
+ 
       <!-- ─── STATISTICS GRAPH ─── -->
       <div class="prof-section">
         <div class="prof-section-title">Attendance Statistics</div>
@@ -1259,7 +1447,7 @@ function openProfile(docId){
           </div>
         </div>
       </div>
-
+ 
       <div class="prof-section">
         <div class="prof-section-title">Academic Information</div>
         <div class="info-row"><i class="ti ti-school"></i><div><div class="info-row-label">Course</div><div class="info-row-value">${s.course||s.department||'—'}</div></div></div>
@@ -1279,19 +1467,17 @@ function openProfile(docId){
       <div class="prof-section"><div class="prof-section-title">Recent Activity</div>${loginHTML}</div>
       <div class="prof-section"><div class="prof-section-title">Classes Today</div>${classHTML}</div>
     </div>`;
-
+ 
   document.getElementById('profile-overlay').classList.add('open');
   document.getElementById('overlay-backdrop').classList.add('open');
   document.body.style.overflow='hidden';
-
+ 
   if(pct!==null){
     requestAnimationFrame(()=>setTimeout(()=>{const f=document.getElementById('prof-att-fill');if(f)f.style.width=pct+'%';},60));
   }
-
-  // Build chart after DOM renders
   setTimeout(()=>buildStudentChart(s.name,'week'),80);
 }
-
+ 
 function closeProfile(){
   activeStudentId=null;currentProfileDocId=null;
   document.getElementById('profile-overlay').classList.remove('open');
@@ -1300,7 +1486,7 @@ function closeProfile(){
   if(studentChart){studentChart.destroy();studentChart=null;}
   renderPeoplePage();
 }
-
+ 
 /* ═══ STATISTICS CHART ═══ */
 function switchPeriod(period,btn){
   currentProfilePeriod=period;
@@ -1309,15 +1495,12 @@ function switchPeriod(period,btn){
   const s=studentsData.find(x=>x.id===currentProfileDocId);
   if(s)buildStudentChart(s.name,period);
 }
-
-function buildStudentChart(studentName, period){
+function buildStudentChart(studentName,period){
   const canvas=document.getElementById('student-att-chart');
   if(!canvas)return;
   if(studentChart){studentChart.destroy();studentChart=null;}
-
   const recs=attendanceData.filter(a=>a.studentName===studentName);
   const {labels,present,absent,late}=aggregateAttendance(recs,period);
-
   const ctx=canvas.getContext('2d');
   studentChart=new Chart(ctx,{
     type:'bar',
@@ -1330,204 +1513,354 @@ function buildStudentChart(studentName, period){
       ]
     },
     options:{
-      responsive:true,
-      maintainAspectRatio:true,
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#0d1b2e',
-          borderColor:'rgba(99,179,237,0.2)',
-          borderWidth:1,
-          titleColor:'#e2eff8',
-          bodyColor:'#7fa8c4',
-          padding:10,
-          callbacks:{
-            label:ctx=>`${ctx.dataset.label}: ${ctx.raw}`
-          }
-        }
-      },
+      responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d1b2e',borderColor:'rgba(99,179,237,0.2)',borderWidth:1,titleColor:'#e2eff8',bodyColor:'#7fa8c4',padding:10}},
       scales:{
-        x:{
-          grid:{color:'rgba(99,179,237,0.06)'},
-          ticks:{color:'#7fa8c4',font:{size:10}},
-          stacked:false
-        },
-        y:{
-          grid:{color:'rgba(99,179,237,0.08)'},
-          ticks:{color:'#7fa8c4',font:{size:10},stepSize:1},
-          beginAtZero:true
-        }
+        x:{grid:{color:'rgba(99,179,237,0.06)'},ticks:{color:'#7fa8c4',font:{size:10}}},
+        y:{grid:{color:'rgba(99,179,237,0.08)'},ticks:{color:'#7fa8c4',font:{size:10},stepSize:1},beginAtZero:true}
       }
     }
   });
 }
-
-function aggregateAttendance(recs, period){
+function aggregateAttendance(recs,period){
   const now=new Date();
   let labels=[],present=[],absent=[],late=[];
-
   if(period==='week'){
-    // Last 7 days
-    for(let i=6;i>=0;i--){
-      const d=new Date(now);d.setDate(d.getDate()-i);
-      const ds=d.toISOString().slice(0,10);
-      const dayRecs=recs.filter(r=>r.date===ds);
-      labels.push(d.toLocaleDateString('en',{weekday:'short'}));
-      present.push(dayRecs.filter(r=>r.status==='Present').length);
-      absent.push(dayRecs.filter(r=>r.status==='Absent').length);
-      late.push(dayRecs.filter(r=>r.status==='Late').length);
-    }
+    for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);const dr=recs.filter(r=>r.date===ds);labels.push(d.toLocaleDateString('en',{weekday:'short'}));present.push(dr.filter(r=>r.status==='Present').length);absent.push(dr.filter(r=>r.status==='Absent').length);late.push(dr.filter(r=>r.status==='Late').length);}
   }else if(period==='month'){
-    // Last 4 weeks
-    for(let w=3;w>=0;w--){
-      const wStart=new Date(now);wStart.setDate(wStart.getDate()-w*7-6);
-      const wEnd=new Date(now);wEnd.setDate(wEnd.getDate()-w*7);
-      const wRecs=recs.filter(r=>{
-        if(!r.date)return false;
-        return r.date>=wStart.toISOString().slice(0,10)&&r.date<=wEnd.toISOString().slice(0,10);
-      });
-      labels.push(`Wk ${4-w}`);
-      present.push(wRecs.filter(r=>r.status==='Present').length);
-      absent.push(wRecs.filter(r=>r.status==='Absent').length);
-      late.push(wRecs.filter(r=>r.status==='Late').length);
-    }
+    for(let w=3;w>=0;w--){const ws=new Date(now);ws.setDate(ws.getDate()-w*7-6);const we=new Date(now);we.setDate(we.getDate()-w*7);const wr=recs.filter(r=>r.date&&r.date>=ws.toISOString().slice(0,10)&&r.date<=we.toISOString().slice(0,10));labels.push(`Wk ${4-w}`);present.push(wr.filter(r=>r.status==='Present').length);absent.push(wr.filter(r=>r.status==='Absent').length);late.push(wr.filter(r=>r.status==='Late').length);}
   }else if(period==='half'){
-    // Last 6 months
-    for(let m=5;m>=0;m--){
-      const d=new Date(now.getFullYear(),now.getMonth()-m,1);
-      const monthStr=d.toISOString().slice(0,7);
-      const mRecs=recs.filter(r=>r.date&&r.date.startsWith(monthStr));
-      labels.push(d.toLocaleDateString('en',{month:'short'}));
-      present.push(mRecs.filter(r=>r.status==='Present').length);
-      absent.push(mRecs.filter(r=>r.status==='Absent').length);
-      late.push(mRecs.filter(r=>r.status==='Late').length);
-    }
+    for(let m=5;m>=0;m--){const d=new Date(now.getFullYear(),now.getMonth()-m,1);const ms=d.toISOString().slice(0,7);const mr=recs.filter(r=>r.date&&r.date.startsWith(ms));labels.push(d.toLocaleDateString('en',{month:'short'}));present.push(mr.filter(r=>r.status==='Present').length);absent.push(mr.filter(r=>r.status==='Absent').length);late.push(mr.filter(r=>r.status==='Late').length);}
   }else if(period==='year'){
-    // Last 12 months
-    for(let m=11;m>=0;m--){
-      const d=new Date(now.getFullYear(),now.getMonth()-m,1);
-      const monthStr=d.toISOString().slice(0,7);
-      const mRecs=recs.filter(r=>r.date&&r.date.startsWith(monthStr));
-      labels.push(d.toLocaleDateString('en',{month:'short',year:'2-digit'}));
-      present.push(mRecs.filter(r=>r.status==='Present').length);
-      absent.push(mRecs.filter(r=>r.status==='Absent').length);
-      late.push(mRecs.filter(r=>r.status==='Late').length);
-    }
+    for(let m=11;m>=0;m--){const d=new Date(now.getFullYear(),now.getMonth()-m,1);const ms=d.toISOString().slice(0,7);const mr=recs.filter(r=>r.date&&r.date.startsWith(ms));labels.push(d.toLocaleDateString('en',{month:'short',year:'2-digit'}));present.push(mr.filter(r=>r.status==='Present').length);absent.push(mr.filter(r=>r.status==='Absent').length);late.push(mr.filter(r=>r.status==='Late').length);}
   }
   return{labels,present,absent,late};
 }
-
-/* ═══ PHOTO UPLOAD ═══ */
-let _pendingPhotoDocId=null, _pendingPhotoCol=null;
+ 
+/* ═══════════════════════════════════
+   PHOTO UPLOAD — FIXED
+═══════════════════════════════════ */
 function triggerPhotoUpload(docId, col){
-  _pendingPhotoDocId=docId;_pendingPhotoCol=col;
+  // Validate inputs before storing
+  if(!docId){showToast('Cannot upload: missing document ID','error');return;}
+  const safeCol = (col && col.trim()) ? col.trim() : 'users';
+  _pendingPhotoDocId = docId;
+  _pendingPhotoCol   = safeCol;
+  console.log('[Photo] Trigger upload for doc:', docId, 'col:', safeCol);
   document.getElementById('photo-file-input').click();
 }
-document.getElementById('photo-file-input').addEventListener('change',async function(){
-  const file=this.files[0];
-  if(!file||!_pendingPhotoDocId)return;
-  // Validate
-  if(!file.type.startsWith('image/')){showToast('Please select an image file','error');return;}
-  if(file.size>5*1024*1024){showToast('Image must be under 5MB','error');return;}
-  showToast('Uploading photo…');
-  try{
-    // Compress to ≤600px using canvas before upload
-    const compressed=await compressImage(file,600);
-    const ref=storage.ref(`profile_photos/${_pendingPhotoDocId}_${Date.now()}.jpg`);
-    await ref.put(compressed);
-    const url=await ref.getDownloadURL();
-    await db.collection(_pendingPhotoCol||'users').doc(_pendingPhotoDocId).update({photoURL:url});
-    showToast('Photo updated','success');
-    // Refresh overlay
-    const s=studentsData.find(x=>x.id===_pendingPhotoDocId);
-    if(s){
-      // The Firestore listener will trigger mergeAndRefresh → but let's update locally now for snappiness
-      s.photoURL=url;
-      const imgEl=document.querySelector('.prof-avatar-lg img');
-      if(imgEl)imgEl.src=url;
+ 
+document.getElementById('photo-file-input').addEventListener('change', async function(){
+  const file = this.files[0];
+  if(!file) return;
+ 
+  // Clear the input immediately so same file can be re-selected
+  const fileClone = file;
+  this.value = '';
+ 
+  // --- Validate ---
+  const allowedTypes = ['image/jpeg','image/png','image/webp','image/gif'];
+  if(!allowedTypes.includes(fileClone.type)){
+    showToast('Only JPG, PNG, WebP, or GIF images are allowed','error');
+    return;
+  }
+  if(fileClone.size > 5 * 1024 * 1024){
+    showToast('Image must be under 5 MB','error');
+    return;
+  }
+  if(!_pendingPhotoDocId || !_pendingPhotoCol){
+    showToast('Upload failed: no profile selected','error');
+    return;
+  }
+ 
+  const docId = _pendingPhotoDocId;
+  const col   = _pendingPhotoCol;
+  console.log('[Photo] Uploading for doc:', docId, 'col:', col);
+ 
+  // Show progress
+  const progBar  = document.getElementById('upload-prog-bar');
+  const progFill = document.getElementById('upload-prog-fill');
+  if(progBar){ progBar.classList.add('show'); progFill.style.width='5%'; }
+  showToast('Uploading photo…','info');
+ 
+  try {
+    // Compress to ≤600px
+    const compressed = await compressImage(fileClone, 600);
+    if(progFill) progFill.style.width = '30%';
+ 
+    // Check if Firebase Storage is available (may be blocked by CORS in some setups)
+    let photoURL = null;
+    try {
+      const filename  = `profile_photos/${docId}_${Date.now()}.jpg`;
+      const storageRef = storage.ref(filename);
+      const uploadTask = storageRef.put(compressed, {contentType:'image/jpeg'});
+ 
+      // Track upload progress
+      await new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',
+          snapshot => {
+            const pct = 30 + Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 55);
+            if(progFill) progFill.style.width = pct + '%';
+          },
+          err => {
+            console.error('[Photo] Storage upload error:', err);
+            reject(err);
+          },
+          () => resolve()
+        );
+      });
+ 
+      photoURL = await storageRef.getDownloadURL();
+      if(progFill) progFill.style.width = '90%';
+ 
+    } catch(storageErr) {
+      console.warn('[Photo] Firebase Storage failed, falling back to base64 Firestore storage:', storageErr.message);
+      // Fallback: store as base64 in Firestore (for storage permission issues)
+      // Warning: large images will bloat Firestore — only for small compressed images
+      photoURL = await blobToDataURL(compressed);
+      if(progFill) progFill.style.width = '85%';
+    }
+ 
+    // Save URL to Firestore
+    await db.collection(col).doc(docId).update({ photoURL });
+    if(progFill) progFill.style.width = '100%';
+ 
+    // Update UI immediately without waiting for snapshot
+    const s = studentsData.find(x => x.id === docId);
+    if(s){ s.photoURL = photoURL; }
+ 
+    // Update avatar in overlay if still open
+    const av = document.querySelector('.prof-avatar-lg');
+    if(av){
+      const existing = av.querySelector('img');
+      if(existing){ existing.src = photoURL; }
       else{
-        // Replace initials span with image
-        const av=document.querySelector('.prof-avatar-lg');
-        if(av){const span=av.querySelector('span');if(span)span.remove();const img=document.createElement('img');img.src=url;img.style.cssText='width:100%;height:100%;object-fit:cover';av.insertBefore(img,av.firstChild);}
+        const span = av.querySelector('span');
+        if(span) span.remove();
+        const img = document.createElement('img');
+        img.src = photoURL;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+        av.insertBefore(img, av.firstChild);
       }
     }
-  }catch(e){showToast('Upload failed: '+e.message,'error');}
-  this.value='';
+ 
+    showToast('Photo updated successfully','success');
+    setTimeout(()=>{ if(progBar) progBar.classList.remove('show'); if(progFill) progFill.style.width='0%'; }, 1500);
+ 
+  } catch(e) {
+    console.error('[Photo] Upload error:', e);
+    if(progBar) progBar.classList.remove('show');
+    if(progFill) progFill.style.width = '0%';
+ 
+    // Provide specific error messages
+    if(e.code === 'storage/unauthorized'){
+      showToast('Upload denied: check Firebase Storage rules','error');
+    } else if(e.code === 'storage/canceled'){
+      showToast('Upload was cancelled','error');
+    } else if(e.code === 'storage/quota-exceeded'){
+      showToast('Storage quota exceeded','error');
+    } else {
+      showToast('Upload failed: ' + (e.message || 'Unknown error'), 'error');
+    }
+  }
 });
-
+ 
 async function compressImage(file, maxSize){
-  return new Promise((resolve)=>{
-    const img=new Image();
-    const url=URL.createObjectURL(file);
-    img.onload=()=>{
-      let{width,height}=img;
-      if(width>maxSize||height>maxSize){
-        const ratio=Math.min(maxSize/width,maxSize/height);
-        width=Math.round(width*ratio);height=Math.round(height*ratio);
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let {width, height} = img;
+      if(width > maxSize || height > maxSize){
+        const ratio = Math.min(maxSize / width, maxSize / height);
+        width  = Math.round(width * ratio);
+        height = Math.round(height * ratio);
       }
-      const canvas=document.createElement('canvas');
-      canvas.width=width;canvas.height=height;
-      canvas.getContext('2d').drawImage(img,0,0,width,height);
-      canvas.toBlob(blob=>{URL.revokeObjectURL(url);resolve(blob);},'image/jpeg',0.85);
+      const canvas = document.createElement('canvas');
+      canvas.width  = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob => {
+        URL.revokeObjectURL(url);
+        resolve(blob || file); // fallback to original if toBlob fails
+      }, 'image/jpeg', 0.85);
     };
-    img.src=url;
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
   });
 }
-
+ 
+function blobToDataURL(blob){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('FileReader failed'));
+    reader.readAsDataURL(blob);
+  });
+}
+ 
 /* ═══════════════════════════════════════════
-   CCTV MODULE
+   CCTV MODULE — ZONES SYSTEM
 ═══════════════════════════════════════════ */
+function getAllZones(){
+  // Collect all unique zones from cameras + preset zones
+  const zones = new Set(['All', ...BUILTIN_ZONES, ...PRESET_ZONES.slice(4)]);
+  cctvCameras.forEach(c => { if(c.zone) zones.add(c.zone); });
+  customZones.forEach(z => zones.add(z));
+  return ['All', ...Array.from(zones).filter(z=>z!=='All')];
+}
+ 
+function getCamerasForZone(zone){
+  if(zone === 'All') return cctvCameras;
+  return cctvCameras.filter(c => c.zone === zone);
+}
+ 
+function getZoneSlug(zone){
+  return zone.toLowerCase().replace(/\s+/g,'-');
+}
+ 
+function getZoneColor(zone){
+  const map = {All:'var(--accent)', North:'#7c3aed', South:'#059669', East:'#d97706', West:'#dc2626'};
+  return map[zone] || 'var(--purple)';
+}
+ 
+function renderZoneTabs(){
+  const bar = document.getElementById('cctv-zone-bar');
+  if(!bar) return;
+  const zones = getAllZones();
+  const cameraCounts = {};
+  zones.forEach(z => { cameraCounts[z] = z==='All' ? cctvCameras.length : getCamerasForZone(z).length; });
+ 
+  bar.innerHTML = zones.map(zone => {
+    const slug = getZoneSlug(zone);
+    const color = getZoneColor(zone);
+    const count = cameraCounts[zone];
+    const isActive = activeCctvZone === zone;
+    const showCount = count > 0 || zone === 'All';
+    return `
+      <button class="zone-tab zone-${slug} ${isActive?'active':''}"
+        style="${isActive?`background:${color};border-color:${color}`:''}"
+        onclick="setZone('${zone.replace(/'/g,"\\'")}')">
+        ${zoneIcon(zone)} ${zone}
+        ${showCount ? `<span class="zone-count-pill" style="${isActive?'background:rgba(255,255,255,0.25)':''}">${count}</span>` : ''}
+      </button>`;
+  }).join('');
+ 
+  // Add manage button
+  bar.innerHTML += `<button class="zone-manage-btn" onclick="openManageZones()"><i class="ti ti-settings"></i> Manage Zones</button>`;
+}
+ 
+function zoneIcon(zone){
+  const icons = {All:'🗺️', North:'🧭', South:'🧭', East:'🧭', West:'🧭', 'Main Gate':'🚪', Library:'📚', Dormitories:'🏠'};
+  return icons[zone] || '📍';
+}
+ 
+function setZone(zone){
+  activeCctvZone = zone;
+  selectedCameraIdx = null;
+  document.getElementById('cctv-info-content').innerHTML = '<div style="text-align:center;padding:24px;color:var(--faint);font-size:13px"><i class="ti ti-hand-click" style="font-size:28px;display:block;margin-bottom:10px"></i>Select a camera to view details</div>';
+  renderZoneTabs();
+  renderCctvGrid();
+}
+ 
+function openManageZones(){
+  const allZones = getAllZones().filter(z => z !== 'All');
+  document.getElementById('zones-list-ui').innerHTML = allZones.map(z => {
+    const isBuiltin = BUILTIN_ZONES.includes(z) || PRESET_ZONES.includes(z);
+    const count = getCamerasForZone(z).length;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px">
+      <span style="font-size:16px">${zoneIcon(z)}</span>
+      <span style="flex:1;font-size:14px;color:var(--text)">${z}</span>
+      <span style="font-size:11px;color:var(--muted)">${count} cam${count!==1?'s':''}</span>
+      ${!isBuiltin?`<button class="btn btn-danger btn-sm" onclick="removeCustomZone('${z.replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`:'<span style="font-size:10px;color:var(--faint);padding:3px 8px;border:1px solid var(--border);border-radius:4px">Built-in</span>'}
+    </div>`;
+  }).join('');
+  openModal('manageZones');
+}
+ 
+function addCustomZone(){
+  const input = document.getElementById('new-zone-input');
+  const name  = input.value.trim();
+  if(!name){ showToast('Enter a zone name','error'); return; }
+  if(getAllZones().includes(name)){ showToast('Zone already exists','error'); return; }
+  customZones.push(name);
+  input.value = '';
+  openManageZones(); // refresh
+  renderZoneTabs();
+  showToast(`Zone "${name}" added`);
+}
+ 
+function removeCustomZone(zoneName){
+  // Remove from local list
+  customZones = customZones.filter(z => z !== zoneName);
+  // Unassign cameras in this zone
+  const camsInZone = cctvCameras.filter(c => c.zone === zoneName);
+  camsInZone.forEach(async c => {
+    try{ await db.collection('cctv_cameras').doc(c.id).update({zone:''}); }catch(e){}
+  });
+  if(activeCctvZone === zoneName) activeCctvZone = 'All';
+  openManageZones();
+  renderZoneTabs();
+  renderCctvGrid();
+  showToast(`Zone "${zoneName}" removed`);
+}
+ 
 function setCctvLayout(n,btn){
   activeCctvLayout=n;
   document.querySelectorAll('.cctv-layout-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderCctvGrid();
 }
-
+ 
 function updateCctvStatusBar(){
   const online=cctvCameras.filter(c=>c.status==='online').length;
   const offline=cctvCameras.filter(c=>c.status==='offline').length;
   document.getElementById('cctv-online-count').textContent=online;
   document.getElementById('cctv-offline-count').textContent=offline;
 }
-
+ 
 function renderCctvGrid(){
   const grid=document.getElementById('cctv-feed-grid');
-  if(!grid)return;
-
-  // Layout class
+  if(!grid) return;
+ 
+  // Set layout class
   grid.className='cctv-grid';
-  if(activeCctvLayout===1)grid.classList.add('layout-1');
-  else if(activeCctvLayout===3)grid.classList.add('layout-3');
-  else if(activeCctvLayout===4)grid.classList.add('layout-4');
+  if(activeCctvLayout===1) grid.classList.add('layout-1');
+  else if(activeCctvLayout===3) grid.classList.add('layout-3');
   else grid.classList.add('layout-4');
-
+ 
+  const zoneCameras = getCamerasForZone(activeCctvZone);
+ 
   if(!cctvCameras.length){
-    grid.innerHTML=`
-      <div style="grid-column:1/-1">
-        <div class="cctv-feed" style="min-height:280px;cursor:default">
-          <div class="cctv-nostream">
-            <i class="ti ti-camera-off"></i>
-            <p>No cameras configured yet</p>
-            <small>Click "Add Camera" to connect your Hikvision or Dahua feed</small>
-          </div>
-        </div>
-      </div>`;
+    grid.innerHTML=`<div style="grid-column:1/-1"><div class="cctv-zone-empty"><i class="ti ti-camera-off"></i><p>No cameras configured yet</p><small>Click "Add Camera" to connect your Hikvision or Dahua feed</small></div></div>`;
     return;
   }
-
-  const shown=activeCctvLayout===1?[cctvCameras[selectedCameraIdx]||cctvCameras[0]]:cctvCameras;
-
-  grid.innerHTML=shown.map((cam,idx)=>{
-    const isSelected=idx===selectedCameraIdx;
-    const realIdx=cctvCameras.indexOf(cam);
+  if(!zoneCameras.length){
+    grid.innerHTML=`<div style="grid-column:1/-1"><div class="cctv-zone-empty"><i class="ti ti-camera-search"></i><p>No cameras in "${activeCctvZone}" zone</p><small>Add a camera and assign it to this zone</small><button class="btn btn-primary" style="margin-top:8px" onclick="openModal('addCamera')"><i class="ti ti-plus"></i> Add Camera to Zone</button></div></div>`;
+    return;
+  }
+ 
+  // In single layout, show the selected camera or first in zone
+  const shown = activeCctvLayout===1
+    ? [selectedCameraIdx !== null && cctvCameras[selectedCameraIdx] ? cctvCameras[selectedCameraIdx] : zoneCameras[0]]
+    : zoneCameras;
+ 
+  grid.innerHTML = shown.map((cam) => {
+    const realIdx = cctvCameras.indexOf(cam);
+    const isSelected = realIdx === selectedCameraIdx;
+    const zoneSlug   = cam.zone ? getZoneSlug(cam.zone) : '';
+    const zoneColor  = cam.zone ? getZoneColor(cam.zone) : 'var(--faint)';
+ 
     return `
       <div class="cctv-feed ${isSelected?'active-feed':''}" onclick="selectCamera(${realIdx})">
-        ${renderFeedContent(cam)}
+        ${renderFeedContent(cam, realIdx)}
         <div class="cctv-feed-overlay">
-          <div class="cctv-feed-name">
-            <span style="width:7px;height:7px;border-radius:50%;display:inline-block;background:${cam.status==='online'?'#22d3a0':'#f87171'}"></span>
-            ${cam.name||'Camera '+(realIdx+1)}
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="cctv-feed-name">
+              <span style="width:7px;height:7px;border-radius:50%;display:inline-block;background:${cam.status==='online'?'#22d3a0':'#f87171'}"></span>
+              ${cam.name||'Camera '+(realIdx+1)}
+            </div>
+            ${cam.zone?`<span class="cctv-zone-badge" style="background:${zoneColor};color:#fff">${cam.zone}</span>`:''}
           </div>
           <div class="cctv-feed-status">
             <div class="cctv-feed-time" id="cctv-clock-${realIdx}"></div>
@@ -1536,56 +1869,55 @@ function renderCctvGrid(){
         </div>
       </div>`;
   }).join('');
-
-  // Start clocks
+ 
   updateCctvClocks();
 }
-
-function renderFeedContent(cam){
+ 
+function renderFeedContent(cam, idx){
   if(cam.status==='offline'||!cam.url){
     return `<div class="cctv-offline-screen"><i class="ti ti-camera-off"></i><p>Camera Offline</p></div>`;
   }
   if(cam.streamType==='iframe'){
-    return `<iframe src="${cam.url}" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>`;
+    return `<iframe src="${cam.url}" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>`;
   }
-  // HLS or RTSP relay → use <video> with HLS.js fallback note
-  // Native HLS works in Safari; for Chrome we'd need hls.js (loaded below)
-  return `<video id="vid-${cam.id||Date.now()}" autoplay muted playsinline controls style="width:100%;height:100%;object-fit:cover;background:#000"
-    onerror="this.parentElement.innerHTML='<div class=cctv-nostream><i class=ti ti-wifi-off style=font-size:28px;color:var(--faint)></i><p>Stream unavailable</p><small>${cam.url}</small></div>'"
+  // HLS / RTSP relay — use native <video> with lazy loading
+  return `<video id="vid-${cam.id||idx}" autoplay muted playsinline controls
+    style="width:100%;height:100%;object-fit:cover;background:#000"
+    onerror="this.parentElement.querySelector('.cctv-feed-overlay') && (this.outerHTML='<div class=cctv-nostream><i class=ti ti-wifi-off style=font-size:28px;color:var(--faint)></i><p>Stream unavailable</p><small>${escapeHtml(cam.url)}</small></div>')"
   >
     <source src="${cam.url}" type="${cam.streamType==='rtsp_relay'?'video/webm':'application/x-mpegURL'}">
-    <div class="cctv-nostream"><i class="ti ti-player-play"></i><p>Stream not supported in this browser</p><small>Use Safari for HLS, or set up a WebSocket relay</small></div>
   </video>`;
 }
-
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+ 
 function updateCctvClocks(){
   cctvCameras.forEach((_,i)=>{
     const el=document.getElementById('cctv-clock-'+i);
-    if(el)el.textContent=new Date().toLocaleTimeString();
+    if(el) el.textContent=new Date().toLocaleTimeString();
   });
 }
-setInterval(()=>{if(document.getElementById('page-cctv')?.classList.contains('active'))updateCctvClocks();},1000);
-
+setInterval(()=>{ if(document.getElementById('page-cctv')?.classList.contains('active')) updateCctvClocks(); },1000);
+ 
 function selectCamera(idx){
   selectedCameraIdx=idx;
   renderCctvGrid();
   const cam=cctvCameras[idx];
-  if(!cam)return;
-  const isHikDahua=cam.model&&(cam.model.includes('Hikvision')||cam.model.includes('Dahua'));
+  if(!cam) return;
+  const zoneColor = cam.zone ? getZoneColor(cam.zone) : 'var(--muted)';
   document.getElementById('cctv-info-content').innerHTML=`
     <div class="cctv-info-row"><span class="cctv-info-label">Name</span><span class="cctv-info-val">${cam.name||'—'}</span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Zone</span><span class="cctv-info-val"><span style="background:${zoneColor}20;color:${zoneColor};border:1px solid ${zoneColor}40;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">${cam.zone||'Unassigned'}</span></span></div>
     <div class="cctv-info-row"><span class="cctv-info-label">Location</span><span class="cctv-info-val">${cam.location||'—'}</span></div>
     <div class="cctv-info-row"><span class="cctv-info-label">Model</span><span class="cctv-info-val">${cam.model||'—'}</span></div>
     <div class="cctv-info-row"><span class="cctv-info-label">Stream Type</span><span class="cctv-info-val">${cam.streamType||'—'}</span></div>
     <div class="cctv-info-row"><span class="cctv-info-label">Status</span><span class="cctv-info-val"><span class="badge ${cam.status==='online'?'badge-allowed':'badge-denied'}">${cam.status||'unknown'}</span></span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">URL</span><span class="cctv-info-val mono" style="word-break:break-all;font-size:11px">${cam.url||'No stream configured'}</span></div>
-    ${isHikDahua?`<div class="cctv-info-row" style="border-bottom:none"><span class="cctv-info-label">Brand</span><span class="cctv-hikvision-badge"><i class="ti ti-shield-check"></i> Verified Compatible</span></div>`:''}
+    <div class="cctv-info-row"><span class="cctv-info-label">URL</span><span class="cctv-info-val mono" style="word-break:break-all;font-size:10px">${cam.url||'No stream configured'}</span></div>
     <div style="margin-top:14px;display:flex;gap:8px">
       <button class="btn btn-ghost btn-sm" onclick="editCamera('${cam.id}')"><i class="ti ti-pencil"></i> Edit</button>
       <button class="btn btn-danger btn-sm" onclick="deleteCamera('${cam.id}')"><i class="ti ti-trash"></i> Remove</button>
     </div>`;
 }
-
+ 
 /* Camera modal helpers */
 function toggleStreamFields(){
   const type=document.getElementById('cam-stream-type').value;
@@ -1595,40 +1927,51 @@ function toggleStreamFields(){
   if(type==='hls'){
     label.textContent='HLS Stream URL (.m3u8)';
     urlInput.placeholder='http://your-server:8888/channel1/stream.m3u8';
-    hint.innerHTML='Hikvision RTSP → MediaMTX → HLS. MediaMTX is free & open-source.';
+    hint.textContent='Hikvision RTSP → MediaMTX → HLS. MediaMTX is free & open-source.';
   }else if(type==='iframe'){
     label.textContent='NVR Web Portal URL';
     urlInput.placeholder='http://192.168.1.64/doc/page/login.asp';
-    hint.innerHTML='Opens the Hikvision/Dahua NVR web portal in an iframe. Requires same network.';
+    hint.textContent='Opens the Hikvision/Dahua NVR web portal in an iframe. Requires same network.';
   }else{
     label.textContent='WebSocket Relay URL';
     urlInput.placeholder='ws://your-server:8889/channel1';
-    hint.innerHTML='RTSP over WebSocket via MediaMTX. Requires the mediamtx WebRTC/WebSocket feature.';
+    hint.textContent='RTSP over WebSocket via MediaMTX WebRTC feature.';
   }
 }
-
+ 
+function getSelectedZoneValue(){
+  const zoneEl  = document.getElementById('cam-zone');
+  const zoneVal = zoneEl.value;
+  if(zoneVal === 'Custom'){
+    return document.getElementById('cam-zone-custom').value.trim() || 'Custom';
+  }
+  return zoneVal;
+}
+ 
 async function saveCamera(){
   const name=document.getElementById('cam-name').value.trim();
-  const location=document.getElementById('cam-location').value.trim();
-  const streamType=document.getElementById('cam-stream-type').value;
-  const url=document.getElementById('cam-url').value.trim();
-  const model=document.getElementById('cam-model').value;
-  const status=document.getElementById('cam-status').value;
   if(!name){showToast('Camera name is required','error');return;}
+  const location   = document.getElementById('cam-location').value.trim();
+  const streamType = document.getElementById('cam-stream-type').value;
+  const url        = document.getElementById('cam-url').value.trim();
+  const model      = document.getElementById('cam-model').value;
+  const status     = document.getElementById('cam-status').value;
+  const zone       = getSelectedZoneValue();
+ 
   try{
     await db.collection('cctv_cameras').add({
-      name,location,streamType,url,model,status,
-      addedAt:firebase.firestore.FieldValue.serverTimestamp()
+      name, location, streamType, url, model, status, zone,
+      addedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     closeModal('addCamera');
-    ['cam-name','cam-location','cam-url'].forEach(id=>document.getElementById(id).value='');
-    showToast('Camera added');
+    ['cam-name','cam-location','cam-url','cam-zone-custom'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    showToast('Camera added to ' + zone + ' zone');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-
+ 
 async function deleteCamera(camId){
-  if(!camId)return;
-  if(!confirm('Remove this camera from the system?'))return;
+  if(!camId) return;
+  if(!confirm('Remove this camera from the system?')) return;
   try{
     await db.collection('cctv_cameras').doc(camId).delete();
     selectedCameraIdx=null;
@@ -1636,24 +1979,28 @@ async function deleteCamera(camId){
     showToast('Camera removed');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-
+ 
 async function editCamera(camId){
   const cam=cctvCameras.find(c=>c.id===camId);
-  if(!cam)return;
-  // Populate modal
+  if(!cam) return;
   document.getElementById('cam-name').value=cam.name||'';
   document.getElementById('cam-location').value=cam.location||'';
   document.getElementById('cam-stream-type').value=cam.streamType||'hls';
   document.getElementById('cam-url').value=cam.url||'';
   document.getElementById('cam-model').value=cam.model||'Other';
   document.getElementById('cam-status').value=cam.status||'online';
+  // Set zone
+  const zoneEl = document.getElementById('cam-zone');
+  const knownZone = [...zoneEl.options].find(o=>o.value===cam.zone);
+  if(knownZone){ zoneEl.value = cam.zone; }
+  else if(cam.zone){ zoneEl.value='Custom'; document.getElementById('cam-zone-custom').value=cam.zone; document.getElementById('cam-zone-custom-wrap').style.display='block'; }
   toggleStreamFields();
   openModal('addCamera');
-  // Swap save button to update
   const modalTitle=document.querySelector('#modal-addCamera .modal-title');
-  const saveBtn=document.querySelector('#modal-addCamera .btn-primary');
-  modalTitle.innerHTML='<i class="ti ti-pencil" style="color:var(--accent)"></i> Edit Camera';
-  saveBtn.onclick=async()=>{
+  const saveBtn=document.getElementById('cam-save-btn');
+  if(modalTitle) modalTitle.innerHTML='<i class="ti ti-pencil" style="color:var(--accent)"></i> Edit Camera';
+  if(saveBtn) saveBtn.onclick=async()=>{
+    const zone = getSelectedZoneValue();
     try{
       await db.collection('cctv_cameras').doc(camId).update({
         name:document.getElementById('cam-name').value.trim(),
@@ -1662,17 +2009,17 @@ async function editCamera(camId){
         url:document.getElementById('cam-url').value.trim(),
         model:document.getElementById('cam-model').value,
         status:document.getElementById('cam-status').value,
+        zone,
         updatedAt:firebase.firestore.FieldValue.serverTimestamp()
       });
       closeModal('addCamera');
-      // Reset modal
-      modalTitle.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
-      saveBtn.onclick=saveCamera;
+      if(modalTitle) modalTitle.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
+      if(saveBtn) saveBtn.onclick=saveCamera;
       showToast('Camera updated');
     }catch(e){showToast('Error: '+e.message,'error');}
   };
 }
-
+ 
 /* ═══ DASHBOARD ═══ */
 function renderDashStudents(){
   document.getElementById('dash-students').innerHTML=studentsData.slice(0,6).map(s=>{
@@ -1696,12 +2043,31 @@ function handleGlobalSearch(val){
     document.getElementById('people-search').value=val;renderPeoplePage();
   }
 }
-
-/* ═══ ADD PERSON ═══ */
+ 
+/* ═══ ADD PERSON — with validation ═══ */
 function syncCollectionFromRole(role){
   const col=document.getElementById('add-collection');
   if(role==='Student')col.value='students';
   else if(role==='Staff'||role==='Lecturer'||role==='Professor')col.value='staff';
+}
+function validatePersonForm(){
+  let valid=true;
+  const age=parseInt(document.getElementById('add-age').value)||0;
+  const height=parseInt(document.getElementById('add-height').value)||0;
+  const ageErr=document.getElementById('add-age-err');
+  const heightErr=document.getElementById('add-height-err');
+  const ageInput=document.getElementById('add-age');
+  const heightInput=document.getElementById('add-height');
+  // Reset
+  ageErr.classList.remove('show');heightErr.classList.remove('show');
+  ageInput.classList.remove('invalid');heightInput.classList.remove('invalid');
+  if(document.getElementById('add-age').value && (age<1||age>120)){
+    ageErr.classList.add('show');ageInput.classList.add('invalid');valid=false;
+  }
+  if(document.getElementById('add-height').value && (height<50||height>300)){
+    heightErr.classList.add('show');heightInput.classList.add('invalid');valid=false;
+  }
+  return valid;
 }
 async function addPerson(){
   if(!currentUserIsAdmin){showToast('Admin access required','error');openAdminModal();return;}
@@ -1710,22 +2076,34 @@ async function addPerson(){
   try{const d=await db.collection('admins').doc(user.uid).get();if(!d.exists){showToast('Access denied — admin only','error');closeModal('addPerson');return;}}
   catch(e){showToast('Could not verify admin status','error');return;}
   const name=document.getElementById('add-name').value.trim();
+  if(!name){showToast('Name is required','error');return;}
+  if(!validatePersonForm()) return;
   const sid=document.getElementById('add-sid').value.trim();
   const role=document.getElementById('add-role').value;
   const col=document.getElementById('add-collection').value||'students';
   const dept=document.getElementById('add-dept').value;
   const uid=document.getElementById('add-uid').value.trim();
   const course=document.getElementById('add-course').value.trim();
-  if(!name){showToast('Name is required','error');return;}
+  const ageVal=document.getElementById('add-age').value;
+  const heightVal=document.getElementById('add-height').value;
+  const bloodGroup=document.getElementById('add-bloodgroup').value;
+  const payload={
+    name, Student_ID:sid, role, department:dept, uid, course,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  if(ageVal)   payload.age   = parseInt(ageVal);
+  if(heightVal) payload.height = parseInt(heightVal);
+  if(bloodGroup) payload.bloodGroup = bloodGroup;
   try{
-    await db.collection(col).add({name,Student_ID:sid,role,department:dept,uid,course,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    await db.collection(col).add(payload);
     closeModal('addPerson');
-    ['add-name','add-sid','add-uid','add-course'].forEach(id=>document.getElementById(id).value='');
+    ['add-name','add-sid','add-uid','add-course','add-age','add-height'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('add-dept').value='';
+    document.getElementById('add-bloodgroup').value='';
     showToast(`${role} added to "${col}" collection`);
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-
+ 
 /* ═══ ADMINS TABLE ═══ */
 function renderAdminsTable(){
   const tbody=document.getElementById('admins-tbody');
@@ -1755,7 +2133,7 @@ async function removeAdmin(uid){
   if(uid===auth.currentUser?.uid){showToast("Can't remove yourself",'error');return;}
   try{await db.collection('admins').doc(uid).delete();showToast('Admin removed');}catch(e){showToast('Error: '+e.message,'error');}
 }
-
+ 
 /* ═══ DEPARTMENTS PAGE ═══ */
 function renderDeptPage(){renderDeptCards();renderDeptTable();}
 function renderDeptCards(){
@@ -1819,7 +2197,7 @@ async function saveDeptChange(){
     closeModal('changeDept');showToast('Department updated to '+(newDept||'Unassigned'));
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-
+ 
 /* ═══ LOGS ═══ */
 function renderLogs(){
   const filter=document.getElementById('log-filter').value;
@@ -1843,7 +2221,7 @@ function updateDashStats(){
   document.getElementById('stat-logs').textContent=logsData.length;
   document.getElementById('stat-denied').textContent=logsData.filter(l=>l.status==='Denied').length;
 }
-
+ 
 /* ═══ ATTENDANCE ═══ */
 function renderAttendance(){
   const dateVal=document.getElementById('att-date').value;
@@ -1918,7 +2296,7 @@ function exportAttendanceCSV(){
   const a=document.createElement('a');a.href=url;a.download=`attendance-${dateVal||'all'}.csv`;a.click();
   URL.revokeObjectURL(url);showToast('CSV exported');
 }
-
+ 
 /* ═══ MODALS ═══ */
 function openModal(id){
   if(id==='markAttendance'){
@@ -1926,26 +2304,38 @@ function openModal(id){
       studentsData.map(s=>`<option value="${s.uid||s.name}">${s.name} (${s.Student_ID||'N/A'}) — ${s.role||'?'}</option>`).join('');
   }
   if(id==='addCamera'){
-    // Reset modal to add mode
-    const title=document.querySelector('#modal-addCamera .modal-title');
-    const saveBtn=document.querySelector('#modal-addCamera .btn-primary');
-    if(title)title.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
-    if(saveBtn)saveBtn.onclick=saveCamera;
+    // Only reset to "Add" mode if not already editing
+    const saveBtn=document.getElementById('cam-save-btn');
+    if(saveBtn.dataset.editing !== '1'){
+      const title=document.querySelector('#modal-addCamera .modal-title');
+      if(title) title.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
+      saveBtn.onclick=saveCamera;
+    }
     toggleStreamFields();
   }
   document.getElementById('modal-'+id).classList.add('open');
 }
-function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+function closeModal(id){
+  document.getElementById('modal-'+id).classList.remove('open');
+  // Reset camera modal state
+  if(id==='addCamera'){
+    const saveBtn=document.getElementById('cam-save-btn');
+    if(saveBtn){ delete saveBtn.dataset.editing; saveBtn.onclick=saveCamera; }
+    const title=document.querySelector('#modal-addCamera .modal-title');
+    if(title) title.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
+    document.getElementById('cam-zone-custom-wrap').style.display='none';
+  }
+}
 document.querySelectorAll('.modal-bg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open');}));
-
+ 
 /* ═══ TOAST ═══ */
 function showToast(msg,type='success'){
   const t=document.getElementById('toast');
   t.className='toast '+type;
-  t.querySelector('i').className=type==='success'?'ti ti-check-circle':'ti ti-alert-circle';
+  t.querySelector('i').className=type==='success'?'ti ti-check-circle':type==='error'?'ti ti-alert-circle':'ti ti-info-circle';
   document.getElementById('toast-msg').textContent=msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  setTimeout(()=>t.classList.remove('show'),3500);
 }
 </script>
 </body>
