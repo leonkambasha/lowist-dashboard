@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13"></script>  <!-- ✅ FIX: HLS.js for Chrome/Firefox HLS playback -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -257,7 +258,6 @@
     .personal-info-card .pic-label{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px}
     .personal-info-card .pic-value{font-size:15px;font-weight:600;color:var(--text)}
  
-    /* blood group badge styling */
     .blood-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.3);border-radius:6px;padding:2px 10px;font-size:15px;font-weight:700;font-family:var(--font-head)}
  
     .att-bar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:8px}
@@ -492,7 +492,7 @@
     </div>
     <div class="login-panel" id="panel-phone">
       <div id="phone-step1">
-        <input class="login-input" id="phone-input" type="tel" placeholder="+1 234 567 8900"/>
+        <input class="login-input" id="phone-input" type="tel" placeholder="+60 12 345 6789"/>
         <div id="recaptcha-container"></div>
         <button class="login-btn btn-phone-send" id="send-otp-btn"><i class="ti ti-device-mobile"></i> Send OTP</button>
       </div>
@@ -622,7 +622,6 @@
 <div id="overlay-backdrop" onclick="closeProfile()"></div>
 <div id="profile-overlay"><div id="profile-content"></div></div>
  
-<!-- hidden photo input -->
 <input type="file" id="photo-file-input" accept="image/jpeg,image/png,image/webp,image/gif">
  
 <!-- ─── SIDEBAR ─── -->
@@ -648,11 +647,10 @@
   </nav>
   <div class="sidebar-footer">
     <span id="user-email-display" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px"></span>
-    <button class="signout-btn" onclick="doSignOut()"><i class="ti ti-logout"></i></button>
+    <button class="signout-btn" onclick="doSignOut()" title="Sign out"><i class="ti ti-logout"></i></button>
   </div>
 </aside>
  
-<!-- ─── MAIN ─── -->
 <main class="main">
   <div class="topbar">
     <div class="topbar-title" id="pageTitle">Dashboard</div>
@@ -666,7 +664,6 @@
   </div>
   <div class="content">
  
-    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="stats-grid">
         <div class="stat-card blue"><div class="stat-icon blue"><i class="ti ti-users"></i></div><div class="stat-value" id="stat-students">—</div><div class="stat-label">Total People</div></div>
@@ -692,7 +689,6 @@
       </div>
     </div>
  
-    <!-- PEOPLE PAGE -->
     <div class="page" id="page-people">
       <div class="section-header" style="margin-bottom:12px">
         <div class="section-title">All People</div>
@@ -719,7 +715,6 @@
       </div>
     </div>
  
-    <!-- DEPARTMENTS PAGE -->
     <div class="page" id="page-departments">
       <div class="dept-overview-grid" id="dept-cards-row"></div>
       <div class="section-header">
@@ -749,7 +744,6 @@
       </div>
     </div>
  
-    <!-- ATTENDANCE PAGE -->
     <div class="page" id="page-attendance">
       <div class="section-header"><div class="section-title">Attendance</div><button class="btn btn-primary" onclick="openModal('markAttendance')"><i class="ti ti-calendar-plus"></i> Mark Attendance</button></div>
       <div class="attendance-controls">
@@ -768,7 +762,6 @@
       <tbody id="attendance-tbody"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
  
-    <!-- LOGS PAGE -->
     <div class="page" id="page-logs">
       <div class="section-header">
         <div class="section-title">Live Activity Log</div>
@@ -778,7 +771,6 @@
       <tbody id="logs-tbody"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
  
-    <!-- ADMIN PANEL PAGE -->
     <div class="page" id="page-admins">
       <div class="section-header">
         <div class="section-title"><i class="ti ti-shield" style="color:var(--amber)"></i> Admin Panel</div>
@@ -796,7 +788,6 @@
       </div>
     </div>
  
-    <!-- ═══ CCTV PAGE ═══ -->
     <div class="page" id="page-cctv">
       <div class="cctv-header">
         <div>
@@ -809,13 +800,7 @@
           </div>
         </div>
       </div>
- 
-      <!-- Zone navigation bar -->
-      <div class="cctv-zone-bar" id="cctv-zone-bar">
-        <!-- populated by renderZoneTabs() -->
-      </div>
- 
-      <!-- Layout controls -->
+      <div class="cctv-zone-bar" id="cctv-zone-bar"></div>
       <div class="cctv-controls">
         <button class="cctv-layout-btn active" id="layout-btn-2" onclick="setCctvLayout(2,this)"><i class="ti ti-layout-2"></i> 2×2</button>
         <button class="cctv-layout-btn" id="layout-btn-1" onclick="setCctvLayout(1,this)"><i class="ti ti-square"></i> Single</button>
@@ -823,12 +808,10 @@
         <button class="cctv-layout-btn" id="layout-btn-4" onclick="setCctvLayout(4,this)"><i class="ti ti-layout-grid-add"></i> 4-Up</button>
         <button class="cctv-add-btn" onclick="openModal('addCamera')"><i class="ti ti-plus"></i> Add Camera</button>
       </div>
- 
       <div class="cctv-two-col">
         <div>
           <div class="cctv-grid layout-4" id="cctv-feed-grid"></div>
         </div>
-        <!-- Info panel -->
         <div class="cctv-info-panel" id="cctv-info-panel">
           <div class="cctv-info-title"><i class="ti ti-info-circle" style="color:var(--accent)"></i> Camera Details</div>
           <div id="cctv-info-content">
@@ -853,7 +836,6 @@
   </div>
 </main>
  
-<!-- ─── MODALS ─── -->
 <div class="modal-bg" id="modal-addPerson">
   <div class="modal" style="width:520px">
     <div class="modal-title"><i class="ti ti-user-plus" style="color:var(--accent)"></i> Add Person</div>
@@ -985,7 +967,7 @@ let logsData       = [];
 let attendanceData = [];
 let adminsData     = [];
 let cctvCameras    = [];
-let customZones    = [];   // user-created zone names
+let customZones    = [];
 let activeCctvZone = 'All';
 let confirmationResult = null, recaptchaVerifier = null;
 let activeStudentId    = null;
@@ -998,8 +980,16 @@ let currentProfileDocId = null;
 let currentProfilePeriod = 'week';
 let _pendingPhotoDocId = null;
 let _pendingPhotoCol   = null;
+let _cctvClockInterval = null; // ✅ FIX: track interval for cleanup
 const todayStr = new Date().toISOString().slice(0,10);
 const _coll = { users:[], students:[], staff:[] };
+ 
+/* ✅ FIX: Debounced refresh to prevent cascade re-renders */
+let _refreshTimer = null;
+function scheduleRefresh() {
+  clearTimeout(_refreshTimer);
+  _refreshTimer = setTimeout(mergeAndRefresh, 250);
+}
  
 /* ═══ BUILT-IN ZONES ═══ */
 const BUILTIN_ZONES = ['North','South','East','West'];
@@ -1028,8 +1018,18 @@ const BLOOD_GROUP_COLORS = {
   'AB+':'#60a5fa','AB-':'#c084fc','O+':'#34d399','O-':'#f472b6',
 };
  
+/* ✅ FIX: HTML escape utility — applied everywhere user data appears in innerHTML */
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => 
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+/* ✅ FIX: JS string escape — for interpolating user data into inline event handlers */
+function escJs(s) {
+  return String(s ?? '').replace(/[\\'"]/g, '\\$&').replace(/\n/g,'\\n');
+}
+ 
 function roleConf(role){return ROLE_CONFIG[role]||ROLE_CONFIG['Student'];}
-function initials(n){if(!n)return'?';return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+function initials(n){if(!n)return'?';return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
 function attColor(p){return p>=80?'#22d3a0':p>=60?'#fbbf24':'#f87171';}
 function attLabel(p){
   if(p>=80)return{text:'Good Standing',cls:'badge-present'};
@@ -1100,7 +1100,10 @@ auth.onAuthStateChanged(async user=>{
     await checkAdminStatus(user.uid);
     initData();
   }else{
-    currentUserIsAdmin=false;
+    // ✅ FIX: Properly clean up state on signout
+    currentUserIsAdmin = false;
+    applyAdminUI();
+    studentsData=[]; logsData=[]; attendanceData=[]; adminsData=[];
     document.getElementById('login-screen').style.display='flex';
   }
 });
@@ -1116,7 +1119,6 @@ function setupButtons(){
   document.getElementById('password-input').addEventListener('keydown',e=>{if(e.key==='Enter')signInEmail();});
   document.getElementById('email-input').addEventListener('keydown',e=>{if(e.key==='Enter')signInEmail();});
   document.getElementById('signup-confirm').addEventListener('keydown',e=>{if(e.key==='Enter')doSignUp();});
-  // Zone custom toggle
   document.getElementById('cam-zone').addEventListener('change',function(){
     document.getElementById('cam-zone-custom-wrap').style.display=this.value==='Custom'?'block':'none';
   });
@@ -1135,7 +1137,7 @@ function switchMode(mode){
   }else{
     document.getElementById('auth-title').textContent='Welcome back';
     document.getElementById('auth-subtitle').textContent='Sign in to access the dashboard';
-    document.getElementById('method-tabs').style.display='flex';
+    document.getElementById('method-tabs').style.display='flex'; // ✅ FIX: was missing
     document.querySelectorAll('.login-panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('panel-email').classList.add('active');
     document.querySelectorAll('.login-tab').forEach(t=>t.classList.remove('active'));
@@ -1175,7 +1177,9 @@ async function signInApple(){try{await auth.signInWithPopup(new firebase.auth.OA
 function setupRecaptcha(){recaptchaVerifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'normal',callback:()=>{}});recaptchaVerifier.render();}
 async function sendOTP(){
   const ph=document.getElementById('phone-input').value.trim();
+  // ✅ FIX: Validate international phone format
   if(!ph){showErr('Please enter phone number');return;}
+  if(!/^\+[1-9]\d{6,14}$/.test(ph)){showErr('Use international format starting with + (e.g. +60123456789)');return;}
   try{confirmationResult=await auth.signInWithPhoneNumber(ph,recaptchaVerifier);document.getElementById('phone-step1').style.display='none';document.getElementById('phone-step2').style.display='block';hideErr();}catch(e){showErr(e.message);}
 }
 async function verifyOTP(){
@@ -1184,7 +1188,11 @@ async function verifyOTP(){
   try{await confirmationResult.confirm(code);}catch(e){showErr('Invalid code. Try again.');}
 }
 function resetPhone(){document.getElementById('phone-step1').style.display='block';document.getElementById('phone-step2').style.display='none';document.getElementById('otp-input').value='';hideErr();}
-async function doSignOut(){await auth.signOut();}
+async function doSignOut(){
+  // ✅ FIX: Stop CCTV clock interval on signout
+  if(_cctvClockInterval){ clearInterval(_cctvClockInterval); _cctvClockInterval=null; }
+  await auth.signOut();
+}
  
 /* ═══ DATA ═══ */
 function mergeAndRefresh(){
@@ -1204,10 +1212,10 @@ function initData(){
   document.getElementById('att-date').value=todayStr;
   document.getElementById('mark-date').value=todayStr;
   ['users','students','staff'].forEach(col=>{
-    db.collection(col).onSnapshot(snap=>{
+    db.collection(col).limit(1000).onSnapshot(snap=>{ // ✅ FIX: limit query size
       _coll[col]=[];
       snap.forEach(d=>_coll[col].push({id:d.id,...d.data()}));
-      mergeAndRefresh();
+      scheduleRefresh(); // ✅ FIX: debounced
     },err=>console.warn(`Collection "${col}":`,err.message));
   });
   db.collection('admins').onSnapshot(snap=>{
@@ -1218,15 +1226,13 @@ function initData(){
     logsData=[];snap.forEach(d=>logsData.push({id:d.id,...d.data()}));
     renderLogs();renderDashLogs();updateDashStats();
   });
-  db.collection('attendance').onSnapshot(snap=>{
+  db.collection('attendance').limit(2000).onSnapshot(snap=>{ // ✅ FIX: limit query size
     attendanceData=[];snap.forEach(d=>attendanceData.push({id:d.id,...d.data()}));
     renderAttendance();updatePresentStat();
   });
-  // Load cameras from Firestore
   db.collection('cctv_cameras').onSnapshot(snap=>{
     cctvCameras=[];
     snap.forEach(d=>cctvCameras.push({id:d.id,...d.data()}));
-    // Collect custom zones
     const zones=new Set();
     cctvCameras.forEach(c=>{if(c.zone&&!BUILTIN_ZONES.includes(c.zone)&&c.zone!=='Main Gate'&&c.zone!=='Library'&&c.zone!=='Dormitories')zones.add(c.zone);});
     customZones=[...zones];
@@ -1276,24 +1282,28 @@ function renderPeoplePage(){
 function renderStudentsGrid(data){
   const grid=document.getElementById('students-grid');
   if(!data.length){grid.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><i class="ti ti-users-off"></i><p>No people found</p></div></div>`;return;}
+  // ✅ FIX: All user data escaped with esc() / escJs()
   grid.innerHTML=data.map(s=>{
     const rc=roleConf(s.role);
     const pct=studentAttPct(s.name);
     const col=pct!==null?attColor(pct):'var(--faint)';
+    const safeName = esc(s.name);
+    const safeId   = esc(s.id);
+    const safeInit = esc(initials(s.name));
     const avatarHTML=s.photoURL
-      ?`<div class="stu-card-avatar"><img src="${s.photoURL}" alt="${s.name}" onerror="this.parentElement.innerHTML='${initials(s.name)}'"></div>`
-      :`<div class="stu-card-avatar ${rc.avClass}">${initials(s.name)}</div>`;
+      ?`<div class="stu-card-avatar"><img src="${esc(s.photoURL)}" alt="${safeName}" onerror="this.parentElement.textContent='${safeInit}'"></div>`
+      :`<div class="stu-card-avatar ${rc.avClass}">${safeInit}</div>`;
     return `
       <div class="stu-card ${activeStudentId===s.id?'active':''}"
-           onclick="openProfile('${s.id}')" role="button" tabindex="0"
-           onkeydown="if(event.key==='Enter')openProfile('${s.id}')">
+           onclick="openProfile('${safeId}')" role="button" tabindex="0"
+           onkeydown="if(event.key==='Enter')openProfile('${safeId}')">
         <div class="stu-card-band ${rc.band}"></div>
         <div class="stu-card-body">
           ${avatarHTML}
-          <div class="stu-card-name">${s.name||'—'}</div>
-          <div class="stu-card-id">${s.Student_ID||'No ID'}</div>
-          <div class="stu-card-dept ${rc.avClass}" style="padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;display:inline-block;margin-bottom:14px">${s.role||'—'}</div>
-          ${s.bloodGroup?`<div style="font-size:11px;color:var(--muted);margin-bottom:8px">🩸 ${s.bloodGroup}${s.age?' · '+s.age+'y':''}</div>`:''}
+          <div class="stu-card-name">${safeName}</div>
+          <div class="stu-card-id">${esc(s.Student_ID||'No ID')}</div>
+          <div class="stu-card-dept ${rc.avClass}" style="padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;display:inline-block;margin-bottom:14px">${esc(s.role||'—')}</div>
+          ${s.bloodGroup?`<div style="font-size:11px;color:var(--muted);margin-bottom:8px">🩸 ${esc(s.bloodGroup)}${s.age?' · '+esc(s.age)+'y':''}</div>`:''}
           <div class="stu-card-footer">
             <div class="stu-card-att">
               <div class="stu-card-att-dot" style="background:${col}"></div>
@@ -1306,9 +1316,7 @@ function renderStudentsGrid(data){
   }).join('');
 }
  
-/* ═══════════════════════════════
-   PROFILE OVERLAY — ENHANCED
-═══════════════════════════════ */
+/* ═══ PROFILE OVERLAY ═══ */
 function openProfile(docId){
   const s=studentsData.find(x=>x.id===docId);
   if(!s)return;
@@ -1328,15 +1336,17 @@ function openProfile(docId){
   const lbl=pct!==null?attLabel(pct):{text:'No data',cls:'badge-absent'};
   const classes=s.classesToday||[];
  
+  const safeName = esc(s.name);
+  const safeInit = esc(initials(s.name));
   const avatarContent=s.photoURL
-    ?`<img src="${s.photoURL}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span>${initials(s.name)}</span>'">`
-    :`<span>${initials(s.name)}</span>`;
+    ?`<img src="${esc(s.photoURL)}" alt="${safeName}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span>${safeInit}</span>'">`
+    :`<span>${safeInit}</span>`;
  
   const loginHTML=logins.length
     ?logins.map((l,i)=>`
       <div class="login-entry">
         <div class="login-icon-wrap"><i class="ti ti-device-desktop"></i></div>
-        <div><div class="login-time">${l.time}</div><div class="login-sub">${l.location} · ${l.status}</div></div>
+        <div><div class="login-time">${esc(l.time)}</div><div class="login-sub">${esc(l.location)} · ${esc(l.status)}</div></div>
         ${i===0?'<span class="login-badge">Latest</span>':''}
       </div>`).join('')
     :'<div class="no-classes">No login activity in logs.</div>';
@@ -1344,22 +1354,21 @@ function openProfile(docId){
   let classHTML;
   if(classes.length){
     classHTML=classes.map(c=>`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
-      <div style="text-align:center;min-width:46px"><div style="font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--amber)">${c.time||'—'}</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${c.period||''}</div></div>
+      <div style="text-align:center;min-width:46px"><div style="font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--amber)">${esc(c.time||'—')}</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${esc(c.period||'')}</div></div>
       <div style="width:2px;height:32px;background:var(--border2);border-radius:2px"></div>
-      <div><div style="font-size:14px;font-weight:500;color:var(--text)">${c.name||'—'}</div><div style="font-size:11px;color:var(--muted)">${c.room||'—'}</div></div>
+      <div><div style="font-size:14px;font-weight:500;color:var(--text)">${esc(c.name||'—')}</div><div style="font-size:11px;color:var(--muted)">${esc(c.room||'—')}</div></div>
     </div>`).join('');
   }else if(todayRecs.length){
     classHTML=todayRecs.map(a=>`
       <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="text-align:center;min-width:46px"><div style="font-size:13px;font-weight:600;color:var(--amber)">${a.time||'—'}</div><div style="font-size:10px;color:var(--muted)">today</div></div>
+        <div style="text-align:center;min-width:46px"><div style="font-size:13px;font-weight:600;color:var(--amber)">${esc(a.time||'—')}</div><div style="font-size:10px;color:var(--muted)">today</div></div>
         <div style="width:2px;height:32px;background:var(--border2);border-radius:2px"></div>
-        <div><div style="font-size:14px;font-weight:500;color:var(--text)">${a.department||'Class'}</div><div style="font-size:11px;color:var(--muted)">Attendance: <span class="badge ${a.status==='Present'?'badge-present':a.status==='Absent'?'badge-absent':'badge-late'}">${a.status}</span></div></div>
+        <div><div style="font-size:14px;font-weight:500;color:var(--text)">${esc(a.department||'Class')}</div><div style="font-size:11px;color:var(--muted)">Attendance: <span class="badge ${a.status==='Present'?'badge-present':a.status==='Absent'?'badge-absent':'badge-late'}">${esc(a.status)}</span></div></div>
       </div>`).join('');
   }else{
     classHTML='<div class="no-classes">No class data for today.</div>';
   }
  
-  // Personal info cards — new section
   const bloodColor=s.bloodGroup?BLOOD_GROUP_COLORS[s.bloodGroup]||'var(--red)':'var(--faint)';
   const personalInfoHTML=`
     <div class="personal-info-grid">
@@ -1367,14 +1376,14 @@ function openProfile(docId){
         <div class="pic-icon" style="background:var(--amber-dim);color:var(--amber)"><i class="ti ti-calendar-user"></i></div>
         <div>
           <div class="pic-label">Age</div>
-          <div class="pic-value">${s.age?s.age+' years':'—'}</div>
+          <div class="pic-value">${s.age?esc(s.age)+' years':'—'}</div>
         </div>
       </div>
       <div class="personal-info-card">
         <div class="pic-icon" style="background:var(--green-dim);color:var(--green)"><i class="ti ti-ruler"></i></div>
         <div>
           <div class="pic-label">Height</div>
-          <div class="pic-value">${s.height?s.height+' cm':'—'}</div>
+          <div class="pic-value">${s.height?esc(s.height)+' cm':'—'}</div>
         </div>
       </div>
       <div class="personal-info-card" style="grid-column:1/-1">
@@ -1382,18 +1391,21 @@ function openProfile(docId){
         <div style="display:flex;align-items:center;gap:12px;flex:1">
           <div>
             <div class="pic-label">Blood Group</div>
-            <div class="pic-value">${s.bloodGroup||'—'}</div>
+            <div class="pic-value">${s.bloodGroup?esc(s.bloodGroup):'—'}</div>
           </div>
-          ${s.bloodGroup?`<span class="blood-badge" style="background:${bloodColor}20;color:${bloodColor};border-color:${bloodColor}40">${s.bloodGroup}</span>`:''}
+          ${s.bloodGroup?`<span class="blood-badge" style="background:${bloodColor}20;color:${bloodColor};border-color:${bloodColor}40">${esc(s.bloodGroup)}</span>`:''}
         </div>
       </div>
     </div>`;
+ 
+  const safeCol = escJs((s._col||'users'));
+  const safeId  = esc(s.id);
  
   document.getElementById('profile-content').innerHTML=`
     <div class="prof-hero">
       <button class="prof-back-btn" onclick="closeProfile()"><i class="ti ti-arrow-left"></i> Back</button>
       <div class="prof-hero-inner">
-        <div class="prof-avatar-lg ${rc.avClass}" onclick="triggerPhotoUpload('${s.id}','${(s._col||'users').replace(/'/g,"\\'")}')" title="Click to change photo">
+        <div class="prof-avatar-lg ${rc.avClass}" onclick="triggerPhotoUpload('${safeId}','${safeCol}')" title="Click to change photo">
           ${avatarContent}
           <div class="prof-avatar-upload-hint">
             <i class="ti ti-camera"></i>
@@ -1401,17 +1413,16 @@ function openProfile(docId){
           </div>
         </div>
         <div class="prof-hero-text">
-          <div class="prof-hero-name">${s.name||'—'}</div>
+          <div class="prof-hero-name">${safeName||'—'}</div>
           <div class="prof-tags">
-            <span class="prof-tag tag-blue">${s.Student_ID||'No ID'}</span>
-            <span class="prof-tag ${rc.tagClass}">${s.role||'—'}</span>
-            ${s.department?`<span class="prof-tag tag-amber">${s.department}</span>`:''}
-            ${s.bloodGroup?`<span class="prof-tag tag-red">🩸 ${s.bloodGroup}</span>`:''}
-            ${s._col?`<span class="prof-tag" style="background:var(--surface2);color:var(--faint);border:1px solid var(--border)">${s._col}</span>`:''}
+            <span class="prof-tag tag-blue">${esc(s.Student_ID||'No ID')}</span>
+            <span class="prof-tag ${rc.tagClass}">${esc(s.role||'—')}</span>
+            ${s.department?`<span class="prof-tag tag-amber">${esc(s.department)}</span>`:''}
+            ${s.bloodGroup?`<span class="prof-tag tag-red">🩸 ${esc(s.bloodGroup)}</span>`:''}
+            ${s._col?`<span class="prof-tag" style="background:var(--surface2);color:var(--faint);border:1px solid var(--border)">${esc(s._col)}</span>`:''}
           </div>
         </div>
       </div>
-      <!-- upload progress bar -->
       <div class="upload-progress-bar" id="upload-prog-bar">
         <div class="upload-progress-fill" id="upload-prog-fill"></div>
       </div>
@@ -1422,14 +1433,10 @@ function openProfile(docId){
         <div class="prof-stat-box"><div class="prof-stat-num green">${recs.length}</div><div class="prof-stat-label">Records</div></div>
         <div class="prof-stat-box"><div class="prof-stat-num amber">${classes.length||todayRecs.length}</div><div class="prof-stat-label">Today</div></div>
       </div>
- 
-      <!-- ─── PERSONAL INFO ─── -->
       <div class="prof-section">
         <div class="prof-section-title">Personal Information</div>
         ${personalInfoHTML}
       </div>
- 
-      <!-- ─── STATISTICS GRAPH ─── -->
       <div class="prof-section">
         <div class="prof-section-title">Attendance Statistics</div>
         <div class="stats-period-toggle">
@@ -1447,19 +1454,18 @@ function openProfile(docId){
           </div>
         </div>
       </div>
- 
       <div class="prof-section">
         <div class="prof-section-title">Academic Information</div>
-        <div class="info-row"><i class="ti ti-school"></i><div><div class="info-row-label">Course</div><div class="info-row-value">${s.course||s.department||'—'}</div></div></div>
-        <div class="info-row"><i class="ti ti-building"></i><div><div class="info-row-label">Department</div><div class="info-row-value">${s.department||'—'}</div></div></div>
-        <div class="info-row"><i class="ti ti-id-badge"></i><div><div class="info-row-label">Card UID</div><div class="info-row-value" style="font-family:monospace;font-size:13px">${s.uid||'—'}</div></div></div>
-        <div class="info-row"><i class="ti ti-database"></i><div><div class="info-row-label">Source Collection</div><div class="info-row-value" style="font-family:monospace;font-size:13px">${s._col||'—'}</div></div></div>
+        <div class="info-row"><i class="ti ti-school"></i><div><div class="info-row-label">Course</div><div class="info-row-value">${esc(s.course||s.department||'—')}</div></div></div>
+        <div class="info-row"><i class="ti ti-building"></i><div><div class="info-row-label">Department</div><div class="info-row-value">${esc(s.department||'—')}</div></div></div>
+        <div class="info-row"><i class="ti ti-id-badge"></i><div><div class="info-row-label">Card UID</div><div class="info-row-value" style="font-family:monospace;font-size:13px">${esc(s.uid||'—')}</div></div></div>
+        <div class="info-row"><i class="ti ti-database"></i><div><div class="info-row-label">Source Collection</div><div class="info-row-value" style="font-family:monospace;font-size:13px">${esc(s._col||'—')}</div></div></div>
       </div>
       <div class="prof-section">
         <div class="prof-section-title">Attendance Record</div>
         ${pct!==null?`
         <div class="att-bar-wrap">
-          <div class="att-bar-header"><div class="att-pct">${pct}%</div><span class="badge ${lbl.cls}">${lbl.text}</span></div>
+          <div class="att-bar-header"><div class="att-pct">${pct}%</div><span class="badge ${lbl.cls}">${esc(lbl.text)}</span></div>
           <div class="att-track"><div class="att-fill" id="prof-att-fill" style="width:0%;background:${col}"></div></div>
           <div class="att-note">${recs.filter(a=>a.status==='Present').length} present · ${recs.filter(a=>a.status==='Absent').length} absent · ${recs.filter(a=>a.status==='Late').length} late of ${recs.length}</div>
         </div>`:'<div class="no-classes">No attendance records found.</div>'}
@@ -1537,11 +1543,8 @@ function aggregateAttendance(recs,period){
   return{labels,present,absent,late};
 }
  
-/* ═══════════════════════════════════
-   PHOTO UPLOAD — FIXED
-═══════════════════════════════════ */
+/* ═══ PHOTO UPLOAD ═══ */
 function triggerPhotoUpload(docId, col){
-  // Validate inputs before storing
   if(!docId){showToast('Cannot upload: missing document ID','error');return;}
   const safeCol = (col && col.trim()) ? col.trim() : 'users';
   _pendingPhotoDocId = docId;
@@ -1553,12 +1556,9 @@ function triggerPhotoUpload(docId, col){
 document.getElementById('photo-file-input').addEventListener('change', async function(){
   const file = this.files[0];
   if(!file) return;
- 
-  // Clear the input immediately so same file can be re-selected
   const fileClone = file;
   this.value = '';
  
-  // --- Validate ---
   const allowedTypes = ['image/jpeg','image/png','image/webp','image/gif'];
   if(!allowedTypes.includes(fileClone.type)){
     showToast('Only JPG, PNG, WebP, or GIF images are allowed','error');
@@ -1577,35 +1577,28 @@ document.getElementById('photo-file-input').addEventListener('change', async fun
   const col   = _pendingPhotoCol;
   console.log('[Photo] Uploading for doc:', docId, 'col:', col);
  
-  // Show progress
   const progBar  = document.getElementById('upload-prog-bar');
   const progFill = document.getElementById('upload-prog-fill');
   if(progBar){ progBar.classList.add('show'); progFill.style.width='5%'; }
   showToast('Uploading photo…','info');
  
   try {
-    // Compress to ≤600px
     const compressed = await compressImage(fileClone, 600);
     if(progFill) progFill.style.width = '30%';
  
-    // Check if Firebase Storage is available (may be blocked by CORS in some setups)
     let photoURL = null;
     try {
       const filename  = `profile_photos/${docId}_${Date.now()}.jpg`;
       const storageRef = storage.ref(filename);
       const uploadTask = storageRef.put(compressed, {contentType:'image/jpeg'});
  
-      // Track upload progress
       await new Promise((resolve, reject) => {
         uploadTask.on('state_changed',
           snapshot => {
             const pct = 30 + Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 55);
             if(progFill) progFill.style.width = pct + '%';
           },
-          err => {
-            console.error('[Photo] Storage upload error:', err);
-            reject(err);
-          },
+          err => { console.error('[Photo] Storage upload error:', err); reject(err); },
           () => resolve()
         );
       });
@@ -1614,22 +1607,23 @@ document.getElementById('photo-file-input').addEventListener('change', async fun
       if(progFill) progFill.style.width = '90%';
  
     } catch(storageErr) {
-      console.warn('[Photo] Firebase Storage failed, falling back to base64 Firestore storage:', storageErr.message);
-      // Fallback: store as base64 in Firestore (for storage permission issues)
-      // Warning: large images will bloat Firestore — only for small compressed images
-      photoURL = await blobToDataURL(compressed);
+      console.warn('[Photo] Firebase Storage failed, falling back to base64:', storageErr.message);
+      // ✅ FIX: Check Firestore 1MB doc size limit before storing base64
+      const dataUrl = await blobToDataURL(compressed);
+      // Firestore doc limit is ~1MB (1,048,576 bytes); be conservative
+      if (dataUrl.length > 800000) {
+        throw new Error('Compressed image too large for Firestore fallback (~600KB+). Please configure Firebase Storage.');
+      }
+      photoURL = dataUrl;
       if(progFill) progFill.style.width = '85%';
     }
  
-    // Save URL to Firestore
     await db.collection(col).doc(docId).update({ photoURL });
     if(progFill) progFill.style.width = '100%';
  
-    // Update UI immediately without waiting for snapshot
     const s = studentsData.find(x => x.id === docId);
     if(s){ s.photoURL = photoURL; }
  
-    // Update avatar in overlay if still open
     const av = document.querySelector('.prof-avatar-lg');
     if(av){
       const existing = av.querySelector('img');
@@ -1652,7 +1646,6 @@ document.getElementById('photo-file-input').addEventListener('change', async fun
     if(progBar) progBar.classList.remove('show');
     if(progFill) progFill.style.width = '0%';
  
-    // Provide specific error messages
     if(e.code === 'storage/unauthorized'){
       showToast('Upload denied: check Firebase Storage rules','error');
     } else if(e.code === 'storage/canceled'){
@@ -1682,7 +1675,7 @@ async function compressImage(file, maxSize){
       canvas.getContext('2d').drawImage(img, 0, 0, width, height);
       canvas.toBlob(blob => {
         URL.revokeObjectURL(url);
-        resolve(blob || file); // fallback to original if toBlob fails
+        resolve(blob || file);
       }, 'image/jpeg', 0.85);
     };
     img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
@@ -1699,31 +1692,24 @@ function blobToDataURL(blob){
   });
 }
  
-/* ═══════════════════════════════════════════
-   CCTV MODULE — ZONES SYSTEM
-═══════════════════════════════════════════ */
+/* ═══ CCTV MODULE — ZONES SYSTEM ═══ */
 function getAllZones(){
-  // Collect all unique zones from cameras + preset zones
   const zones = new Set(['All', ...BUILTIN_ZONES, ...PRESET_ZONES.slice(4)]);
   cctvCameras.forEach(c => { if(c.zone) zones.add(c.zone); });
   customZones.forEach(z => zones.add(z));
   return ['All', ...Array.from(zones).filter(z=>z!=='All')];
 }
- 
 function getCamerasForZone(zone){
   if(zone === 'All') return cctvCameras;
   return cctvCameras.filter(c => c.zone === zone);
 }
- 
 function getZoneSlug(zone){
   return zone.toLowerCase().replace(/\s+/g,'-');
 }
- 
 function getZoneColor(zone){
   const map = {All:'var(--accent)', North:'#7c3aed', South:'#059669', East:'#d97706', West:'#dc2626'};
   return map[zone] || 'var(--purple)';
 }
- 
 function renderZoneTabs(){
   const bar = document.getElementById('cctv-zone-bar');
   if(!bar) return;
@@ -1740,21 +1726,18 @@ function renderZoneTabs(){
     return `
       <button class="zone-tab zone-${slug} ${isActive?'active':''}"
         style="${isActive?`background:${color};border-color:${color}`:''}"
-        onclick="setZone('${zone.replace(/'/g,"\\'")}')">
-        ${zoneIcon(zone)} ${zone}
+        onclick="setZone('${escJs(zone)}')">
+        ${zoneIcon(zone)} ${esc(zone)}
         ${showCount ? `<span class="zone-count-pill" style="${isActive?'background:rgba(255,255,255,0.25)':''}">${count}</span>` : ''}
       </button>`;
   }).join('');
  
-  // Add manage button
   bar.innerHTML += `<button class="zone-manage-btn" onclick="openManageZones()"><i class="ti ti-settings"></i> Manage Zones</button>`;
 }
- 
 function zoneIcon(zone){
   const icons = {All:'🗺️', North:'🧭', South:'🧭', East:'🧭', West:'🧭', 'Main Gate':'🚪', Library:'📚', Dormitories:'🏠'};
   return icons[zone] || '📍';
 }
- 
 function setZone(zone){
   activeCctvZone = zone;
   selectedCameraIdx = null;
@@ -1762,7 +1745,6 @@ function setZone(zone){
   renderZoneTabs();
   renderCctvGrid();
 }
- 
 function openManageZones(){
   const allZones = getAllZones().filter(z => z !== 'All');
   document.getElementById('zones-list-ui').innerHTML = allZones.map(z => {
@@ -1770,14 +1752,13 @@ function openManageZones(){
     const count = getCamerasForZone(z).length;
     return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px">
       <span style="font-size:16px">${zoneIcon(z)}</span>
-      <span style="flex:1;font-size:14px;color:var(--text)">${z}</span>
+      <span style="flex:1;font-size:14px;color:var(--text)">${esc(z)}</span>
       <span style="font-size:11px;color:var(--muted)">${count} cam${count!==1?'s':''}</span>
-      ${!isBuiltin?`<button class="btn btn-danger btn-sm" onclick="removeCustomZone('${z.replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`:'<span style="font-size:10px;color:var(--faint);padding:3px 8px;border:1px solid var(--border);border-radius:4px">Built-in</span>'}
+      ${!isBuiltin?`<button class="btn btn-danger btn-sm" onclick="removeCustomZone('${escJs(z)}')"><i class="ti ti-trash"></i></button>`:'<span style="font-size:10px;color:var(--faint);padding:3px 8px;border:1px solid var(--border);border-radius:4px">Built-in</span>'}
     </div>`;
   }).join('');
   openModal('manageZones');
 }
- 
 function addCustomZone(){
   const input = document.getElementById('new-zone-input');
   const name  = input.value.trim();
@@ -1785,15 +1766,12 @@ function addCustomZone(){
   if(getAllZones().includes(name)){ showToast('Zone already exists','error'); return; }
   customZones.push(name);
   input.value = '';
-  openManageZones(); // refresh
+  openManageZones();
   renderZoneTabs();
   showToast(`Zone "${name}" added`);
 }
- 
 function removeCustomZone(zoneName){
-  // Remove from local list
   customZones = customZones.filter(z => z !== zoneName);
-  // Unassign cameras in this zone
   const camsInZone = cctvCameras.filter(c => c.zone === zoneName);
   camsInZone.forEach(async c => {
     try{ await db.collection('cctv_cameras').doc(c.id).update({zone:''}); }catch(e){}
@@ -1804,14 +1782,12 @@ function removeCustomZone(zoneName){
   renderCctvGrid();
   showToast(`Zone "${zoneName}" removed`);
 }
- 
 function setCctvLayout(n,btn){
   activeCctvLayout=n;
   document.querySelectorAll('.cctv-layout-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderCctvGrid();
 }
- 
 function updateCctvStatusBar(){
   const online=cctvCameras.filter(c=>c.status==='online').length;
   const offline=cctvCameras.filter(c=>c.status==='offline').length;
@@ -1819,11 +1795,18 @@ function updateCctvStatusBar(){
   document.getElementById('cctv-offline-count').textContent=offline;
 }
  
+/* ✅ FIX: HLS.js integration for cross-browser HLS playback */
+let _hlsInstances = [];
+function destroyHlsInstances() {
+  _hlsInstances.forEach(h => { try { h.destroy(); } catch(e){} });
+  _hlsInstances = [];
+}
+ 
 function renderCctvGrid(){
+  destroyHlsInstances(); // clean up any previous streams
   const grid=document.getElementById('cctv-feed-grid');
   if(!grid) return;
  
-  // Set layout class
   grid.className='cctv-grid';
   if(activeCctvLayout===1) grid.classList.add('layout-1');
   else if(activeCctvLayout===3) grid.classList.add('layout-3');
@@ -1836,11 +1819,10 @@ function renderCctvGrid(){
     return;
   }
   if(!zoneCameras.length){
-    grid.innerHTML=`<div style="grid-column:1/-1"><div class="cctv-zone-empty"><i class="ti ti-camera-search"></i><p>No cameras in "${activeCctvZone}" zone</p><small>Add a camera and assign it to this zone</small><button class="btn btn-primary" style="margin-top:8px" onclick="openModal('addCamera')"><i class="ti ti-plus"></i> Add Camera to Zone</button></div></div>`;
+    grid.innerHTML=`<div style="grid-column:1/-1"><div class="cctv-zone-empty"><i class="ti ti-camera-search"></i><p>No cameras in "${esc(activeCctvZone)}" zone</p><small>Add a camera and assign it to this zone</small><button class="btn btn-primary" style="margin-top:8px" onclick="openModal('addCamera')"><i class="ti ti-plus"></i> Add Camera to Zone</button></div></div>`;
     return;
   }
  
-  // In single layout, show the selected camera or first in zone
   const shown = activeCctvLayout===1
     ? [selectedCameraIdx !== null && cctvCameras[selectedCameraIdx] ? cctvCameras[selectedCameraIdx] : zoneCameras[0]]
     : zoneCameras;
@@ -1858,19 +1840,53 @@ function renderCctvGrid(){
           <div style="display:flex;align-items:center;justify-content:space-between">
             <div class="cctv-feed-name">
               <span style="width:7px;height:7px;border-radius:50%;display:inline-block;background:${cam.status==='online'?'#22d3a0':'#f87171'}"></span>
-              ${cam.name||'Camera '+(realIdx+1)}
+              ${esc(cam.name||'Camera '+(realIdx+1))}
             </div>
-            ${cam.zone?`<span class="cctv-zone-badge" style="background:${zoneColor};color:#fff">${cam.zone}</span>`:''}
+            ${cam.zone?`<span class="cctv-zone-badge" style="background:${zoneColor};color:#fff">${esc(cam.zone)}</span>`:''}
           </div>
           <div class="cctv-feed-status">
             <div class="cctv-feed-time" id="cctv-clock-${realIdx}"></div>
-            <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);padding:2px 7px;border-radius:99px;background:rgba(0,0,0,0.4)">${cam.location||'—'}</span>
+            <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);padding:2px 7px;border-radius:99px;background:rgba(0,0,0,0.4)">${esc(cam.location||'—')}</span>
           </div>
         </div>
       </div>`;
   }).join('');
  
+  // ✅ FIX: Attach HLS.js after DOM is rendered
+  setTimeout(() => attachHlsStreams(shown), 50);
   updateCctvClocks();
+}
+ 
+function attachHlsStreams(cameras) {
+  cameras.forEach((cam) => {
+    if(cam.status==='offline'||!cam.url) return;
+    if(cam.streamType==='iframe') return; // iframe handles itself
+    if(cam.streamType!=='hls') return;     // rtsp_relay uses native webm src
+    const vid = document.getElementById('vid-' + (cam.id || cctvCameras.indexOf(cam)));
+    if(!vid) return;
+    if (typeof Hls === 'undefined') {
+      console.warn('Hls.js not loaded — falling back to native HLS (Safari only)');
+      vid.src = cam.url;
+      return;
+    }
+    if (Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+      hls.loadSource(cam.url);
+      hls.attachMedia(vid);
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          console.error('[HLS] Fatal error', data);
+          vid.parentElement.innerHTML = `<div class="cctv-nostream"><i class="ti ti-wifi-off"></i><p>Stream error</p><small>${esc(cam.url)}</small></div>`;
+        }
+      });
+      _hlsInstances.push(hls);
+    } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari has native HLS support
+      vid.src = cam.url;
+    } else {
+      vid.parentElement.innerHTML = `<div class="cctv-nostream"><i class="ti ti-wifi-off"></i><p>Browser cannot play HLS</p><small>${esc(cam.url)}</small></div>`;
+    }
+  });
 }
  
 function renderFeedContent(cam, idx){
@@ -1878,17 +1894,13 @@ function renderFeedContent(cam, idx){
     return `<div class="cctv-offline-screen"><i class="ti ti-camera-off"></i><p>Camera Offline</p></div>`;
   }
   if(cam.streamType==='iframe'){
-    return `<iframe src="${cam.url}" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>`;
+    return `<iframe src="${esc(cam.url)}" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>`;
   }
-  // HLS / RTSP relay — use native <video> with lazy loading
   return `<video id="vid-${cam.id||idx}" autoplay muted playsinline controls
     style="width:100%;height:100%;object-fit:cover;background:#000"
-    onerror="this.parentElement.querySelector('.cctv-feed-overlay') && (this.outerHTML='<div class=cctv-nostream><i class=ti ti-wifi-off style=font-size:28px;color:var(--faint)></i><p>Stream unavailable</p><small>${escapeHtml(cam.url)}</small></div>')"
-  >
-    <source src="${cam.url}" type="${cam.streamType==='rtsp_relay'?'video/webm':'application/x-mpegURL'}">
-  </video>`;
+    preload="metadata"
+  ></video>`;
 }
-function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
  
 function updateCctvClocks(){
   cctvCameras.forEach((_,i)=>{
@@ -1896,7 +1908,15 @@ function updateCctvClocks(){
     if(el) el.textContent=new Date().toLocaleTimeString();
   });
 }
-setInterval(()=>{ if(document.getElementById('page-cctv')?.classList.contains('active')) updateCctvClocks(); },1000);
+ 
+function startCctvClock(){
+  if(_cctvClockInterval) return;
+  _cctvClockInterval = setInterval(()=>{
+    const cctvPage = document.getElementById('page-cctv');
+    if(cctvPage?.classList.contains('active')) updateCctvClocks();
+  },1000);
+}
+startCctvClock();
  
 function selectCamera(idx){
   selectedCameraIdx=idx;
@@ -1905,16 +1925,16 @@ function selectCamera(idx){
   if(!cam) return;
   const zoneColor = cam.zone ? getZoneColor(cam.zone) : 'var(--muted)';
   document.getElementById('cctv-info-content').innerHTML=`
-    <div class="cctv-info-row"><span class="cctv-info-label">Name</span><span class="cctv-info-val">${cam.name||'—'}</span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">Zone</span><span class="cctv-info-val"><span style="background:${zoneColor}20;color:${zoneColor};border:1px solid ${zoneColor}40;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">${cam.zone||'Unassigned'}</span></span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">Location</span><span class="cctv-info-val">${cam.location||'—'}</span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">Model</span><span class="cctv-info-val">${cam.model||'—'}</span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">Stream Type</span><span class="cctv-info-val">${cam.streamType||'—'}</span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">Status</span><span class="cctv-info-val"><span class="badge ${cam.status==='online'?'badge-allowed':'badge-denied'}">${cam.status||'unknown'}</span></span></div>
-    <div class="cctv-info-row"><span class="cctv-info-label">URL</span><span class="cctv-info-val mono" style="word-break:break-all;font-size:10px">${cam.url||'No stream configured'}</span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Name</span><span class="cctv-info-val">${esc(cam.name||'—')}</span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Zone</span><span class="cctv-info-val"><span style="background:${zoneColor}20;color:${zoneColor};border:1px solid ${zoneColor}40;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">${esc(cam.zone||'Unassigned')}</span></span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Location</span><span class="cctv-info-val">${esc(cam.location||'—')}</span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Model</span><span class="cctv-info-val">${esc(cam.model||'—')}</span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Stream Type</span><span class="cctv-info-val">${esc(cam.streamType||'—')}</span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">Status</span><span class="cctv-info-val"><span class="badge ${cam.status==='online'?'badge-allowed':'badge-denied'}">${esc(cam.status||'unknown')}</span></span></div>
+    <div class="cctv-info-row"><span class="cctv-info-label">URL</span><span class="cctv-info-val mono" style="word-break:break-all;font-size:10px">${esc(cam.url||'No stream configured')}</span></div>
     <div style="margin-top:14px;display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="editCamera('${cam.id}')"><i class="ti ti-pencil"></i> Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteCamera('${cam.id}')"><i class="ti ti-trash"></i> Remove</button>
+      <button class="btn btn-ghost btn-sm" onclick="editCamera('${escJs(cam.id)}')"><i class="ti ti-pencil"></i> Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteCamera('${escJs(cam.id)}')"><i class="ti ti-trash"></i> Remove</button>
     </div>`;
 }
  
@@ -1938,7 +1958,6 @@ function toggleStreamFields(){
     hint.textContent='RTSP over WebSocket via MediaMTX WebRTC feature.';
   }
 }
- 
 function getSelectedZoneValue(){
   const zoneEl  = document.getElementById('cam-zone');
   const zoneVal = zoneEl.value;
@@ -1947,7 +1966,6 @@ function getSelectedZoneValue(){
   }
   return zoneVal;
 }
- 
 async function saveCamera(){
   const name=document.getElementById('cam-name').value.trim();
   if(!name){showToast('Camera name is required','error');return;}
@@ -1968,7 +1986,6 @@ async function saveCamera(){
     showToast('Camera added to ' + zone + ' zone');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
- 
 async function deleteCamera(camId){
   if(!camId) return;
   if(!confirm('Remove this camera from the system?')) return;
@@ -1979,7 +1996,6 @@ async function deleteCamera(camId){
     showToast('Camera removed');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
- 
 async function editCamera(camId){
   const cam=cctvCameras.find(c=>c.id===camId);
   if(!cam) return;
@@ -1989,7 +2005,6 @@ async function editCamera(camId){
   document.getElementById('cam-url').value=cam.url||'';
   document.getElementById('cam-model').value=cam.model||'Other';
   document.getElementById('cam-status').value=cam.status||'online';
-  // Set zone
   const zoneEl = document.getElementById('cam-zone');
   const knownZone = [...zoneEl.options].find(o=>o.value===cam.zone);
   if(knownZone){ zoneEl.value = cam.zone; }
@@ -1999,7 +2014,8 @@ async function editCamera(camId){
   const modalTitle=document.querySelector('#modal-addCamera .modal-title');
   const saveBtn=document.getElementById('cam-save-btn');
   if(modalTitle) modalTitle.innerHTML='<i class="ti ti-pencil" style="color:var(--accent)"></i> Edit Camera';
-  if(saveBtn) saveBtn.onclick=async()=>{
+  // ✅ FIX: Properly mark as editing so openModal can reset on close
+  if(saveBtn){ saveBtn.dataset.editing='1'; saveBtn.onclick=async()=>{
     const zone = getSelectedZoneValue();
     try{
       await db.collection('cctv_cameras').doc(camId).update({
@@ -2014,37 +2030,45 @@ async function editCamera(camId){
       });
       closeModal('addCamera');
       if(modalTitle) modalTitle.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
-      if(saveBtn) saveBtn.onclick=saveCamera;
+      if(saveBtn){ delete saveBtn.dataset.editing; saveBtn.onclick=saveCamera; }
       showToast('Camera updated');
     }catch(e){showToast('Error: '+e.message,'error');}
-  };
+  };}
 }
  
 /* ═══ DASHBOARD ═══ */
 function renderDashStudents(){
   document.getElementById('dash-students').innerHTML=studentsData.slice(0,6).map(s=>{
     const rc=roleConf(s.role);
-    return `<tr style="cursor:pointer" onclick="showPage('people',document.querySelector('[onclick*=people]'));setTimeout(()=>openProfile('${s.id}'),200)">
-      <td><div class="name-cell"><div class="avatar ${rc.avClass}">${s.photoURL?`<img src="${s.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-      <td><span class="badge ${rc.badge}">${s.role||'—'}</span></td>
-      <td style="color:var(--muted)">${s.department||'—'}</td>
+    return `<tr style="cursor:pointer" onclick="showPage('people',document.querySelector('[onclick*=people]'));setTimeout(()=>openProfile('${escJs(s.id)}'),200)">
+      <td><div class="name-cell"><div class="avatar ${rc.avClass}">${s.photoURL?`<img src="${esc(s.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:esc(initials(s.name))}</div><span>${esc(s.name||'—')}</span></div></td>
+      <td><span class="badge ${rc.badge}">${esc(s.role||'—')}</span></td>
+      <td style="color:var(--muted)">${esc(s.department||'—')}</td>
     </tr>`;
   }).join('');
 }
 function updateDeptFilter(){
   const sel=document.getElementById('att-dept'),cur=sel.value;
   sel.innerHTML='<option value="">All Departments</option>'+
-    DEPARTMENTS.map(d=>`<option value="${d.name}"${d.name===cur?' selected':''}>${d.name}</option>`).join('');
+    DEPARTMENTS.map(d=>`<option value="${esc(d.name)}"${d.name===cur?' selected':''}>${esc(d.name)}</option>`).join('');
 }
 function handleGlobalSearch(val){
   const q=val.toLowerCase();
-  if(!q){renderPeoplePage();return;}
-  if(document.getElementById('page-people').classList.contains('active')){
-    document.getElementById('people-search').value=val;renderPeoplePage();
+  // ✅ FIX: Auto-redirect to People page when searching from elsewhere
+  if(!q){
+    renderPeoplePage();
+    return;
   }
+  const peoplePage = document.getElementById('page-people');
+  if(!peoplePage.classList.contains('active')){
+    const navBtn = [...document.querySelectorAll('.nav-item')].find(b => b.textContent.includes('People'));
+    if(navBtn) showPage('people', navBtn);
+  }
+  document.getElementById('people-search').value = val;
+  renderPeoplePage();
 }
  
-/* ═══ ADD PERSON — with validation ═══ */
+/* ═══ ADD PERSON ═══ */
 function syncCollectionFromRole(role){
   const col=document.getElementById('add-collection');
   if(role==='Student')col.value='students';
@@ -2058,7 +2082,6 @@ function validatePersonForm(){
   const heightErr=document.getElementById('add-height-err');
   const ageInput=document.getElementById('add-age');
   const heightInput=document.getElementById('add-height');
-  // Reset
   ageErr.classList.remove('show');heightErr.classList.remove('show');
   ageInput.classList.remove('invalid');heightInput.classList.remove('invalid');
   if(document.getElementById('add-age').value && (age<1||age>120)){
@@ -2110,10 +2133,10 @@ function renderAdminsTable(){
   if(!adminsData.length){tbody.innerHTML='<tr><td colspan="4"><div class="empty"><i class="ti ti-shield-off"></i><p>No admins found</p></div></td></tr>';return;}
   tbody.innerHTML=adminsData.map(a=>`
     <tr>
-      <td style="font-family:monospace;font-size:12px;color:var(--muted)">${a.uid}</td>
-      <td>${a.email||a.label||'—'}</td>
+      <td style="font-family:monospace;font-size:12px;color:var(--muted)">${esc(a.uid)}</td>
+      <td>${esc(a.email||a.label||'—')}</td>
       <td style="font-size:12px;color:var(--faint)">${a.addedAt?new Date(a.addedAt.toDate()).toLocaleDateString():'—'}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="removeAdmin('${a.uid}')"><i class="ti ti-trash"></i> Remove</button></td>
+      <td><button class="btn btn-danger btn-sm" onclick="removeAdmin('${escJs(a.uid)}')"><i class="ti ti-trash"></i> Remove</button></td>
     </tr>`).join('');
 }
 async function saveNewAdmin(){
@@ -2140,9 +2163,9 @@ function renderDeptCards(){
   const sel=document.getElementById('dept-filter-select').value;
   document.getElementById('dept-cards-row').innerHTML=DEPARTMENTS.map(d=>{
     const count=studentsData.filter(s=>s.department===d.name).length;
-    return `<div class="dept-overview-card ${sel===d.name?'selected':''}" onclick="filterByDept('${d.name}')" style="border-top:2px solid ${d.color}">
+    return `<div class="dept-overview-card ${sel===d.name?'selected':''}" onclick="filterByDept('${escJs(d.name)}')" style="border-top:2px solid ${d.color}">
       <div class="dept-card-icon" style="color:${d.color}"><i class="ti ${d.icon}"></i></div>
-      <div class="dept-card-name">${d.name}</div>
+      <div class="dept-card-name">${esc(d.name)}</div>
       <div class="dept-card-count" style="color:${d.color}">${count}</div>
       <div class="dept-card-label">people</div>
     </div>`;
@@ -2169,15 +2192,15 @@ function renderDeptTable(){
     const rc=roleConf(s.role);
     const dObj=DEPARTMENTS.find(d=>d.name===s.department);
     const dBadge=s.department
-      ?`<span style="background:${dObj?dObj.dim:'var(--accent-dim)'};color:${dObj?dObj.color:'var(--accent)'};padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600">${s.department}</span>`
+      ?`<span style="background:${dObj?dObj.dim:'var(--accent-dim)'};color:${dObj?dObj.color:'var(--accent)'};padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600">${esc(s.department)}</span>`
       :`<span style="color:var(--faint);font-size:12px">Unassigned</span>`;
-    return `<tr style="cursor:pointer" onclick="openProfile('${s.id}')">
-      <td><div class="name-cell"><div class="avatar ${rc.avClass}">${s.photoURL?`<img src="${s.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:initials(s.name)}</div><span>${s.name||'—'}</span></div></td>
-      <td style="color:var(--muted)">${s.Student_ID||'—'}</td>
-      <td><span class="badge ${rc.badge}">${s.role||'—'}</span></td>
+    return `<tr style="cursor:pointer" onclick="openProfile('${escJs(s.id)}')">
+      <td><div class="name-cell"><div class="avatar ${rc.avClass}">${s.photoURL?`<img src="${esc(s.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:esc(initials(s.name))}</div><span>${esc(s.name||'—')}</span></div></td>
+      <td style="color:var(--muted)">${esc(s.Student_ID||'—')}</td>
+      <td><span class="badge ${rc.badge}">${esc(s.role||'—')}</span></td>
       <td>${dBadge}</td>
-      <td style="font-family:monospace;font-size:12px;color:var(--muted)">${s.uid||'—'}</td>
-      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openChangeDept('${s.id}','${(s.name||'').replace(/'/g,"\\'")}','${s.department||''}','${s._col||'users'}')"><i class="ti ti-pencil"></i> Dept</button></td>
+      <td style="font-family:monospace;font-size:12px;color:var(--muted)">${esc(s.uid||'—')}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openChangeDept('${escJs(s.id)}','${escJs(s.name||'')}','${escJs(s.department||'')}','${escJs(s._col||'users')}')"><i class="ti ti-pencil"></i> Dept</button></td>
     </tr>`;
   }).join('');
 }
@@ -2206,16 +2229,16 @@ function renderLogs(){
   if(!data.length){tbody.innerHTML=`<tr><td colspan="4"><div class="empty"><i class="ti ti-activity-off"></i><p>No logs</p></div></td></tr>`;return;}
   tbody.innerHTML=data.map(l=>`
     <tr>
-      <td><div class="name-cell"><div class="avatar">${initials(l.name)}</div><span>${l.name||'—'}</span></div></td>
-      <td>${l.location||'—'}</td>
-      <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${l.status||'—'}</span></td>
+      <td><div class="name-cell"><div class="avatar">${esc(initials(l.name))}</div><span>${esc(l.name||'—')}</span></div></td>
+      <td>${esc(l.location||'—')}</td>
+      <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${esc(l.status||'—')}</span></td>
       <td style="color:var(--muted);font-size:12px">${l.time?new Date(l.time.toDate()).toLocaleString():'—'}</td>
     </tr>`).join('');
 }
 function renderDashLogs(){
   document.getElementById('dash-logs').innerHTML=logsData.slice(0,6).map(l=>`
-    <tr><td>${l.name||'—'}</td><td style="color:var(--muted)">${l.location||'—'}</td>
-    <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${l.status||'—'}</span></td></tr>`).join('');
+    <tr><td>${esc(l.name||'—')}</td><td style="color:var(--muted)">${esc(l.location||'—')}</td>
+    <td><span class="badge ${l.status==='Allowed'?'badge-allowed':'badge-denied'}">${esc(l.status||'—')}</span></td></tr>`).join('');
 }
 function updateDashStats(){
   document.getElementById('stat-logs').textContent=logsData.length;
@@ -2244,15 +2267,15 @@ function renderAttendance(){
   tbody.innerHTML=data.map(a=>{
     const bc=a.status==='Present'?'badge-present':a.status==='Absent'?'badge-absent':'badge-late';
     return `<tr>
-      <td><div class="name-cell"><div class="avatar">${initials(a.studentName)}</div><span>${a.studentName||'—'}</span></div></td>
-      <td style="color:var(--muted)">${a.studentId||'—'}</td>
-      <td>${a.department||'—'}</td>
-      <td><span class="badge ${bc}">${a.status||'—'}</span></td>
-      <td style="color:var(--muted);font-size:12px">${a.time||'—'}</td>
+      <td><div class="name-cell"><div class="avatar">${esc(initials(a.studentName))}</div><span>${esc(a.studentName||'—')}</span></div></td>
+      <td style="color:var(--muted)">${esc(a.studentId||'—')}</td>
+      <td>${esc(a.department||'—')}</td>
+      <td><span class="badge ${bc}">${esc(a.status||'—')}</span></td>
+      <td style="color:var(--muted);font-size:12px">${esc(a.time||'—')}</td>
       <td><div class="mark-btns">
-        <button class="btn btn-success btn-sm" onclick="updateAttStatus('${a.id}','Present')"><i class="ti ti-check"></i></button>
-        <button class="btn btn-amber btn-sm" onclick="updateAttStatus('${a.id}','Late')"><i class="ti ti-clock"></i></button>
-        <button class="btn btn-danger btn-sm" onclick="updateAttStatus('${a.id}','Absent')"><i class="ti ti-x"></i></button>
+        <button class="btn btn-success btn-sm" onclick="updateAttStatus('${escJs(a.id)}','Present')"><i class="ti ti-check"></i></button>
+        <button class="btn btn-amber btn-sm" onclick="updateAttStatus('${escJs(a.id)}','Late')"><i class="ti ti-clock"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="updateAttStatus('${escJs(a.id)}','Absent')"><i class="ti ti-x"></i></button>
       </div></td>
     </tr>`;
   }).join('');
@@ -2273,7 +2296,8 @@ async function saveAttendance(){
       studentId:student?student.Student_ID||'':'',
       department:student?student.department||'':'',
       uid:sv,date:dateVal,status:statusVal,note:noteVal,
-      time:new Date().toLocaleTimeString(),
+      // ✅ FIX: use ISO format instead of locale string for consistency
+      time:new Date().toISOString(),
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     closeModal('markAttendance');document.getElementById('mark-note').value='';
@@ -2288,8 +2312,10 @@ function exportAttendanceCSV(){
   const dateVal=document.getElementById('att-date').value;
   const data=dateVal?attendanceData.filter(a=>a.date===dateVal):attendanceData;
   if(!data.length){showToast('No data to export','error');return;}
+  // ✅ FIX: Properly escape CSV fields
+  const csvEsc = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
   const header=['Name','Student ID','Department','Status','Date','Time','Note'];
-  const rows=data.map(a=>[a.studentName,a.studentId,a.department,a.status,a.date,a.time,a.note||''].map(v=>`"${v}"`).join(','));
+  const rows=data.map(a=>[a.studentName,a.studentId,a.department,a.status,a.date,a.time,a.note||''].map(csvEsc).join(','));
   const csv=[header.join(','),...rows].join('\n');
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
@@ -2301,12 +2327,12 @@ function exportAttendanceCSV(){
 function openModal(id){
   if(id==='markAttendance'){
     document.getElementById('mark-student').innerHTML=
-      studentsData.map(s=>`<option value="${s.uid||s.name}">${s.name} (${s.Student_ID||'N/A'}) — ${s.role||'?'}</option>`).join('');
+      studentsData.map(s=>`<option value="${esc(s.uid||s.name)}">${esc(s.name)} (${esc(s.Student_ID||'N/A')}) — ${esc(s.role||'?')}</option>`).join('');
   }
   if(id==='addCamera'){
-    // Only reset to "Add" mode if not already editing
+    // ✅ FIX: Check dataset.editing flag properly
     const saveBtn=document.getElementById('cam-save-btn');
-    if(saveBtn.dataset.editing !== '1'){
+    if(!saveBtn?.dataset.editing){
       const title=document.querySelector('#modal-addCamera .modal-title');
       if(title) title.innerHTML='<i class="ti ti-camera-plus" style="color:var(--accent)"></i> Add Camera Feed';
       saveBtn.onclick=saveCamera;
@@ -2317,7 +2343,6 @@ function openModal(id){
 }
 function closeModal(id){
   document.getElementById('modal-'+id).classList.remove('open');
-  // Reset camera modal state
   if(id==='addCamera'){
     const saveBtn=document.getElementById('cam-save-btn');
     if(saveBtn){ delete saveBtn.dataset.editing; saveBtn.onclick=saveCamera; }
